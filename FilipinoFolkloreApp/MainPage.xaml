@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="FilipinoFolkloreApp.MainPage"
+    Shell.NavBarIsVisible="False"
+    BackgroundImageSource="login_bg.jpeg">
+
+    <Grid>
+        <Grid VerticalOptions="Center" HorizontalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Entry x:Name="OutputEntry"
+               Grid.Row="0"
+               FontSize="30"
+               Placeholder="Type here..."
+               IsReadOnly="True" />
+
+            <Grid Grid.Row="1" x:Name="KeyboardGrid" VerticalOptions="Center" HorizontalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Row 0 -->
+                <ImageButton Source="keys/a.png" Grid.Row="0" Grid.Column="0" Clicked="Letter_Clicked" CommandParameter="a" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/b.png" Grid.Row="0" Grid.Column="1" Clicked="Letter_Clicked" CommandParameter="b" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/c.png" Grid.Row="0" Grid.Column="2" Clicked="Letter_Clicked" CommandParameter="c" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/d.png" Grid.Row="0" Grid.Column="3" Clicked="Letter_Clicked" CommandParameter="d" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/e.png" Grid.Row="0" Grid.Column="4" Clicked="Letter_Clicked" CommandParameter="e" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/f.png" Grid.Row="0" Grid.Column="5" Clicked="Letter_Clicked" CommandParameter="f" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/g.png" Grid.Row="0" Grid.Column="6" Clicked="Letter_Clicked" CommandParameter="g" Aspect="AspectFit" WidthRequest="60" />
+
+                <!-- Row 1 -->
+                <ImageButton Source="keys/h.png" Grid.Row="1" Grid.Column="0" Clicked="Letter_Clicked" CommandParameter="h" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/i.png" Grid.Row="1" Grid.Column="1" Clicked="Letter_Clicked" CommandParameter="i" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/j.png" Grid.Row="1" Grid.Column="2" Clicked="Letter_Clicked" CommandParameter="j" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/k.png" Grid.Row="1" Grid.Column="3" Clicked="Letter_Clicked" CommandParameter="k" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/l.png" Grid.Row="1" Grid.Column="4" Clicked="Letter_Clicked" CommandParameter="l" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/m.png" Grid.Row="1" Grid.Column="5" Clicked="Letter_Clicked" CommandParameter="m" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/n.png" Grid.Row="1" Grid.Column="6" Clicked="Letter_Clicked" CommandParameter="n" Aspect="AspectFit" WidthRequest="60" />
+
+                <!-- Row 2 -->
+                <ImageButton Source="keys/o.png" Grid.Row="2" Grid.Column="0" Clicked="Letter_Clicked" CommandParameter="o" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/p.png" Grid.Row="2" Grid.Column="1" Clicked="Letter_Clicked" CommandParameter="p" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/q.png" Grid.Row="2" Grid.Column="2" Clicked="Letter_Clicked" CommandParameter="q" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/r.png" Grid.Row="2" Grid.Column="3" Clicked="Letter_Clicked" CommandParameter="r" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/s.png" Grid.Row="2" Grid.Column="4" Clicked="Letter_Clicked" CommandParameter="s" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/t.png" Grid.Row="2" Grid.Column="5" Clicked="Letter_Clicked" CommandParameter="t" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/u.png" Grid.Row="2" Grid.Column="6" Clicked="Letter_Clicked" CommandParameter="u" Aspect="AspectFit" WidthRequest="60" />
+
+                <!-- Row 3 -->
+                <ImageButton Source="keys/v.png" Grid.Row="3" Grid.Column="0" Clicked="Letter_Clicked" CommandParameter="v" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/w.png" Grid.Row="3" Grid.Column="1" Clicked="Letter_Clicked" CommandParameter="w" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/x.png" Grid.Row="3" Grid.Column="2" Clicked="Letter_Clicked" CommandParameter="x" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/y.png" Grid.Row="3" Grid.Column="3" Clicked="Letter_Clicked" CommandParameter="y" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/z.png" Grid.Row="3" Grid.Column="4" Clicked="Letter_Clicked" CommandParameter="z" Aspect="AspectFit" WidthRequest="60" />
+                <ImageButton Source="keys/ok.png" Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" Clicked="Letter_Clicked" CommandParameter="enter" Aspect="AspectFit" WidthRequest="120" />
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>
