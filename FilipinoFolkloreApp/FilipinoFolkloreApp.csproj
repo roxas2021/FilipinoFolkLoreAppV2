@@ -65,6 +65,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\avatarcustomization\avatar_blue.png" />
+	  <None Remove="Resources\Images\avatarcustomization\avatar_bluered.png" />
+	  <None Remove="Resources\Images\avatarcustomization\avatar_green.png" />
+	  <None Remove="Resources\Images\avatarcustomization\avatar_pink.png" />
+	  <None Remove="Resources\Images\avatarcustomization\avatar_red.png" />
+	  <None Remove="Resources\Images\avatarcustomization\avatar_white.png" />
+	  <None Remove="Resources\Images\avatarcustomization\defaultavatar.png" />
+	  <None Remove="Resources\Images\avatarcustomization\tapis_blue.png" />
+	  <None Remove="Resources\Images\avatarcustomization\tapis_bluered.png" />
+	  <None Remove="Resources\Images\avatarcustomization\tapis_green.png" />
+	  <None Remove="Resources\Images\avatarcustomization\tapis_pink.png" />
+	  <None Remove="Resources\Images\avatarcustomization\tapis_red.png" />
+	  <None Remove="Resources\Images\avatarcustomization\tapis_white.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
@@ -73,6 +89,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Views\AvatarSelectionPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CharacterCostume.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Home\IndexPage.xaml">
@@ -86,6 +105,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar_blue.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar_bluered.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar_green.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar_pink.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar_red.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar_white.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\defaultavatar.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_blue.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_bluered.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_green.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_pink.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_red.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_white.png" />
 	  <MauiImage Include="Resources\Images\keys\a.png" />
 	  <MauiImage Include="Resources\Images\keys\b.png" />
 	  <MauiImage Include="Resources\Images\keys\c.png" />

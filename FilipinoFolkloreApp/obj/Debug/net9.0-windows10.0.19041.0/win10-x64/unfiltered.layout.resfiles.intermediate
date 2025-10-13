@@ -48,6 +48,12 @@ appiconWideTile.scale-125.png
 appiconWideTile.scale-150.png
 appiconWideTile.scale-200.png
 appiconWideTile.scale-400.png
+avatar_blue.scale-100.png
+avatar_bluered.scale-100.png
+avatar_green.scale-100.png
+avatar_pink.scale-100.png
+avatar_red.scale-100.png
+avatar_white.scale-100.png
 avatar1.scale-100.png
 avatar2.scale-100.png
 avatar3.scale-100.png
@@ -65,6 +71,7 @@ bg_avatarselectpage.scale-100.jpeg
 bg_index.scale-100.jpeg
 c.scale-100.png
 d.scale-100.png
+defaultavatar.scale-100.png
 dotnet_bot.scale-100.png
 dotnet_bot.scale-125.png
 dotnet_bot.scale-150.png
@@ -98,6 +105,12 @@ s.scale-100.png
 selectionpage.scale-100.jpg
 star.scale-100.png
 t.scale-100.png
+tapis_blue.scale-100.png
+tapis_bluered.scale-100.png
+tapis_green.scale-100.png
+tapis_pink.scale-100.png
+tapis_red.scale-100.png
+tapis_white.scale-100.png
 u.scale-100.png
 v.scale-100.png
 w.scale-100.png

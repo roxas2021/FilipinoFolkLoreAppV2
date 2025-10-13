@@ -24,6 +24,10 @@
            Padding="0"
            HasShadow="True"
            BackgroundColor="White">
+                    <Frame.GestureRecognizers>
+                        <!-- Add a TapGestureRecognizer to handle tap events -->
+                        <TapGestureRecognizer Tapped="OnAvatarTapped"/>
+                    </Frame.GestureRecognizers>
                     <Image Source="avatar1.png"
              Aspect="AspectFill"/>
                 </Frame>

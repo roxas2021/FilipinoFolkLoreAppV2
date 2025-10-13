@@ -12,49 +12,55 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = FilipinoFolkloreApp
-build_property.ProjectDir = C:\Users\user\source\repos\FilipinoFolkloreApp\FilipinoFolkloreApp\
+build_property.ProjectDir = C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/user/source/repos/FilipinoFolkloreApp/FilipinoFolkloreApp/App.xaml]
+[C:/Users/user/Source/Repos/FilipinoFolkLoreAppV2/FilipinoFolkloreApp/App.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.App.xaml
 build_metadata.AdditionalFiles.TargetPath = App.xaml
 build_metadata.AdditionalFiles.RelativePath = App.xaml
 
-[C:/Users/user/source/repos/FilipinoFolkloreApp/FilipinoFolkloreApp/AppShell.xaml]
+[C:/Users/user/Source/Repos/FilipinoFolkLoreAppV2/FilipinoFolkloreApp/AppShell.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.AppShell.xaml
 build_metadata.AdditionalFiles.TargetPath = AppShell.xaml
 build_metadata.AdditionalFiles.RelativePath = AppShell.xaml
 
-[C:/Users/user/source/repos/FilipinoFolkloreApp/FilipinoFolkloreApp/MainPage.xaml]
+[C:/Users/user/Source/Repos/FilipinoFolkLoreAppV2/FilipinoFolkloreApp/MainPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.MainPage.xaml
 build_metadata.AdditionalFiles.TargetPath = MainPage.xaml
 build_metadata.AdditionalFiles.RelativePath = MainPage.xaml
 
-[C:/Users/user/source/repos/FilipinoFolkloreApp/FilipinoFolkloreApp/Resources/Styles/Colors.xaml]
+[C:/Users/user/Source/Repos/FilipinoFolkLoreAppV2/FilipinoFolkloreApp/Resources/Styles/Colors.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.Resources.Styles.Colors.xaml
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
 build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Colors.xaml
 
-[C:/Users/user/source/repos/FilipinoFolkloreApp/FilipinoFolkloreApp/Resources/Styles/Styles.xaml]
+[C:/Users/user/Source/Repos/FilipinoFolkLoreAppV2/FilipinoFolkloreApp/Resources/Styles/Styles.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.Resources.Styles.Styles.xaml
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
 build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
 
-[C:/Users/user/source/repos/FilipinoFolkloreApp/FilipinoFolkloreApp/Views/AvatarSelectionPage.xaml]
+[C:/Users/user/Source/Repos/FilipinoFolkLoreAppV2/FilipinoFolkloreApp/Views/AvatarSelectionPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.Views.AvatarSelectionPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\AvatarSelectionPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\AvatarSelectionPage.xaml
 
-[C:/Users/user/source/repos/FilipinoFolkloreApp/FilipinoFolkloreApp/Views/Home/IndexPage.xaml]
+[C:/Users/user/Source/Repos/FilipinoFolkLoreAppV2/FilipinoFolkloreApp/Views/CharacterCostume.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.Views.CharacterCostume.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\CharacterCostume.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\CharacterCostume.xaml
+
+[C:/Users/user/Source/Repos/FilipinoFolkLoreAppV2/FilipinoFolkloreApp/Views/Home/IndexPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.Views.Home.IndexPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\Home\IndexPage.xaml

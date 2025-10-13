@@ -3,6 +3,12 @@ obj\Debug\net9.0-android\resizetizer\r\drawable\avatar1.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\avatar2.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\avatar3.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\avatar4.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\avatar_blue.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\avatar_bluered.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\avatar_green.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\avatar_pink.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\avatar_red.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\avatar_white.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\b.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\bg_1.jpeg
 obj\Debug\net9.0-android\resizetizer\r\drawable\bg_2.jpeg
@@ -16,6 +22,7 @@ obj\Debug\net9.0-android\resizetizer\r\drawable\bg_avatarselectpage.jpeg
 obj\Debug\net9.0-android\resizetizer\r\drawable\bg_index.jpeg
 obj\Debug\net9.0-android\resizetizer\r\drawable\c.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\d.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\defaultavatar.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\e.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\f.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\g.png
@@ -44,6 +51,12 @@ obj\Debug\net9.0-android\resizetizer\r\drawable\s.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\selectionpage.jpg
 obj\Debug\net9.0-android\resizetizer\r\drawable\star.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\t.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\tapis_blue.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\tapis_bluered.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\tapis_green.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\tapis_pink.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\tapis_red.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\tapis_white.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\u.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\v.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\w.png

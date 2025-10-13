@@ -6,6 +6,11 @@ public partial class IndexPage : ContentPage
 	{
 		InitializeComponent();
 
-        var data = App.Database.GetCharByIdAsync(1);
+        var data = App.Database.GetCharAsync();
+    }
+    private async void OnAvatarTapped(object sender, EventArgs e)
+    {
+        // Navigate to the CharacterCostume page
+        await Navigation.PushAsync(new CharacterCostume());
     }
 }       

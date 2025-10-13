@@ -17,9 +17,11 @@ namespace FilipinoFolkloreApp
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
+
             // other configuration (services, handlers) here
 
             return builder.Build();
+
         }
     }
 }
