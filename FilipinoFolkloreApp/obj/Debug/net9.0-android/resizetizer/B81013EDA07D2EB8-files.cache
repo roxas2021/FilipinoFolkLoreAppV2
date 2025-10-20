@@ -24,6 +24,8 @@ obj\Debug\net9.0-android\resizetizer\r\drawable\c.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\d.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\defaultavatar.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\e.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\emoji_happy.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\emoji_sad.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\f.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\g.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\h.png

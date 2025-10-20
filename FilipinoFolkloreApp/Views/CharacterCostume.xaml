@@ -6,211 +6,286 @@
              BackgroundImageSource="selectionpage.jpg"
              Shell.NavBarIsVisible="False">
 
-    <!-- 8pt safe padding + 8pt gaps between columns/rows -->
-    <Grid RowDefinitions="Auto, *, Auto"
-          ColumnDefinitions="*, Auto"
-          Padding="8,8,8,16"
-          ColumnSpacing="8"
-          RowSpacing="8">
+    <Grid>
 
-        <!-- Left side: Avatar + Nichol pills, with BUY under it -->
-        <Grid Grid.Row="0" Grid.Column="0"
-              HorizontalOptions="Center"
-              VerticalOptions="Center"
+        <Grid x:Name="MainGrid"
+              RowDefinitions="Auto, *, Auto"
+              ColumnDefinitions="*, Auto"
+              Padding="8,8,8,16"
+              ColumnSpacing="8"
               RowSpacing="8">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center"
+                  RowSpacing="8">
 
-            <!-- Left panel block -->
-            <Border Grid.Row="0" Padding="8" BackgroundColor="SkyBlue" StrokeThickness="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Padding="8" BackgroundColor="SkyBlue" StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"/>
+                    </Border.StrokeShape>
+
+                    <StackLayout Spacing="8">
+
+                        <Grid ColumnDefinitions="Auto,Auto"
+                              ColumnSpacing="0"
+                              HorizontalOptions="Center"
+                              VerticalOptions="Center">
+
+                            <Frame Grid.Column="0"
+                                   Padding="16,8"
+                                   BackgroundColor="DeepPink"
+                                   BorderColor="black"
+                                   CornerRadius="16"
+                                   HasShadow="False"
+                                   Margin="0,0,-8,0">
+                                <!-- Now bound to CurrentUserName so you can change it at runtime -->
+                                <Label Text="{Binding CurrentUserName}"
+                                       FontSize="Small"
+                                       TextColor="White"
+                                       VerticalTextAlignment="Center" />
+                            </Frame>
+
+                            <Frame Grid.Column="1"
+                                   Padding="16,8"
+                                   BackgroundColor="SkyBlue"
+                                   BorderColor="black"
+                                   CornerRadius="16"
+                                   HasShadow="False"
+                                   ZIndex="1">
+                                <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
+                                    <Label x:Name="PilonStarNicholLabel"
+                                           Text="300"
+                                           FontSize="Small"
+                                           TextColor="Yellow"
+                                           VerticalTextAlignment="Center" />
+                                    <Image Grid.Column="1"
+                                           Source="icon_star_yellow.png"
+                                           WidthRequest="18"
+                                           HeightRequest="18"
+                                           Aspect="AspectFit"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </Frame>
+                        </Grid>
+
+                        <Image x:Name="CharacterImage"
+                               Source="avatarcustomization/defaultavatar.png"
+                               WidthRequest="136"
+                               HeightRequest="184"
+                               Aspect="AspectFit"/>
+                    </StackLayout>
+                </Border>
+
+                <Button Grid.Row="1"
+                        x:Name="BuyButton"
+                        Text="BUY"
+                        FontSize="Large"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Start"
+                        CornerRadius="22"
+                        BackgroundColor="HotPink"
+                        TextColor="SkyBlue"
+                        Clicked="OnBuyButtonClicked">
+                    <Button.Shadow>
+                        <Shadow Brush="Black"
+                                Offset="0,8"
+                                Radius="8"
+                                Opacity="0.5"/>
+                    </Button.Shadow>
+                </Button>
+            </Grid>
+
+            <!-- Right side and CollectionView unchanged -->
+            <Border Grid.Row="0" Grid.Column="1"
+                    Padding="8"
+                    BackgroundColor="#4D87CEFA"
+                    StrokeThickness="0">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="16"/>
                 </Border.StrokeShape>
 
                 <StackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                        <Frame Grid.ColumnSpan="2"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Padding="8"
+                               BackgroundColor="LightGray"
+                               BorderColor="Black"
+                               CornerRadius="12"
+                               HasShadow="True">
+                            <Label Text="TAPIS"
+                                   TextColor="DeepPink"
+                                   FontAttributes="Bold"
+                                   FontSize="Large"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"/>
+                        </Frame>
 
-                    <!-- Nichol pills: left label box + right amount box (with star), overlapped -->
-                    <Grid ColumnDefinitions="Auto,Auto"
-                      ColumnSpacing="0"
-                      HorizontalOptions="Center"
-                      VerticalOptions="Center">
+                        <ImageButton x:Name="HomeButton"
+                                     Grid.Column="1"
+                                     Source="icon_home.png"
+                                     BackgroundColor="Transparent"
+                                     HorizontalOptions="End"
+                                     VerticalOptions="Center"
+                                     WidthRequest="36"
+                                     HeightRequest="36"
+                                     Aspect="AspectFit"
+                                     Clicked="OnHomeButtonClicked" />
+                    </Grid>
 
-                        <!-- Left pill: "Nichol" -->
-                    <Frame Grid.Column="0"
-                           Padding="16,8"
-                           BackgroundColor="DeepPink"
-                           BorderColor="black"
-                           CornerRadius="16"
-                           HasShadow="False"
-                           Margin="0,0,-8,0">
-                        <Label Text="Nichol"
-                               FontSize="Small"
-                               TextColor="White"
-                               VerticalTextAlignment="Center" />
-                    </Frame>
+                    <CollectionView x:Name="TapisCollectionView"
+                                    ItemsSource="{Binding TapisItems}"
+                                    SelectionMode="Single"
+                                    SelectionChanged="OnTapisSelected">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Span="3" Orientation="Vertical"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="8"
+                                      HorizontalOptions="Center"
+                                      VerticalOptions="Center">
+                                    <Border InputTransparent="True"
+                                            BackgroundColor="White"
+                                            StrokeThickness="1"
+                                            HorizontalOptions="Fill"
+                                            VerticalOptions="Fill">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12"/>
+                                        </Border.StrokeShape>
+                                    </Border>
 
-                    <!-- Right pill: amount + star inside same box -->
-                    <Frame Grid.Column="1"
-                           Padding="16,8"
-                           BackgroundColor="SkyBlue"
-                           BorderColor="black"
-                           CornerRadius="16"
-                           HasShadow="False"
-                           ZIndex="1">
-                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
-                            <Label x:Name="NicholAmount"
-                                   Text="300"
-                                   FontSize="Small"
-                                   TextColor="Yellow"
-                                   VerticalTextAlignment="Center" />
-                            <Image Grid.Column="1"
-                                   Source="icon_star_yellow.png"
-                                   WidthRequest="18"
-                                   HeightRequest="18"
-                                   Aspect="AspectFit"
-                                   VerticalOptions="Center" />
-                        </Grid>
-                    </Frame>
-                </Grid>
+                                    <Image Source="{Binding TapisImageSource}"
+                                           WidthRequest="72"
+                                           HeightRequest="112"
+                                           BackgroundColor="Transparent"
+                                           Aspect="AspectFit" />
 
-                <Image x:Name="CharacterImage"
-                       Source="avatarcustomization/defaultavatar.png"
-                       WidthRequest="136"
-                       HeightRequest="184"
-                       Aspect="AspectFit"/>
+                                    <Frame InputTransparent="True"
+                                           Padding="8,4"
+                                           BackgroundColor="DeepPink"
+                                           CornerRadius="12"
+                                           HasShadow="False"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="End"
+                                           BorderColor="Black"
+                                           TranslationY="-4">
+                                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
+                                            <Label Text="{Binding Price}"
+                                                   TextColor="Yellow"
+                                                   FontSize="12"
+                                                   VerticalTextAlignment="Center"/>
+                                            <Image Grid.Column="1"
+                                                   Source="icon_star_yellow.png"
+                                                   WidthRequest="16"
+                                                   HeightRequest="16"
+                                                   Aspect="AspectFit"
+                                                   VerticalOptions="Center"/>
+                                        </Grid>
+                                    </Frame>
+
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </StackLayout>
             </Border>
 
-            <!-- BUY button placed outside, directly under the StackLayout -->
-            <Button Grid.Row="1"
-                    x:Name="BuyButton"
-                    Text="BUY"
-                    FontSize="Large"
-                    FontAttributes="Bold"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Start"
-                    CornerRadius="22"
-                    BackgroundColor="HotPink"
-                    TextColor="SkyBlue"
-                    Clicked="OnBuyButtonClicked">
-                <Button.Shadow>
-                    <Shadow Brush="Black"
-                            Offset="0,8"
-                            Radius="8"
-                            Opacity="0.5"/>
-                </Button.Shadow>
-            </Button>
         </Grid>
 
-        <!-- Right side: Costumes (Tapis) Selection -->
-        <Border Grid.Row="0" Grid.Column="1"
-        Padding="8"
-        BackgroundColor="#4D87CEFA"
-        StrokeThickness="0">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="16"/>
-            </Border.StrokeShape>
+        <!-- INLINE GAME ALERT OVERLAY -->
+        <Grid x:Name="GameAlertOverlay"
+              IsVisible="False"
+              Opacity="0"
+              BackgroundColor="#40000000"
+              HorizontalOptions="Fill"
+              VerticalOptions="Fill"
+              Grid.RowSpan="3"
+              Grid.ColumnSpan="2">
 
-            <StackLayout Spacing="8">
-                <!-- Header: centered TAPIS + Home at far right -->
-                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                    <Frame Grid.ColumnSpan="2"
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnAlertBackgroundTapped" />
+            </Grid.GestureRecognizers>
+
+            <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                <Frame x:Name="GameAlertCard"
+                       CornerRadius="20"
+                       Padding="20"
+                       HasShadow="True"
+                       BorderColor="Transparent"
+                       BackgroundColor="#E0F7FF"
+                       WidthRequest="360"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"
-                       Padding="8"
-                       BackgroundColor="LightGray"
-                       BorderColor="Black"
-                       CornerRadius="12"
-                       HasShadow="True">
-                                        <Label Text="TAPIS"
-                         TextColor="DeepPink"
-                         FontAttributes="Bold"
-                         FontSize="Large"
-                         HorizontalTextAlignment="Center"
-                         VerticalTextAlignment="Center"/>
-                    </Frame>
+                       Scale="0.96">
 
-                    <ImageButton x:Name="HomeButton"
-                         Grid.Column="1"
-                         Source="icon_home.png"
-                         BackgroundColor="Transparent"
-                         HorizontalOptions="End"
-                         VerticalOptions="Center"
-                         WidthRequest="36"
-                         HeightRequest="36"
-                         Aspect="AspectFit"
-                         Clicked="OnHomeButtonClicked" />
-                </Grid>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="12">
 
-                <!-- CollectionView unchanged -->
-                <CollectionView x:Name="TapisCollectionView"
-                        ItemsSource="{Binding TapisItems}"
-                        SelectionMode="Single"
-                        SelectionChanged="OnTapisSelected">
-                    <CollectionView.ItemsLayout>
-                        <GridItemsLayout Span="3" Orientation="Vertical"/>
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <!-- Root Grid = tap target for CollectionView selection -->
-                            <Grid Padding="8"
-                                    HorizontalOptions="Center"
-                                    VerticalOptions="Center">
+                        <Image x:Name="AlertEmoji"
+                               Source="emoji_sad.png"
+                               WidthRequest="72"
+                               HeightRequest="72"
+                               Aspect="AspectFit"
+                               HorizontalOptions="Center" />
 
-                                <!-- White rounded box as a visual background (doesn't intercept taps) -->
-                                <Border InputTransparent="True"
-                                    BackgroundColor="White"
-                                    StrokeThickness="1"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="12"/>
-                                    </Border.StrokeShape>
-                                </Border>
-
-                                <!-- Tapis image (visible + tappable via CollectionView) -->
-                                <Image Source="{Binding TapisImageSource}"
-                                   WidthRequest="72"
-                                   HeightRequest="112"
-                                   BackgroundColor="Transparent"
-                                   Aspect="AspectFit" />
-
-                                <!-- Price pill overlaid at the bottom; ignore input so taps pass through -->
-                                <Frame InputTransparent="True"
-                                   Padding="8,4"
-                                   BackgroundColor="DeepPink"
-                                   CornerRadius="12"
+                        <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                            <Frame CornerRadius="22"
+                                   Padding="8"
                                    HasShadow="False"
+                                   BackgroundColor="#60EFFF"
                                    HorizontalOptions="Center"
-                                   VerticalOptions="End"
-                                   BorderColor="Black"
-                                   TranslationY="-4">
-                                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
-                                        <Label Text="{Binding Price}"
-                                           TextColor="Yellow"
-                                           FontSize="12"
-                                           VerticalTextAlignment="Center"/>
-                                        <Image Grid.Column="1"
-                                           Source="icon_star_yellow.png"
-                                           WidthRequest="16"
-                                           HeightRequest="16"
-                                           Aspect="AspectFit"
-                                           VerticalOptions="Center"/>
-                                    </Grid>
-                                </Frame>
+                                   MinimumWidthRequest="72">
 
-                            </Grid>
-                        </DataTemplate>
+                                <StackLayout Orientation="Horizontal"
+                                             Spacing="6"
+                                             VerticalOptions="Center"
+                                             HorizontalOptions="Center">
+                                    <Image Source="icon_star_yellow.png"
+                                           WidthRequest="18"
+                                           HeightRequest="18"
+                                           VerticalOptions="Center"
+                                           Aspect="AspectFit" />
 
-                    </CollectionView.ItemTemplate>
+                                    <Label x:Name="AlertAmountLabel"
+                                           Text="0"
+                                           FontSize="22"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center" />
+                                </StackLayout>
+                            </Frame>
+                        </Grid>
 
-                </CollectionView>
-            </StackLayout>
-        </Border>
+                        <Label x:Name="AlertMessageLabel"
+                               Text="You don't have enough Pilon Star!"
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#333333"
+                               Margin="6,0,6,0" />
 
+                        <Button x:Name="AlertOkButton"
+                                Text="OK"
+                                FontAttributes="Bold"
+                                CornerRadius="18"
+                                HeightRequest="44"
+                                WidthRequest="120"
+                                BackgroundColor="#00A6FF"
+                                TextColor="White"
+                                Clicked="OnAlertOkClicked"
+                                HorizontalOptions="Center" />
+                    </StackLayout>
+                </Frame>
+            </Grid>
+        </Grid>
 
     </Grid>
 </ContentPage>

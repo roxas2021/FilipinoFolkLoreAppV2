@@ -1,28 +1,42 @@
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using FilipinoFolkloreApp.Services;
 
 namespace FilipinoFolkloreApp.Views
 {
     public partial class CharacterCostume : ContentPage
     {
-        private int NicholAmountValue = 300; // Player's current currency
-        private List<bool> purchasedCostumes; // List to track the purchase state of each costume
-        private List<int> costumePrices; // Prices for each costume
-        private int selectedCostumeId = 0; // Tracks the selected costume for BUY/USE
+        // user's balance
+        private int PilonStarNicholAmountValue = 300;
+        private List<bool> purchasedCostumes;
+        private List<int> costumePrices;
+        private int selectedCostumeId = 0;
+
+        // awaitable alert TCS
+        TaskCompletionSource<bool> _alertTcs;
+
+        // expose the username so it can be changed programmatically or bound from VM
+        public string CurrentUserName { get; set; } = "Nichol";
+//        CurrentUserName = "New Name";
+//BindingContext = this;            // re-set if necessary, or raise PropertyChanged
+//PilonStarNicholLabel.Text = PilonStarNicholAmountValue.ToString(); // balance unchanged
+//AlertMessageLabel.Text = $"You don't have enough {CurrentUserName}!"; // update default alert text
 
         public List<TapisItem> TapisItems { get; set; }
 
         public CharacterCostume()
         {
             InitializeComponent();
-            
 
-            // Initialize the purchasedCostumes list to track the state of each costume (not purchased initially)
-            purchasedCostumes = new List<bool> { false, false, false, false, false, false };  // Example with 6 costumes
-            costumePrices = new List<int> { 100, 150, 180, 200, 250, 280 };  // Example prices
+            // set binding context so XAML bindings work
+            BindingContext = this;
 
-            // Initialize list of costumes with associated avatar images
+            purchasedCostumes = new List<bool> { false, false, false, false, false, false };
+            costumePrices = new List<int> { 100, 150, 180, 200, 250, 280 };
+
             TapisItems = new List<TapisItem>
             {
                 new TapisItem { TapisImageSource = "avatarcustomization/tapis_blue.png", AvatarImageSource = "avatarcustomization/avatar_blue.png", Price = "100", TapisId = 1 },
@@ -33,39 +47,75 @@ namespace FilipinoFolkloreApp.Views
                 new TapisItem { TapisImageSource = "avatarcustomization/tapis_pink.png", AvatarImageSource = "avatarcustomization/avatar_pink.png", Price = "280", TapisId = 6 }
             };
 
-            // Bind the TapisItems list to the CollectionView
             TapisCollectionView.ItemsSource = TapisItems;
 
-            // Display the initial amount
-            NicholAmount.Text = NicholAmountValue.ToString();
+            // update balance label
+            PilonStarNicholLabel.Text = PilonStarNicholAmountValue.ToString();
+
+            // also ensure alert message uses current user name by default
+            AlertMessageLabel.Text = $"You don't have enough {CurrentUserName}!";
         }
 
-        // Handle selecting a costume (Tapis) and updating the avatar
-        private void OnTapisSelected(object sender, SelectionChangedEventArgs e)
+        private async void OnTapisSelected(object sender, SelectionChangedEventArgs e)
         {
             var selectedTapis = e.CurrentSelection.FirstOrDefault() as TapisItem;
+            if (selectedTapis == null) return;
 
-            if (selectedTapis != null)
+            selectedCostumeId = selectedTapis.TapisId;
+
+            // animate avatar change (crossfade + pop + bounce)
+            await AnimateAvatarChangeAsync(selectedTapis.AvatarImageSource);
+
+            // Update Buy button text depending on purchase state
+            if (purchasedCostumes[selectedCostumeId - 1])
+                BuyButton.Text = "SELECT";
+            else
+                BuyButton.Text = "BUY";
+        }
+        private async Task AnimateAvatarChangeAsync(string newAvatarSource)
+        {
+            try
             {
-                selectedCostumeId = selectedTapis.TapisId;
+                // quick fade out (makes swap look smooth)
+                await CharacterImage.FadeTo(0.25, 120, Easing.CubicIn);
 
-                // Update the avatar image regardless of purchase status
-                CharacterImage.Source = $"avatarcustomization/{selectedTapis.AvatarImageSource}";
+                // swap image source
+                CharacterImage.Source = $"avatarcustomization/{newAvatarSource}";
 
-                // If purchased, change the Buy button text to "SELECT", otherwise "BUY"
-                if (purchasedCostumes[selectedCostumeId - 1])
-                {
-                    BuyButton.Text = "SELECT";
-                }
-                else
-                {
-                    BuyButton.Text = "BUY";
-                }
+                // prepare for pop/rotate: ensure base transforms are reset
+                CharacterImage.Rotation = 0;
+                CharacterImage.TranslationY = 0;
+
+                // do pop + rotate in parallel
+                var pop = CharacterImage.ScaleTo(1.18, 180, Easing.CubicOut);
+                var rot = CharacterImage.RotateTo(6, 140, Easing.CubicOut);
+                await Task.WhenAll(pop, rot);
+
+                // bounce back to normal scale and rotate back to 0
+                var settleScale = CharacterImage.ScaleTo(1.0, 220, Easing.BounceOut);
+                var settleRot = CharacterImage.RotateTo(0, 140, Easing.SpringOut);
+                // small upward bounce
+                var translateUp = CharacterImage.TranslateTo(0, -8, 100, Easing.CubicOut);
+                await Task.WhenAll(settleScale, settleRot, translateUp);
+
+                // fall back into place
+                await CharacterImage.TranslateTo(0, 0, 160, Easing.BounceOut);
+
+                // final fade in to fully visible
+                await CharacterImage.FadeTo(1.0, 150, Easing.CubicIn);
+
+                // tiny pulse on the buy/select button to show action affordance
+                await BuyButton.ScaleTo(1.06, 110, Easing.CubicOut);
+                await BuyButton.ScaleTo(1.0, 120, Easing.BounceOut);
+            }
+            catch
+            {
+                // swallow animation errors so nothing breaks if the platform can't animate
             }
         }
 
-        // Handle the BUY/SELECT button click
-        private void OnBuyButtonClicked(object sender, EventArgs e)
+
+        private async void OnBuyButtonClicked(object sender, EventArgs e)
         {
             if (selectedCostumeId == 0) return;
 
@@ -73,47 +123,116 @@ namespace FilipinoFolkloreApp.Views
 
             if (purchasedCostumes[selectedCostumeId - 1])
             {
-                // Already purchased
-                DisplayAlert("Already Purchased", "You have already bought this costume.", "OK");
+                // Already purchased -> neutral emoji + message
+                await ShowGameAlertAsync(PilonStarNicholAmountValue, "You have selected this costume.", "emoji_happy.png");
+
+                // still set the avatar to the selected one (keeps previous behavior)
                 CharacterImage.Source = $"avatarcustomization/{TapisItems[selectedCostumeId - 1].AvatarImageSource}";
             }
             else
             {
-                if (NicholAmountValue >= itemCost)
+                if (PilonStarNicholAmountValue >= itemCost)
                 {
-                    // Proceed with the purchase
-                    NicholAmountValue -= itemCost;
-                    purchasedCostumes[selectedCostumeId - 1] = true; // Mark the costume as purchased
+                    // Purchase success -> deduct, update UI, show happy emoji
+                    PilonStarNicholAmountValue -= itemCost;
+                    purchasedCostumes[selectedCostumeId - 1] = true;
 
-                    // Update UI
-                    NicholAmount.Text = NicholAmountValue.ToString();
-                    DisplayAlert("Purchase", "You bought the item!", "OK");
+                    // update UI
+                    PilonStarNicholLabel.Text = PilonStarNicholAmountValue.ToString();
 
-                    // Update the character image with the associated avatar image for the selected Tapis
+                    // show success modal (happy emoji)
+                    await ShowGameAlertAsync(PilonStarNicholAmountValue, "You bought the item!", "emoji_happy.png");
+
                     CharacterImage.Source = $"avatarcustomization/{TapisItems[selectedCostumeId - 1].AvatarImageSource}";
-
-                    // Change the button text to "SELECT" after purchase
                     BuyButton.Text = "SELECT";
                 }
                 else
                 {
-                    DisplayAlert("Insufficient Funds", "You don't have enough Nichol!", "OK");
+                    // Insufficient funds -> sad emoji (amount param still shows current balance)
+                    await ShowGameAlertAsync(PilonStarNicholAmountValue, null, "emoji_sad.png");
                 }
             }
         }
 
-        // Handle the Home button click
+
         private void OnHomeButtonClicked(object sender, EventArgs e)
         {
-            // Navigate back to the home page (or go to a different page)
             Navigation.PopAsync();
+        }
+
+        // awaitable overlay — message is optional; default uses CurrentUserName
+        public Task ShowGameAlertAsync(int amount, string message = null, string emojiSource = "emoji_sad.png")
+        {
+            if (GameAlertOverlay.IsVisible && _alertTcs != null)
+                return _alertTcs.Task;
+
+            _alertTcs = new TaskCompletionSource<bool>();
+
+            // set the emoji image (use provided source)
+            AlertEmoji.Source = emojiSource;
+
+            // show current balance in the pill
+            AlertAmountLabel.Text = PilonStarNicholAmountValue.ToString();
+
+            // default message uses the CurrentUserName if not supplied
+            if (string.IsNullOrWhiteSpace(message))
+                message = $"You don't have enough pilon star!";
+
+            AlertMessageLabel.Text = message;
+
+            GameAlertOverlay.IsVisible = true;
+            GameAlertOverlay.Opacity = 0;
+            GameAlertCard.Scale = 0.96;
+
+            _ = AnimateShowOverlayAsync();
+
+            return _alertTcs.Task;
+        }
+
+
+        private async Task AnimateShowOverlayAsync()
+        {
+            try
+            {
+                await GameAlertOverlay.FadeTo(1, 180, Easing.CubicIn);
+                await GameAlertCard.ScaleTo(1.06, 220, Easing.CubicOut);
+                await GameAlertCard.ScaleTo(1.0, 120, Easing.CubicIn);
+            }
+            catch { }
+        }
+
+        private async Task HideGameAlertAsync(bool completedByUser = true)
+        {
+            if (!GameAlertOverlay.IsVisible) return;
+
+            try
+            {
+                await GameAlertCard.ScaleTo(0.96, 120, Easing.CubicIn);
+                await GameAlertOverlay.FadeTo(0, 140, Easing.CubicOut);
+            }
+            catch { }
+
+            GameAlertOverlay.IsVisible = false;
+
+            _alertTcs?.TrySetResult(completedByUser);
+            _alertTcs = null;
+        }
+
+        private async void OnAlertOkClicked(object sender, EventArgs e)
+        {
+            await HideGameAlertAsync(true);
+        }
+
+        private async void OnAlertBackgroundTapped(object sender, EventArgs e)
+        {
+            await HideGameAlertAsync(false);
         }
     }
 
     public class TapisItem
     {
-        public string TapisImageSource { get; set; }  // Path to the Tapis image
-        public string AvatarImageSource { get; set; } // Path to the associated avatar image
+        public string TapisImageSource { get; set; }
+        public string AvatarImageSource { get; set; }
         public string Price { get; set; }
         public int TapisId { get; set; }
     }
