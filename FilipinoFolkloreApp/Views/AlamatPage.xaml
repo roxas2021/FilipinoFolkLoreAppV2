@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="FilipinoFolkloreApp.Views.AlamatPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundImageSource="ui/bg_landscape.png">
+    <Grid Padding="16" RowDefinitions="Auto,*" RowSpacing="12">
+
+        <!-- HUD: narrator avatar + hearts only (no back, no stars) -->
+        <Grid ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
+            <Image x:Name="HudAvatar" HeightRequest="48" WidthRequest="48"/>
+            <Image Grid.Column="1" Source="ui/heart.png" HeightRequest="28"/>
+            <Label Grid.Column="2" x:Name="HudHearts" Text="3" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+        </Grid>
+
+        <!-- Stories grid -->
+        <CollectionView x:Name="StoriesView" Grid.Row="1" SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="5"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="6">
+                        <Border StrokeShape="RoundRectangle 18" BackgroundColor="#B3FFFFFF" StrokeThickness="0">
+                            <Grid RowDefinitions="*,Auto" Padding="6">
+                                <Image Source="{Binding Thumb}" Aspect="AspectFill" HeightRequest="110" />
+                                <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="0,6,0,0">
+                                    <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="12" LineBreakMode="TailTruncation"/>
+                                    <HorizontalStackLayout Grid.Column="1" Spacing="4">
+                                        <Image Source="ui/lock.png" HeightRequest="16" IsVisible="{Binding IsLocked}"/>
+                                        <Border BackgroundColor="#FF69B4" Padding="6,2" StrokeShape="RoundRectangle 12" IsVisible="{Binding IsLocked}">
+                                            <Label Text="{Binding PriceText}" FontSize="11" TextColor="White"/>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnStoryTapped"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

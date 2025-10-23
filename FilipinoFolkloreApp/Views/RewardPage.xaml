@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="FilipinoFolkloreApp.Views.RewardPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundImageSource="ui/reward_bg.png">
+    <Grid>
+        <Border BackgroundColor="#66000000" StrokeShape="RoundRectangle 24"
+            Padding="26" HorizontalOptions="Center" VerticalOptions="Center">
+            <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Image Source="ui/badge.png" HeightRequest="150"/>
+                <Label x:Name="RewardText" Text="+20 ⭐" FontAttributes="Bold" FontSize="28" TextColor="White" HorizontalTextAlignment="Center"/>
+                <Button Text="OK" Clicked="OnRewardOk" />
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

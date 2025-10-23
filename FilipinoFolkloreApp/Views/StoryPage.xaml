@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="FilipinoFolkloreApp.Views.StoryPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <Grid>
+
+        <!-- double buffer for cross-fade -->
+        <Image x:Name="BgA" Aspect="AspectFill" />
+        <Image x:Name="BgB" Aspect="AspectFill" Opacity="0" />
+
+        <!-- layered character sprites -->
+        <Grid x:Name="CharacterLayer" InputTransparent="True" />
+
+
+        <!-- center controls -->
+        <Grid HorizontalOptions="Center" VerticalOptions="Center"
+          ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="28" Opacity="0.92">
+            <Frame BackgroundColor="#66000000" HasShadow="False" Padding="14" CornerRadius="22">
+                <Image Source="ui/prev.png" HeightRequest="36">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPrev"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </Frame>
+            <Frame Grid.Column="1" BackgroundColor="#66000000" HasShadow="False" Padding="18" CornerRadius="28">
+                <Image x:Name="PlayIcon" Source="ui/pause.png" HeightRequest="42">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTogglePlay"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </Frame>
+            <Frame Grid.Column="2" BackgroundColor="#66000000" HasShadow="False" Padding="14" CornerRadius="22">
+                <Image Source="ui/next.png" HeightRequest="36">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNext"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </Frame>
+        </Grid>
+
+        <!-- subtitle bar (shows after image change) + narrator avatar -->
+        <Grid x:Name="SubtitleBar" Padding="14" ColumnDefinitions="Auto,*"
+          VerticalOptions="End" BackgroundColor="#66000000" Opacity="0">
+            <Image x:Name="NarratorAvatar" HeightRequest="56" WidthRequest="56" Margin="0,0,10,0"/>
+            <Label Grid.Column="1" x:Name="SubtitleText" TextColor="White" LineBreakMode="WordWrap"/>
+        </Grid>
+
+    </Grid>
+</ContentPage>

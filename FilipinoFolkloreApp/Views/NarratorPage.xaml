@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="FilipinoFolkloreApp.Views.NarratorPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundImageSource="ui/bg_landscape.png"
+             Shell.NavBarIsVisible="False">
+
+
+    <Grid Padding="16">
+        <CollectionView x:Name="NarratorsView" SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Horizontal" Span="3"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="8">
+                        <Border StrokeShape="RoundRectangle 18" BackgroundColor="#B3FFFFFF" StrokeThickness="0">
+                            <VerticalStackLayout Padding="14" Spacing="10">
+                                <Image Source="{Binding Avatar}" HeightRequest="160" Aspect="AspectFit"/>
+                                <Grid ColumnDefinitions="*,Auto" Padding="0,4,0,0">
+                                    <Label Text="{Binding Name}" FontAttributes="Bold"/>
+                                    <HorizontalStackLayout Grid.Column="1" Spacing="6">
+                                        <Image Source="ui/lock.png" HeightRequest="16" IsVisible="{Binding IsLocked}"/>
+                                        <Border BackgroundColor="#FF69B4" Padding="8,2" StrokeShape="RoundRectangle 12" IsVisible="{Binding IsLocked}">
+                                            <Label Text="{Binding PriceText}" FontSize="12" TextColor="White"/>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnNarratorTapped"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
