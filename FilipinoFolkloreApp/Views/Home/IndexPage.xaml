@@ -139,6 +139,7 @@
               FontAttributes="Bold"
               CornerRadius="40"
               WidthRequest="130"
+              Clicked="OnAlamatClicked"
               HeightRequest="40"/>
 
             <Button Grid.Column="1" Text="EPIKO"

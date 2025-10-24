@@ -113,7 +113,7 @@ public partial class StoryPage : ContentPage
     void OnTogglePlay(object? s, TappedEventArgs e)
     {
         _playing = !_playing;
-        PlayIcon.Source = _playing ? "ui/pause.png" : "ui/play.png";
+        PlayIcon.Source = _playing ? "elements/pause.png" : "elements/play.png";
         if (_playing) RestartAutoplay(); else _cts?.Cancel();
     }
 }

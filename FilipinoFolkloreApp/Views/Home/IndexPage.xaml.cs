@@ -13,4 +13,9 @@ public partial class IndexPage : ContentPage
         // Navigate to the CharacterCostume page
         await Navigation.PushAsync(new CharacterCostume());
     }
+    private async void OnAlamatClicked(object sender, EventArgs e)
+    {
+        // Navigate to the AlamatList page
+        await Navigation.PushAsync(new AlamatPage());
+    }
 }       

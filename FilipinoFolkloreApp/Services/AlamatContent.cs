@@ -45,9 +45,9 @@ namespace FilipinoFolkloreApp.Services
         // ------- EDIT THESE: narrators, stories, slides, quiz -------
         public static List<Narrator> Narrators { get; } = new()
         {
-            new Narrator{ Id="tarsier", Name="Tarsier", Avatar="narrators/tarsier.png", PriceStars=0 },
-            new Narrator{ Id="eagle",   Name="Agila",   Avatar="narrators/eagle.png",   PriceStars=50 },
-            new Narrator{ Id="monkey",  Name="Unggoy",  Avatar="narrators/monkey.png",  PriceStars=100 },
+            new Narrator{ Id="tarsier", Name="Tarsier", Avatar="elements/tarsier.png", PriceStars=0 },
+            new Narrator{ Id="eagle",   Name="Agila",   Avatar="elements/eagle.png",   PriceStars=50 },
+            new Narrator{ Id="monkey",  Name="Unggoy",  Avatar="elements/monkey.png",  PriceStars=100 },
         };
 
         public static List<Story> Stories { get; } = new()
@@ -56,10 +56,10 @@ namespace FilipinoFolkloreApp.Services
                 Id="1_juan_tamad", Title="Juan Tamad", PriceStars=0, RewardStars=20,
                 Slides = new()
                 {
-                    new Slide{ Background="stories/juan/scene1.png",
+                    new Slide{ Background="stories/juantamad/juan_tamad_scene1.png",
                                Characters=new(){ "stories/juan/char_boy.png" },
                                Subtitle="Si Juan ay naghihintay sa ilalim ng puno."},
-                    new Slide{ Background="stories/juan/scene2.png",
+                    new Slide{ Background="stories/juantamad/juan_tamad_scene2.png",
                                Characters=new(){ "stories/juan/char_boy.png","stories/juan/char_tarsier.png" },
                                Subtitle="Inaabangan niya ang pagbagsak ng bunga."},
                 },

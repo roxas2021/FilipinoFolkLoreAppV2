@@ -2,7 +2,8 @@
 <ContentPage x:Class="FilipinoFolkloreApp.Views.AlamatPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             BackgroundImageSource="ui/bg_landscape.png">
+             BackgroundImageSource="ui/bg_index.png"
+             Shell.NavBarIsVisible="False">
     <Grid Padding="16" RowDefinitions="Auto,*" RowSpacing="12">
 
         <!-- HUD: narrator avatar + hearts only (no back, no stars) -->
