@@ -21,6 +21,8 @@ namespace FilipinoFolkloreApp.Services
             public string Background { get; set; } = "";         // e.g., "stories/juan/scene1.png"
             public List<string> Characters { get; set; } = new();// layered sprites (front-most last)
             public string? Subtitle { get; set; }                 // null/empty = no subtitle
+
+            public Dictionary<string, string> AudioByNarrator { get; set; } = new();
         }
 
         public class QuizQuestion
@@ -56,12 +58,28 @@ namespace FilipinoFolkloreApp.Services
                 Id="1_juan_tamad", Title="Juan Tamad", PriceStars=0, RewardStars=20, Thumb ="stories/juantamad/juan_tamad_thumb.png",
                 Slides = new()
                 {
-                    new Slide{ Background="stories/juantamad/juan_tamad_scene1.png",
-                               Characters=new(){ "stories/juan/char_boy.png" },
-                               Subtitle="Si Juan ay naghihintay sa ilalim ng puno."},
-                    new Slide{ Background="stories/juantamad/juan_tamad_scene2.png",
-                               Characters=new(){ "stories/juan/char_boy.png","stories/juan/char_tarsier.png" },
-                               Subtitle="Inaabangan niya ang pagbagsak ng bunga."},
+                    new Slide{ 
+                        Background="stories/juantamad/juan_tamad_scene1.png",
+                        Characters=new(){ "stories/juan/char_boy.png" },
+                        Subtitle="Si Juan ay naghihintay sa ilalim ng puno.",
+                        AudioByNarrator = new()
+                                {
+                                    ["tarsier"] = "juantamad/audio/juantamad_tarsier1.mp3",
+                                    ["eagle"]   = "juantamad/audio/juantamad_tarsier1.mp3",
+                                    ["monkey"]  = "juantamad/audio/juantamad_tarsier1.mp3",
+                                }
+                        },
+                    new Slide{ 
+                        Background="stories/juantamad/juan_tamad_scene2.png",
+                        Characters=new(){ "stories/juan/char_boy.png","stories/juan/char_tarsier.png" },
+                        Subtitle="Inaabangan niya ang pagbagsak ng bunga.",
+                        AudioByNarrator = new()
+                                {
+                                    ["tarsier"] = "juantamad/audio/juantamad_tarsier2.mp3",
+                                    ["eagle"]   = "juantamad/audio/juantamad_tarsier2.mp3",
+                                    ["monkey"]  = "juantamad/audio/juantamad_tarsier2.mp3",
+                                }
+                        },
                 },
                 Quiz = new()
                 {

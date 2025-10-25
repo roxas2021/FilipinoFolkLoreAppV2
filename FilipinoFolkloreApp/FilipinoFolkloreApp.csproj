@@ -94,6 +94,7 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+		<PackageReference Include="Plugin.Maui.Audio" Version="4.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 
@@ -195,6 +196,15 @@
     <MauiImage Include="Resources\Images\stories\juantamad\juan_tamad_scene1.png" />
     <MauiImage Include="Resources\Images\stories\juantamad\juan_tamad_scene2.png" />
     <MauiImage Include="Resources\Images\stories\juantamad\juan_tamad_thumb.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiAsset Update="Resources\Raw\juantamad\audio\juantamad_tarsier2.mp3">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </MauiAsset>
+	  <MauiAsset Update="Resources\Raw\juantamad\audio\juantamad_tarsier1.mp3">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </MauiAsset>
 	</ItemGroup>
 
 </Project>
