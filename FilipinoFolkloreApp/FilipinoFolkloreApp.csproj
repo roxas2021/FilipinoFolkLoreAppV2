@@ -79,6 +79,7 @@
 	  <None Remove="Resources\Images\avatarcustomization\tapis_red.png" />
 	  <None Remove="Resources\Images\avatarcustomization\tapis_white.png" />
 	  <None Remove="Resources\Images\elements\eagle.png" />
+	  <None Remove="Resources\Images\elements\lock.png" />
 	  <None Remove="Resources\Images\elements\monkey.png" />
 	  <None Remove="Resources\Images\elements\next.png" />
 	  <None Remove="Resources\Images\elements\pause.png" />
@@ -86,6 +87,7 @@
 	  <None Remove="Resources\Images\elements\prev.png" />
 	  <None Remove="Resources\Images\stories\juantamad\juan_tamad_scene1.png" />
 	  <None Remove="Resources\Images\stories\juantamad\juan_tamad_scene2.png" />
+	  <None Remove="Resources\Images\stories\juantamad\juan_tamad_thumb.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -142,6 +144,7 @@
 	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_red.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_white.png" />
 	  <MauiImage Include="Resources\Images\elements\eagle.png" />
+	  <MauiImage Include="Resources\Images\elements\lock.png" />
 	  <MauiImage Include="Resources\Images\elements\monkey.png" />
 	  <MauiImage Include="Resources\Images\elements\next.png" />
 	  <MauiImage Include="Resources\Images\elements\pause.png" />
@@ -191,6 +194,7 @@
     <MauiImage Include="Resources\Images\elements\pluss.png" />
     <MauiImage Include="Resources\Images\stories\juantamad\juan_tamad_scene1.png" />
     <MauiImage Include="Resources\Images\stories\juantamad\juan_tamad_scene2.png" />
+    <MauiImage Include="Resources\Images\stories\juantamad\juan_tamad_thumb.png" />
 	</ItemGroup>
 
 </Project>

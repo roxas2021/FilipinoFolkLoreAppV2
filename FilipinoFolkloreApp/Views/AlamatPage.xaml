@@ -4,31 +4,129 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              BackgroundImageSource="ui/bg_index.png"
              Shell.NavBarIsVisible="False">
-    <Grid Padding="16" RowDefinitions="Auto,*" RowSpacing="12">
+    <Grid RowDefinitions="Auto, Auto, *"
+      ColumnDefinitions="*"
+      Padding="20">
 
-        <!-- HUD: narrator avatar + hearts only (no back, no stars) -->
-        <Grid ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
-            <Image x:Name="HudAvatar" HeightRequest="48" WidthRequest="48"/>
-            <Image Grid.Column="1" Source="ui/heart.png" HeightRequest="28"/>
-            <Label Grid.Column="2" x:Name="HudHearts" Text="3" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+        <!-- ===== HUD row 0 ===== -->
+        <!-- ===== HUD row 0 (RIGHT: prev + home) ===== -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Start">
+
+            <!-- MIDDLE/LEFT: Avatar + Name + Stars + Hearts -->
+            <Grid Grid.Column="0"
+        RowDefinitions="Auto, Auto"
+        ColumnDefinitions="Auto, Auto, *, Auto">
+
+                <!-- Avatar -->
+                <Frame Grid.RowSpan="2"
+           Grid.Column="0"
+           WidthRequest="80" HeightRequest="90"
+           CornerRadius="10" Padding="0"
+           HasShadow="True" BackgroundColor="White">
+                    <Image x:Name="HudAvatar" Aspect="AspectFill" />
+                </Frame>
+
+                <!-- Name + Stars pill -->
+                <Frame Margin="10,0,0,0"
+           Grid.Row="0" Grid.Column="1"
+           BackgroundColor="LightGreen"
+           CornerRadius="10" Padding="8,4"
+           HorizontalOptions="Start" VerticalOptions="Center">
+                    <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                        <Label x:Name="PlayerNameLabel"
+               Grid.Column="0" Text="NICHOL"
+               FontAttributes="Bold" FontSize="18" TextColor="#FF66CC"
+               VerticalOptions="Center"/>
+                        <BoxView Grid.Column="1"/>
+                        <Frame Grid.Column="2" Padding="10,4"
+               BackgroundColor="LightGreen" BorderColor="Black"
+               CornerRadius="12" HasShadow="False"
+               VerticalOptions="Center" Margin="10,0,0,0">
+                            <Frame.Shadow>
+                                <Shadow Brush="Black" Offset="-4,4" Radius="8" Opacity="0.5"/>
+                            </Frame.Shadow>
+                            <StackLayout Orientation="Horizontal" Spacing="4">
+                                <Label x:Name="StarsLabel" Text="50"
+                   FontAttributes="Bold" FontSize="20" TextColor="#FFCC00"/>
+                                <Image Source="icon_star_yellow.png" WidthRequest="35" HeightRequest="35"/>
+                            </StackLayout>
+                        </Frame>
+                    </Grid>
+                </Frame>
+
+                <!-- Hearts row -->
+                <Frame Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+           CornerRadius="12" Padding="6,2" Margin="10,0,0,0"
+           BackgroundColor="White" HorizontalOptions="Start">
+                    <StackLayout x:Name="HeartsPanel" Orientation="Horizontal" Spacing="4"/>
+                </Frame>
+            </Grid>
+
+            <!-- RIGHT: Back + Home buttons -->
+            <!-- Make this row the same height as your button -->
+            <HorizontalStackLayout Grid.Column="2"
+                       HeightRequest="56"
+                       Spacing="8"
+                       VerticalOptions="Start"
+                       HorizontalOptions="End">
+
+                <!-- Back -->
+                <Grid WidthRequest="56" HeightRequest="56" BackgroundColor="Transparent">
+                    <Image Source="prev.png"
+           WidthRequest="32" HeightRequest="32"
+           HorizontalOptions="Center" VerticalOptions="Center"
+           Aspect="AspectFit" />
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
+                    </Grid.GestureRecognizers>
+                </Grid>
+
+                <!-- Home -->
+                <Grid WidthRequest="56" HeightRequest="56" BackgroundColor="Transparent">
+                    <Image Source="icon_home.png"
+           WidthRequest="32" HeightRequest="32"
+           HorizontalOptions="Center" VerticalOptions="Center"
+           Aspect="AspectFit" />
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                    </Grid.GestureRecognizers>
+                </Grid>
+
+            </HorizontalStackLayout>
+
+
+
+
         </Grid>
+        <!-- optional second header row -->
+        <ContentView Grid.Row="1"/>
 
-        <!-- Stories grid -->
-        <CollectionView x:Name="StoriesView" Grid.Row="1" SelectionMode="None">
+        <!-- Stories grid (scrolls vertically) -->
+        <CollectionView x:Name="StoriesView"
+                Grid.Row="2"    
+            SelectionMode="None"
+                VerticalScrollBarVisibility="Default">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="5"/>
             </CollectionView.ItemsLayout>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Padding="6">
-                        <Border StrokeShape="RoundRectangle 18" BackgroundColor="#B3FFFFFF" StrokeThickness="0">
+                        <Border BackgroundColor="#B3FFFFFF" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18"/>
+                            </Border.StrokeShape>
                             <Grid RowDefinitions="*,Auto" Padding="6">
                                 <Image Source="{Binding Thumb}" Aspect="AspectFill" HeightRequest="110" />
                                 <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="0,6,0,0">
                                     <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="12" LineBreakMode="TailTruncation"/>
                                     <HorizontalStackLayout Grid.Column="1" Spacing="4">
                                         <Image Source="ui/lock.png" HeightRequest="16" IsVisible="{Binding IsLocked}"/>
-                                        <Border BackgroundColor="#FF69B4" Padding="6,2" StrokeShape="RoundRectangle 12" IsVisible="{Binding IsLocked}">
+                                        <Border BackgroundColor="#FF69B4" Padding="6,2" IsVisible="{Binding IsLocked}">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12"/>
+                                            </Border.StrokeShape>
                                             <Label Text="{Binding PriceText}" FontSize="11" TextColor="White"/>
                                         </Border>
                                     </HorizontalStackLayout>
@@ -42,6 +140,7 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
 
     </Grid>
 </ContentPage>

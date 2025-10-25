@@ -221,7 +221,7 @@
                        Padding="20"
                        HasShadow="True"
                        BorderColor="Transparent"
-                       BackgroundColor="#E0F7FF"
+                       BackgroundColor="#B3FFFFFF"
                        WidthRequest="360"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"

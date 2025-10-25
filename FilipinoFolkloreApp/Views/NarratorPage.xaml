@@ -2,32 +2,58 @@
 <ContentPage x:Class="FilipinoFolkloreApp.Views.NarratorPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             BackgroundImageSource="ui/bg_landscape.png"
+             BackgroundImageSource="ui/bg_index.png"
              Shell.NavBarIsVisible="False">
 
 
     <Grid Padding="16">
-        <CollectionView x:Name="NarratorsView" SelectionMode="None">
+        <!-- Center the whole row and fix its height to your card size -->
+        <CollectionView x:Name="NarratorsView"
+                HeightRequest="240"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                SelectionMode="None"
+                ItemSizingStrategy="MeasureFirstItem">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Horizontal" Span="3"/>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="12"/>
+                <!-- or: <GridItemsLayout Orientation="Horizontal" Span="1"/> -->
             </CollectionView.ItemsLayout>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Padding="8">
-                        <Border StrokeShape="RoundRectangle 18" BackgroundColor="#B3FFFFFF" StrokeThickness="0">
-                            <VerticalStackLayout Padding="14" Spacing="10">
-                                <Image Source="{Binding Avatar}" HeightRequest="160" Aspect="AspectFit"/>
-                                <Grid ColumnDefinitions="*,Auto" Padding="0,4,0,0">
-                                    <Label Text="{Binding Name}" FontAttributes="Bold"/>
-                                    <HorizontalStackLayout Grid.Column="1" Spacing="6">
-                                        <Image Source="ui/lock.png" HeightRequest="16" IsVisible="{Binding IsLocked}"/>
-                                        <Border BackgroundColor="#FF69B4" Padding="8,2" StrokeShape="RoundRectangle 12" IsVisible="{Binding IsLocked}">
+                    <!-- Root of the card: do NOT let it expand; center vertically -->
+                    <Grid Padding="8" VerticalOptions="Center">
+                        <Border BackgroundColor="#B3FFFFFF" StrokeThickness="0" VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18"/>
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Padding="14" Spacing="10" VerticalOptions="Center">
+                                <!-- Only the image gets a height; the Border will wrap around this + text -->
+                                <Image Source="{Binding Avatar}"
+                   HeightRequest="160"
+                   Aspect="AspectFit"
+                   HorizontalOptions="Center" />
+
+                                <!-- Centered price (shows only if locked) -->
+                                <Grid Padding="0,4,0,0" IsVisible="{Binding IsLocked}">
+                                    <HorizontalStackLayout Spacing="6"
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="Center">
+                                        <Image Source="elements/lock.png" HeightRequest="16"/>
+                                        <Border BackgroundColor="#FF69B4" Padding="8,2">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12"/>
+                                            </Border.StrokeShape>
                                             <Label Text="{Binding PriceText}" FontSize="12" TextColor="White"/>
                                         </Border>
                                     </HorizontalStackLayout>
                                 </Grid>
+
                             </VerticalStackLayout>
                         </Border>
+
+                        <!-- whole card tappable -->
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnNarratorTapped"/>
                         </Grid.GestureRecognizers>
@@ -35,5 +61,6 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
     </Grid>
 </ContentPage>

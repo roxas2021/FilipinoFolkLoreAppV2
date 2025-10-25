@@ -31,7 +31,28 @@ public partial class AlamatPage : ContentPage
     void LoadHud()
     {
         HudAvatar.Source = AlamatContent.CurrentNarrator.Avatar;
-        HudHearts.Text = $"{AlamatContent.Hearts}";
+        PlayerNameLabel.Text = PlayerNameLabel.Text is null ? "NICHOL" : PlayerNameLabel.Text;
+        StarsLabel.Text = AlamatContent.Stars.ToString();
+        HeartsPanel.Children.Clear();
+        for (int i = 0; i < AlamatContent.Hearts; i++)
+        {
+            HeartsPanel.Children.Add(new Image
+            {
+                Source = "heart_full.png",
+                WidthRequest = 20,
+                HeightRequest = 20
+            });
+        }
+    }
+    async void OnBackTapped(object? s, TappedEventArgs e)
+    {
+        if (Navigation.NavigationStack.Count > 1)
+            await Navigation.PopAsync();
+    }
+
+    async void OnHomeTapped(object? s, TappedEventArgs e)
+    {
+        await Navigation.PopToRootAsync();
     }
 
     void LoadStories()

@@ -37,7 +37,7 @@ namespace FilipinoFolkloreApp.Services
             public string Title { get; set; } = "";
             public int PriceStars { get; set; } = 0;         // Story #1 free; others priced
             public int RewardStars { get; set; } = 20;       // per-story override
-            public string Thumb => $"stories/{Id}/thumb.png";
+            public string Thumb = "";
             public List<Slide> Slides { get; set; } = new();
             public List<QuizQuestion> Quiz { get; set; } = new(); // supports multiple later
         }
@@ -53,7 +53,7 @@ namespace FilipinoFolkloreApp.Services
         public static List<Story> Stories { get; } = new()
         {
             new Story{
-                Id="1_juan_tamad", Title="Juan Tamad", PriceStars=0, RewardStars=20,
+                Id="1_juan_tamad", Title="Juan Tamad", PriceStars=0, RewardStars=20, Thumb ="stories/juantamad/juan_tamad_thumb.png",
                 Slides = new()
                 {
                     new Slide{ Background="stories/juantamad/juan_tamad_scene1.png",
@@ -96,6 +96,25 @@ namespace FilipinoFolkloreApp.Services
             },
             new Story{
                 Id="5_saging", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
+                Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
+                Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
+                           ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
+                           CorrectIndex=0 } }
+            },
+            new Story{
+                Id="5_luya", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
+                Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
+                Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
+                           ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
+                           CorrectIndex=0 } }
+            },new Story{
+                Id="5_kamatis", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
+                Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
+                Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
+                           ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
+                           CorrectIndex=0 } }
+            },new Story{
+                Id="5_bawang", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
                 Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
                 Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
                            ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},

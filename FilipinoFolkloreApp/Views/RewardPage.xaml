@@ -2,7 +2,7 @@
 <ContentPage x:Class="FilipinoFolkloreApp.Views.RewardPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             BackgroundImageSource="ui/reward_bg.png"
+             BackgroundImageSource="ui/bg_index.png"
              Shell.NavBarIsVisible="False">
     <Grid>
         <Border BackgroundColor="#66000000" StrokeShape="RoundRectangle 24"
