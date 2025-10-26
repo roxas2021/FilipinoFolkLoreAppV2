@@ -26,7 +26,7 @@ public partial class NarratorPage : ContentPage
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
         _storyId = storyId;
-
+        LoadHud();
         NarratorsView.ItemsSource = AlamatContent.Narrators.Select(n => new Card
         {
             Id = n.Id,
@@ -54,4 +54,24 @@ public partial class NarratorPage : ContentPage
         AlamatContent.SelectedNarratorId = c.Id;
         await Navigation.PushAsync(new StoryPage(_storyId));
     }
+    void LoadHud()
+    {
+        HudAvatar.Source = "avatar/avatar1.png";
+        StarsLabel.Text = AlamatContent.Stars.ToString();
+
+        HeartsPanel.Children.Clear();
+        for (int i = 0; i < AlamatContent.Hearts; i++)
+            HeartsPanel.Children.Add(new Image { Source = "heart_full.png", WidthRequest = 24, HeightRequest = 24, Aspect = Aspect.AspectFit });
+    }
+    async void OnBackTapped(object? s, TappedEventArgs e)
+    {
+        if (Navigation.NavigationStack.Count > 1)
+            await Navigation.PopAsync();
+    }
+
+    async void OnHomeTapped(object? s, TappedEventArgs e)
+    {
+        await Navigation.PopToRootAsync();
+    }
+
 }

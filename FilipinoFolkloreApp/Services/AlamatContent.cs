@@ -30,7 +30,7 @@ namespace FilipinoFolkloreApp.Services
             public string Prompt { get; set; } = "";
             public List<string> ChoiceImages { get; set; } = new(); // 3 images
             public int CorrectIndex { get; set; } = 0;              // 0..2
-            public int TimeLimitSec { get; set; } = 20;
+            public int TimeLimitSec { get; set; } = 1000;
         }
 
         public class Story
@@ -85,7 +85,7 @@ namespace FilipinoFolkloreApp.Services
                 {
                     new QuizQuestion{
                         Prompt="Sino ang pangunahing tauhan?",
-                        ChoiceImages=new(){ "quiz/juan/a.png","quiz/juan/b.png","quiz/juan/c.png" },
+                        ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
                         CorrectIndex=0, TimeLimitSec=20
                     }
                 }

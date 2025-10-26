@@ -2,44 +2,202 @@
 <ContentPage x:Class="FilipinoFolkloreApp.Views.QuizPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             BackgroundImageSource="ui/bg_index.png"
+             BackgroundImageSource="login_bg.jpeg"
              Shell.NavBarIsVisible="False">
-    <Grid Padding="16" RowDefinitions="Auto,Auto,*" RowSpacing="14">
 
-        <!-- HUD: narrator avatar + hearts only -->
-        <Grid ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
-            <Image x:Name="QuizAvatar" HeightRequest="48" WidthRequest="48"/>
-            <Image Grid.Column="1" Source="ui/heart.png" HeightRequest="28"/>
-            <Label Grid.Column="2" x:Name="QuizHearts" Text="3" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+    <Grid Padding="16"
+        RowDefinitions="Auto, Auto, *"
+        RowSpacing="16">
+
+        <!-- ===== Header (unchanged) ===== -->
+        <Grid Grid.Row="0"
+          ColumnDefinitions="Auto,*,Auto"
+          ColumnSpacing="16"
+          VerticalOptions="Start">
+
+            <!-- LEFT/MID: Avatar + Name/Stars + Hearts -->
+            <Grid Grid.Column="0"
+            RowDefinitions="Auto, Auto"
+            ColumnDefinitions="Auto, Auto, *, Auto"
+            ColumnSpacing="16">
+
+                <!-- Avatar -->
+                <Frame Grid.RowSpan="2"
+               Grid.Column="0"
+               WidthRequest="80" HeightRequest="88"
+               CornerRadius="16" Padding="0"
+               HasShadow="True" BackgroundColor="White">
+                    <Image x:Name="HudAvatar" Aspect="AspectFill" />
+                </Frame>
+
+                <!-- Name + Stars pill -->
+                <Frame Margin="16,0,0,0"
+               Grid.Row="0" Grid.Column="1"
+               BackgroundColor="LightGreen"
+               CornerRadius="16" Padding="8,8"
+               HorizontalOptions="Start" VerticalOptions="Center">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                        <Label x:Name="PlayerNameLabel"
+                   Grid.Column="0" Text="NICHOL"
+                   FontAttributes="Bold" FontSize="18" TextColor="#FF66CC"
+                   VerticalOptions="Center"/>
+                        <BoxView Grid.Column="1"/>
+                        <Frame Grid.Column="2" Padding="8,4"
+                   BackgroundColor="LightGreen" BorderColor="Black"
+                   CornerRadius="12" HasShadow="False"
+                   VerticalOptions="Center" Margin="8,0,0,0">
+                            <Frame.Shadow>
+                                <Shadow Brush="Black" Offset="-4,4" Radius="8" Opacity="0.5"/>
+                            </Frame.Shadow>
+                            <HorizontalStackLayout Spacing="8">
+                                <Label x:Name="StarsLabel" Text="50"
+                       FontAttributes="Bold" FontSize="20" TextColor="#FFCC00"/>
+                                <Image Source="icon_star_yellow.png" WidthRequest="32" HeightRequest="32"/>
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </Grid>
+                </Frame>
+
+                <!-- Hearts row -->
+                <Frame Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+               CornerRadius="16" Padding="8,8" Margin="16,0,0,0"
+               BackgroundColor="White" HorizontalOptions="Start">
+                    <HorizontalStackLayout x:Name="HeartsPanel" Spacing="8"/>
+                </Frame>
+            </Grid>
+
+            <!-- RIGHT: Home only -->
+            <HorizontalStackLayout Grid.Column="2"
+                             Spacing="8"
+                             VerticalOptions="Center"
+                             HorizontalOptions="End">
+                <Image Source="icon_home.png"
+               WidthRequest="48" HeightRequest="48"
+               Aspect="AspectFit"
+               HorizontalOptions="Center" VerticalOptions="Center">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </HorizontalStackLayout>
         </Grid>
 
-        <!-- question -->
-        <Label Grid.Row="1" x:Name="QuizPrompt" Text="..." FontAttributes="Bold" FontSize="20" HorizontalOptions="Center" />
+        <!-- ===== Question bar (FULL WIDTH pink with yellow text + narrator avatar on left) ===== -->
+        <!-- ===== Question (avatar left, pink pill around text only) ===== -->
+        
+        <Grid Grid.Row="1"
+      ColumnDefinitions="Auto,Auto"
+      ColumnSpacing="8"
+      HorizontalOptions="Center"
+      VerticalOptions="Center">
 
-        <!-- three choices -->
-        <Grid Grid.Row="2" ColumnDefinitions="*,*,*" ColumnSpacing="18" Padding="10,0">
-            <Border StrokeShape="RoundRectangle 18" BackgroundColor="#B3FFFFFF">
-                <Image x:Name="Choice0" Aspect="AspectFit">
+            <Image Source="{Binding Source={x:Reference HudAvatar}, Path=Source}"
+         HeightRequest="40"
+         WidthRequest="40"
+         Margin="0,6,8,0"
+         Aspect="AspectFill"
+         HorizontalOptions="Center"
+         VerticalOptions="Center" />
+
+            <Border Grid.Column="1"
+          BackgroundColor="#FF69B4"
+          Padding="12,6"
+          StrokeThickness="0"
+          HorizontalOptions="Start"
+          VerticalOptions="Center"
+          MaximumWidthRequest="560">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="24"/>
+                </Border.StrokeShape>
+                <Label x:Name="QuizPrompt"
+           Text="..."
+           FontAttributes="Bold"
+           FontSize="20"
+           TextColor="#FFCC00"
+           HorizontalTextAlignment="Center"
+           VerticalTextAlignment="Center"
+           LineBreakMode="WordWrap"/>
+            </Border>
+        </Grid>
+
+
+
+        <!-- ===== Choices (smaller) ===== -->
+        <!-- ===== Choices (tight cards, colored, smaller) ===== -->
+        <Grid Grid.Row="2"
+      ColumnDefinitions="Auto,Auto,Auto"
+      ColumnSpacing="8"
+      Padding="8,0"
+      HorizontalOptions="Center"
+      VerticalOptions="Center">
+
+            <!-- Choice 0: transparent white -->
+            <Border BackgroundColor="#80FFFFFF"
+          StrokeThickness="0"
+          Padding="8"
+          HorizontalOptions="Center"
+          VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16"/>
+                </Border.StrokeShape>
+                <Image x:Name="Choice0"
+           Aspect="AspectFit"
+           HeightRequest="88"
+           WidthRequest="120"
+           HorizontalOptions="Center"
+           VerticalOptions="Center">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnPick0"/>
                     </Image.GestureRecognizers>
                 </Image>
             </Border>
-            <Border Grid.Column="1" StrokeShape="RoundRectangle 18" BackgroundColor="#B3FFFFFF">
-                <Image x:Name="Choice1" Aspect="AspectFit">
+
+            <!-- Choice 1: transparent red -->
+            <Border Grid.Column="1"
+          BackgroundColor="#66FF0000"
+          StrokeThickness="0"
+          Padding="8"
+          HorizontalOptions="Center"
+          VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16"/>
+                </Border.StrokeShape>
+                <Image x:Name="Choice1"
+           Aspect="AspectFit"
+           HeightRequest="88"
+           WidthRequest="120"
+           HorizontalOptions="Center"
+           VerticalOptions="Center">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnPick1"/>
                     </Image.GestureRecognizers>
                 </Image>
             </Border>
-            <Border Grid.Column="2" StrokeShape="RoundRectangle 18" BackgroundColor="#B3FFFFFF">
-                <Image x:Name="Choice2" Aspect="AspectFit">
+
+            <!-- Choice 2: transparent yellow -->
+            <Border Grid.Column="2"
+          BackgroundColor="#66FFFF00"
+          StrokeThickness="0"
+          Padding="8"
+          HorizontalOptions="Center"
+          VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16"/>
+                </Border.StrokeShape>
+                <Image x:Name="Choice2"
+           Aspect="AspectFit"
+           HeightRequest="88"
+           WidthRequest="120"
+           HorizontalOptions="Center"
+           VerticalOptions="Center">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnPick2"/>
                     </Image.GestureRecognizers>
                 </Image>
             </Border>
+
         </Grid>
+
 
     </Grid>
 </ContentPage>

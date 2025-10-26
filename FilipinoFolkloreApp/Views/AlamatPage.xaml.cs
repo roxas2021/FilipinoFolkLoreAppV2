@@ -30,7 +30,7 @@ public partial class AlamatPage : ContentPage
 
     void LoadHud()
     {
-        HudAvatar.Source = AlamatContent.CurrentNarrator.Avatar;
+        HudAvatar.Source = "avatar/avatar1.png";
         PlayerNameLabel.Text = PlayerNameLabel.Text is null ? "NICHOL" : PlayerNameLabel.Text;
         StarsLabel.Text = AlamatContent.Stars.ToString();
         HeartsPanel.Children.Clear();
@@ -39,8 +39,8 @@ public partial class AlamatPage : ContentPage
             HeartsPanel.Children.Add(new Image
             {
                 Source = "heart_full.png",
-                WidthRequest = 20,
-                HeightRequest = 20
+                WidthRequest = 24,
+                HeightRequest = 24
             });
         }
     }

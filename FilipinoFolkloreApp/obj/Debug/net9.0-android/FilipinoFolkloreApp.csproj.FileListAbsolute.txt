@@ -2469,3 +2469,6 @@ C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\n
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-android\android\src\crc64467b05f37239e7a6\StreamMediaDataSource.java
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-android\assets\juantamad\audio\juantamad_tarsier1.mp3
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-android\assets\juantamad\audio\juantamad_tarsier2.mp3
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-android\resizetizer\r\drawable\juantamad_quiz1a.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-android\resizetizer\r\drawable\juantamad_quiz1b.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-android\resizetizer\r\drawable\juantamad_quiz1c.png

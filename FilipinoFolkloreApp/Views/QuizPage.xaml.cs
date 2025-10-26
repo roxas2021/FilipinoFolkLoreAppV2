@@ -18,22 +18,36 @@ public partial class QuizPage : ContentPage
     {
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
+
         _storyId = storyId;
 
-        // HUD
-        QuizAvatar.Source = AlamatContent.CurrentNarrator.Avatar;
-        QuizHearts.Text = $"{AlamatContent.Hearts}";
+        // Header HUD
+        LoadHud();
 
-        // Use first question for now (supports more later)
-        var q = AlamatContent.GetStory(_storyId).Quiz[0];
+        // Load first question (supports more later)
+        var story = AlamatContent.GetStory(_storyId);
+        if (story.Quiz == null || story.Quiz.Count == 0)
+        {
+            // No quiz? Just reward and exit gracefully
+            _ = HandleCorrectAsync();
+            return;
+        }
+
+        var q = story.Quiz[0];
         QuizPrompt.Text = q.Prompt;
         _correctIndex = q.CorrectIndex;
-        Choice0.Source = q.ChoiceImages[0];
-        Choice1.Source = q.ChoiceImages[1];
-        Choice2.Source = q.ChoiceImages[2];
+        Choice0.Source = q.ChoiceImages.ElementAtOrDefault(0);
+        Choice1.Source = q.ChoiceImages.ElementAtOrDefault(1);
+        Choice2.Source = q.ChoiceImages.ElementAtOrDefault(2);
 
         _cts = new CancellationTokenSource();
         _ = TimerAsync(q.TimeLimitSec, _cts.Token);
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _cts?.Cancel();
     }
 
     async Task TimerAsync(int seconds, CancellationToken ct)
@@ -41,26 +55,35 @@ public partial class QuizPage : ContentPage
         try
         {
             await Task.Delay(TimeSpan.FromSeconds(seconds), ct);
-            if (!ct.IsCancellationRequested) await HandleWrongAsync();
+            if (!ct.IsCancellationRequested)
+                await HandleWrongAsync();
         }
         catch (TaskCanceledException) { }
     }
 
-    Task HandlePickAsync(int idx) => idx == _correctIndex ? HandleCorrectAsync() : HandleWrongAsync();
+    Task HandlePickAsync(int idx) =>
+        idx == _correctIndex ? HandleCorrectAsync() : HandleWrongAsync();
 
     async Task HandleCorrectAsync()
     {
         _cts?.Cancel();
+
         var reward = AlamatContent.GetStory(_storyId).RewardStars;
         AlamatContent.Stars += reward;
+        RefreshStars(); // reflect new stars in header
+
         await Navigation.PushAsync(new RewardPage(reward));
     }
 
     async Task HandleWrongAsync()
     {
         _cts?.Cancel();
-        if (AlamatContent.Hearts > 0) AlamatContent.Hearts--;
-        QuizHearts.Text = $"{AlamatContent.Hearts}";
+
+        if (AlamatContent.Hearts > 0)
+            AlamatContent.Hearts--;
+
+        RefreshHearts(); // reflect updated hearts in header
+
         await DisplayAlert("Mali", "Panoorin muli ang kuwento.", "OK");
         await Navigation.PushAsync(new StoryPage(_storyId));
     }
@@ -68,4 +91,40 @@ public partial class QuizPage : ContentPage
     async void OnPick0(object? s, TappedEventArgs e) => await HandlePickAsync(0);
     async void OnPick1(object? s, TappedEventArgs e) => await HandlePickAsync(1);
     async void OnPick2(object? s, TappedEventArgs e) => await HandlePickAsync(2);
+
+    // ---------- HUD helpers ----------
+    void LoadHud()
+    {
+        HudAvatar.Source = AlamatContent.CurrentNarrator.Avatar;
+        PlayerNameLabel.Text = "NICHOL"; // replace if you have a real player name
+        RefreshStars();
+        RefreshHearts();
+    }
+
+    void RefreshStars()
+    {
+        StarsLabel.Text = AlamatContent.Stars.ToString();
+    }
+
+    void RefreshHearts()
+    {
+        HeartsPanel.Children.Clear();
+        for (int i = 0; i < AlamatContent.Hearts; i++)
+        {
+            HeartsPanel.Children.Add(new Image
+            {
+                Source = "heart_full.png",
+                WidthRequest = 24,
+                HeightRequest = 24,
+                Aspect = Aspect.AspectFit
+            });
+        }
+    }
+
+    // ---------- Header actions ----------
+    async void OnHomeTapped(object? s, TappedEventArgs e)
+    {
+        _cts?.Cancel();
+        await Navigation.PopToRootAsync();
+    }
 }
