@@ -197,6 +197,89 @@
             </Border>
 
         </Grid>
+        <Grid x:Name="GameAlertOverlay"
+      IsVisible="False"
+      Opacity="0"
+      BackgroundColor="#40000000"
+      HorizontalOptions="Fill"
+      VerticalOptions="Fill"
+      Grid.RowSpan="3">
+
+            <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                <Frame x:Name="GameAlertCard"
+           CornerRadius="20"
+           Padding="16"
+           HasShadow="True"
+           BorderColor="Transparent"
+           BackgroundColor="#B3FFFFFF"
+           WidthRequest="420"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"
+           Scale="0.96">
+                    <Grid ColumnDefinitions="Auto,*"
+            RowDefinitions="Auto,Auto,Auto"
+            ColumnSpacing="12"
+            RowSpacing="12">
+
+                        <Image x:Name="AlertNarrator"
+               Grid.RowSpan="3"
+               HeightRequest="96"
+               WidthRequest="96"
+               Aspect="AspectFill"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"/>
+
+                        <Grid Grid.Column="1"
+              Grid.Row="0"
+              ColumnDefinitions="*,Auto"
+              VerticalOptions="Center">
+                            <Label Text="Nais mo bang panoorin ulit ang kuwento?"
+                 FontSize="18"
+                                    TextColor="#FFCC00"
+                 FontAttributes="Bold"
+                 HorizontalTextAlignment="Center"
+                 VerticalTextAlignment="Center"
+                 HorizontalOptions="Center"/>
+                            <Image Grid.Column="1"
+                 Source="ui/close.png"
+                 HeightRequest="40"
+                 WidthRequest="40"
+                 HorizontalOptions="End"
+                 VerticalOptions="Center">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnAlertCloseTapped"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </Grid>
+
+                        <HorizontalStackLayout x:Name="AlertHeartsPanel"
+                               Grid.Column="1"
+                               Grid.Row="1"
+                               Spacing="8"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+
+                        <Image x:Name="AlertThumb"
+       Grid.Column="1"
+       Grid.Row="2"
+       HeightRequest="120"
+       WidthRequest="120"
+       Aspect="AspectFill"
+       HorizontalOptions="Center"
+       VerticalOptions="Center">
+                            <Image.Clip>
+                                <RoundRectangleGeometry CornerRadius="16" Rect="0,0,120,120"/>
+                            </Image.Clip>
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnAlertReplayTapped"/>
+                            </Image.GestureRecognizers>
+                        </Image>
+
+
+                    </Grid>
+                </Frame>
+            </Grid>
+        </Grid>
 
 
     </Grid>

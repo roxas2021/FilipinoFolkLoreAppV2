@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using FilipinoFolkloreApp.Views.Home;
 using FilipinoFolkloreApp.Services;
 
 namespace FilipinoFolkloreApp.Views;
@@ -47,12 +48,12 @@ public partial class AlamatPage : ContentPage
     async void OnBackTapped(object? s, TappedEventArgs e)
     {
         if (Navigation.NavigationStack.Count > 1)
-            await Navigation.PopAsync();
+            await Navigation.PushAsync(new IndexPage());
     }
 
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
-        await Navigation.PopToRootAsync();
+        await Navigation.PushAsync(new IndexPage());
     }
 
     void LoadStories()

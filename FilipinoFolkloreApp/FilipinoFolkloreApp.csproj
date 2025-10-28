@@ -78,6 +78,7 @@
 	  <None Remove="Resources\Images\avatarcustomization\tapis_pink.png" />
 	  <None Remove="Resources\Images\avatarcustomization\tapis_red.png" />
 	  <None Remove="Resources\Images\avatarcustomization\tapis_white.png" />
+	  <None Remove="Resources\Images\elements\close.png" />
 	  <None Remove="Resources\Images\elements\eagle.png" />
 	  <None Remove="Resources\Images\elements\lock.png" />
 	  <None Remove="Resources\Images\elements\monkey.png" />
@@ -147,6 +148,7 @@
 	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_pink.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_red.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\tapis_white.png" />
+	  <MauiImage Include="Resources\Images\elements\close.png" />
 	  <MauiImage Include="Resources\Images\elements\eagle.png" />
 	  <MauiImage Include="Resources\Images\elements\lock.png" />
 	  <MauiImage Include="Resources\Images\elements\monkey.png" />

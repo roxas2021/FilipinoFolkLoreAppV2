@@ -18,7 +18,32 @@ public partial class RewardPage : ContentPage
 
     async void OnRewardOk(object? s, EventArgs e)
     {
-        // Return to Alamat (clear to root so there's no back button needed)
-        await Navigation.PopToRootAsync();
+        var pages = Navigation.NavigationStack.ToList();
+        foreach (var page in pages)
+        {
+            if (page is RewardPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is QuizPage)
+            {
+                // Remove QuizPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is StoryPage)
+            {
+                // Remove StoryPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is NarratorPage)
+            {
+                Navigation.RemovePage(page);
+            }
+        }
+
+        // Optionally, navigate to another page
+        await Navigation.PushAsync(new AlamatPage());
+
     }
 }

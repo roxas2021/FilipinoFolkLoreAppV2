@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using FilipinoFolkloreApp.Services;
-
+using FilipinoFolkloreApp.Views.Home;
 namespace FilipinoFolkloreApp.Views;
 
 public partial class NarratorPage : ContentPage
@@ -71,7 +71,7 @@ public partial class NarratorPage : ContentPage
 
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
-        await Navigation.PopToRootAsync();
+        await Navigation.PushAsync(new IndexPage());
     }
 
 }

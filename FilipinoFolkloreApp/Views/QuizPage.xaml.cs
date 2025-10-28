@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Threading;
+using FilipinoFolkloreApp.Views.Home;
 using FilipinoFolkloreApp.Services;
 
 namespace FilipinoFolkloreApp.Views;
@@ -82,11 +83,67 @@ public partial class QuizPage : ContentPage
         if (AlamatContent.Hearts > 0)
             AlamatContent.Hearts--;
 
-        RefreshHearts(); // reflect updated hearts in header
+        RefreshHearts();
 
-        await DisplayAlert("Mali", "Panoorin muli ang kuwento.", "OK");
+        await ShowWrongModalAsync();
+    }
+
+    async Task ShowWrongModalAsync()
+    {
+        var story = AlamatContent.GetStory(_storyId);
+
+        AlertNarrator.Source = AlamatContent.CurrentNarrator.Avatar;
+
+        AlertHeartsPanel.Children.Clear();
+        for (int i = 0; i < AlamatContent.Hearts; i++)
+        {
+            AlertHeartsPanel.Children.Add(new Image
+            {
+                Source = "heart_full.png",
+                WidthRequest = 24,
+                HeightRequest = 24,
+                Aspect = Aspect.AspectFit
+            });
+        }
+
+        AlertThumb.Source = story.Thumb;
+
+        GameAlertOverlay.IsVisible = true;
+        GameAlertOverlay.Opacity = 0;
+        GameAlertCard.Scale = 0.96;
+
+        await Task.WhenAll(
+            GameAlertOverlay.FadeTo(1, 180, Easing.CubicOut),
+            GameAlertCard.ScaleTo(1.0, 180, Easing.CubicOut)
+        );
+    }
+
+    async Task HideWrongModalAsync()
+    {
+        await Task.WhenAll(
+    GameAlertOverlay.FadeTo(0, 80, Easing.CubicIn), // Reduced animation time
+    GameAlertCard.ScaleTo(0.96, 80, Easing.CubicIn)
+);
+        GameAlertOverlay.IsVisible = false;
+    }
+
+    async void OnAlertReplayTapped(object? s, TappedEventArgs e)
+    {
+        await HideWrongModalAsync();
         await Navigation.PushAsync(new StoryPage(_storyId));
     }
+
+    async void OnAlertCloseTapped(object? s, TappedEventArgs e)
+    {
+        _cts?.Cancel();
+        await Navigation.PushAsync(new AlamatPage());
+    }
+
+    void OnAlertBackgroundTapped(object? s, TappedEventArgs e)
+    {
+        // Intentionally no-op to prevent skipping
+    }
+
 
     async void OnPick0(object? s, TappedEventArgs e) => await HandlePickAsync(0);
     async void OnPick1(object? s, TappedEventArgs e) => await HandlePickAsync(1);
@@ -125,6 +182,6 @@ public partial class QuizPage : ContentPage
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
         _cts?.Cancel();
-        await Navigation.PopToRootAsync();
+        await Navigation.PushAsync(new IndexPage());
     }
 }
