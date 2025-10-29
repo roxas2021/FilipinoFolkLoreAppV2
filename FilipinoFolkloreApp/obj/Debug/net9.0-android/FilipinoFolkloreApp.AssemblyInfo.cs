@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FilipinoFolkloreApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+70b394ed47fbb7a4f34e70ed7cb9ad9368ec4626")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+e378d1c6f41780fc6b6f9a1fa9c97e3a087e7f02")]
 [assembly: System.Reflection.AssemblyProductAttribute("FilipinoFolkloreApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FilipinoFolkloreApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

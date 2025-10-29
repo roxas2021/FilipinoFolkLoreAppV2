@@ -11,7 +11,7 @@ namespace FilipinoFolkloreApp.Models
     {
         [PrimaryKey]
         public int StoryIndex { get; set; }
-
+        public string Category { get; set; } = "";
         public bool IsRewardClaimed { get; set; } = false;
         public bool IsPurchased { get; set; } = false;
         public bool NarratorEagleUnlocked { get; set; } = false;

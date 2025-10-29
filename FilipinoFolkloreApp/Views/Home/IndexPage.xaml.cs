@@ -16,6 +16,16 @@ public partial class IndexPage : ContentPage
     private async void OnAlamatClicked(object sender, EventArgs e)
     {
         // Navigate to the AlamatList page
-        await Navigation.PushAsync(new AlamatPage());
+        await Navigation.PushAsync(new AlamatPage("alamat"));
+    }
+    private async void OnEpikoClicked(object sender, EventArgs e)
+    {
+        // Navigate to the AlamatList page
+        await Navigation.PushAsync(new AlamatPage("epiko"));
+    }
+    private async void OnPabulaClicked(object sender, EventArgs e)
+    {
+        // Navigate to the AlamatList page
+        await Navigation.PushAsync(new AlamatPage("pabula"));
     }
 }       

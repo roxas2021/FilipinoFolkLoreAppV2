@@ -17,16 +17,18 @@ public partial class AlamatPage : ContentPage
         public string Title { get; set; } = "";
         public string Thumb { get; set; } = "";
         public bool IsLocked { get; set; }
+        public string Category { get; set; } = "";
         public bool IsPurchased { get; set; }
         public bool IsRewardClaimed { get; set; }
         public int Price { get; set; }
         public string PriceText => $"{Price}⭐";
     }
 
-    public AlamatPage()
+    public AlamatPage(string category)
     {
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
+        AlamatContent.category = category;
         LoadHud();
         //LoadStories();
     }
@@ -79,7 +81,11 @@ public partial class AlamatPage : ContentPage
 
     void LoadStories()
     {
-        StoriesView.ItemsSource = AlamatContent.Stories.Select(s => new StoryCard
+        var currentCategory = AlamatContent.category ?? "";
+
+        StoriesView.ItemsSource = AlamatContent.Stories.Where(s => string.IsNullOrEmpty(currentCategory)
+                || (!string.IsNullOrEmpty(s.Category)
+                    && s.Category.Equals(currentCategory, StringComparison.OrdinalIgnoreCase))).Select(s => new StoryCard
         {
             Id = s.Id,
             Title = s.Title,

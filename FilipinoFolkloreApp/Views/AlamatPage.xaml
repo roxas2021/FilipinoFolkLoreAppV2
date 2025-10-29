@@ -119,7 +119,7 @@
                             <Grid RowDefinitions="*,Auto" Padding="8">
                                 <Image Source="{Binding Thumb}" Aspect="AspectFill" HeightRequest="112" />
                                 <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="0,8,0,0" ColumnSpacing="8">
-                                    <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="14" LineBreakMode="TailTruncation"/>
+                                    <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="14" LineBreakMode="TailTruncation" IsVisible="False"/>
                                     <HorizontalStackLayout Grid.Column="1" Spacing="8">
                                         <Image Source="ui/lock.png" HeightRequest="16" IsVisible="{Binding IsLocked}"/>
                                         <Border BackgroundColor="#FF69B4" Padding="8,4" IsVisible="{Binding IsLocked}">

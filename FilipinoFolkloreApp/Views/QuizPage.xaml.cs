@@ -136,7 +136,7 @@ public partial class QuizPage : ContentPage
     async void OnAlertCloseTapped(object? s, TappedEventArgs e)
     {
         _cts?.Cancel();
-        await Navigation.PushAsync(new AlamatPage());
+        await Navigation.PushAsync(new AlamatPage(AlamatContent.category));
     }
 
     void OnAlertBackgroundTapped(object? s, TappedEventArgs e)

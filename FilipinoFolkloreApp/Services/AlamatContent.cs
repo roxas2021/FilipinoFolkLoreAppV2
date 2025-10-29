@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace FilipinoFolkloreApp.Services
             public string Id { get; set; } = ""; // monitor
             public string Title { get; set; } = "";
             public int PriceStars { get; set; } = 0;       
+            public string Category { get; set; } = "";
             public int RewardStars { get; set; } = 20;   
             public string Thumb = "";
             public bool IsRewardClaimed = false; // monitor
@@ -59,8 +61,9 @@ namespace FilipinoFolkloreApp.Services
         
         public static List<Story> Stories { get; } = new()
         {
+            //Alamat
             new Story{
-                StoryIndex=1, 
+                StoryIndex=1, Category = "alamat",
                 Id="1_juan_tamad", Title="Juan Tamad", PriceStars=0, RewardStars=20, Thumb ="stories/juantamad/juan_tamad_thumb.png",
                 Slides = new()
                 {
@@ -70,9 +73,9 @@ namespace FilipinoFolkloreApp.Services
                         Subtitle="Si Juan ay naghihintay sa ilalim ng puno.",
                         AudioByNarrator = new()
                                 {
-                                    ["tarsier"] = "juantamad/audio/juantamad_tarsier1.mp3",
-                                    ["eagle"]   = "juantamad/audio/juantamad_tarsier1.mp3",
-                                    ["monkey"]  = "juantamad/audio/juantamad_tarsier1.mp3",
+                                    ["tarsier"] = "storiesalamat/juantamad/audio/juantamad_tarsier1.mp3",
+                                    ["eagle"]   = "storiesalamat/juantamad/audio/juantamad_tarsier1.mp3",
+                                    ["monkey"]  = "storiesalamat/juantamad/audio/juantamad_tarsier1.mp3",
                                 }
                         },
                     new Slide{ 
@@ -81,9 +84,9 @@ namespace FilipinoFolkloreApp.Services
                         Subtitle="Inaabangan niya ang pagbagsak ng bunga.",
                         AudioByNarrator = new()
                                 {
-                                    ["tarsier"] = "juantamad/audio/juantamad_tarsier2.mp3",
-                                    ["eagle"]   = "juantamad/audio/juantamad_tarsier2.mp3",
-                                    ["monkey"]  = "juantamad/audio/juantamad_tarsier2.mp3",
+                                    ["tarsier"] = "storiesalamat/juantamad/audio/juantamad_tarsier2.mp3",
+                                    ["eagle"]   = "storiesalamat/juantamad/audio/juantamad_tarsier2.mp3",
+                                    ["monkey"]  = "storiesalamat/juantamad/audio/juantamad_tarsier2.mp3",
                                 }
                         },
                 },
@@ -97,7 +100,7 @@ namespace FilipinoFolkloreApp.Services
                 }
             },
             new Story{
-                StoryIndex =2,
+                StoryIndex =2,Category = "alamat",
                 Id="2_chocolate", Title="Alamat ng Tsokolate", PriceStars=1, RewardStars=20,
                 Slides=new(){ new Slide{ Background="stories/choco/s1.png", Subtitle="..." },
                               new Slide{ Background="stories/choco/s2.png", Subtitle="..." } },
@@ -106,7 +109,7 @@ namespace FilipinoFolkloreApp.Services
                            CorrectIndex=1 } }
             },
             new Story{
-                StoryIndex =3,
+                StoryIndex =3,Category = "alamat",
                 Id="3_maton", Title="Alamat ng Maton", PriceStars=2, RewardStars=20,
                 Slides=new(){ new Slide{ Background="stories/maton/s1.png", Subtitle="" } }, // no subtitle example
                 Quiz=new(){ new QuizQuestion{ Prompt="Sino ang bida?",
@@ -114,7 +117,7 @@ namespace FilipinoFolkloreApp.Services
                            CorrectIndex=2 } }
             },
             new Story{
-                StoryIndex=4,
+                StoryIndex=4,Category = "alamat",
                 Id="4_mangga", Title="Alamat ng Mangga", PriceStars=3, RewardStars=20,
                 Slides=new(){ new Slide{ Background="stories/mangga/s1.png", Subtitle="..." } },
                 Quiz=new(){ new QuizQuestion{ Prompt="Anong prutas?",
@@ -122,7 +125,7 @@ namespace FilipinoFolkloreApp.Services
                            CorrectIndex=1 } }
             },
             new Story{
-                StoryIndex= 5,
+                StoryIndex= 5,Category = "alamat",
                 Id="5_saging", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
                 Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
                 Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
@@ -130,27 +133,66 @@ namespace FilipinoFolkloreApp.Services
                            CorrectIndex=0 } }
             },
             new Story{
-                StoryIndex =6,
+                StoryIndex =6,Category = "alamat",
                 Id="5_luya", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
                 Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
                 Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
                            ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
                            CorrectIndex=0 } }
             },new Story{
-                StoryIndex = 6,
+                StoryIndex = 6,Category = "alamat",
                 Id="5_kamatis", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
                 Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
                 Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
                            ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
                            CorrectIndex=0 } }
             },new Story{
-                StoryIndex =7,
+                StoryIndex =7,Category = "alamat",
                 Id="5_bawang", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
                 Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
                 Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
                            ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
                            CorrectIndex=0 } }
             },
+            //Epiko
+            new Story{
+                StoryIndex =8,Category = "epiko",
+                Id="6_Lapulapu", Title="Lapu-Lapu", PriceStars=50, RewardStars=25,Thumb ="storiesepiko/lapulapu/lapulapu_thumbnail.png",
+                Slides = new()
+                {
+                    new Slide{
+                        Background="storiesepiko/lapulapu/lapulapu_scene1.png",
+                        Characters=new(){ "stories/juan/char_boy.png" },
+                        Subtitle="Si Lapu-Lapu ay isang napakakisig na bayani.",
+                        AudioByNarrator = new()
+                                {
+                                    ["tarsier"] = "storiesepiko/lapulapu/audio/lapulapu_tarsier1.mp3",
+                                    ["eagle"]   = "storiesepiko/lapulapu/audio/lapulapu_tarsier1.mp3",
+                                    ["monkey"]  = "storiesepiko/lapulapu/audio/lapulapu_tarsier1.mp3",
+                                }
+                        },
+                    new Slide{
+                        Background="storiesepiko/lapulapu/lapulapu_scene2.png",
+                        Characters=new(){ "stories/juan/char_boy.png","stories/juan/char_tarsier.png" },
+                        Subtitle="Siya ang unang lumaban sa mga kastila.",
+                        AudioByNarrator = new()
+                                {
+                                    ["tarsier"] = "storiesepiko/lapulapu/audio/lapulapu_tarsier2.mp3",
+                                    ["eagle"]   = "storiesepiko/lapulapu/audio/lapulapu_tarsier2.mp3",
+                                    ["monkey"]  = "storiesepiko/lapulapu/audio/lapulapu_tarsier2.mp3",
+                                }
+                        },
+                },
+                Quiz = new()
+                {
+                    new QuizQuestion{
+                        Prompt="Sino ang pangunahing tauhan?",
+                        ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
+                        CorrectIndex=0, TimeLimitSec=20
+                    }
+                }
+            },
+
         };
 
         // ------- In-memory runtime (no DB yet) -------
@@ -159,6 +201,7 @@ namespace FilipinoFolkloreApp.Services
         public static string SelectedNarratorId { get; set; } = "tarsier";
         public static HashSet<string> UnlockedStories { get; } = new() { "1_juan_tamad" };
         public static HashSet<string> UnlockedNarrators { get; } = new() { "tarsier" };
+        public static string category { get; set; } = "";
         // Prefer checked sets but also fall back to story fields and price.
         public static bool IsStoryUnlocked(string id)
         {

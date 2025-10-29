@@ -82,7 +82,7 @@ public partial class RewardPage : ContentPage
                     if (page is NarratorPage) Navigation.RemovePage(page);
                 }
 
-                await Navigation.PushAsync(new AlamatPage());
+                await Navigation.PushAsync(new AlamatPage(AlamatContent.category));
                 return;
             }
         }
@@ -152,6 +152,6 @@ public partial class RewardPage : ContentPage
         }
 
         // Navigate back to AlamatPage (HUD will show updated stars)
-        await Navigation.PushAsync(new AlamatPage());
+        await Navigation.PushAsync(new AlamatPage(AlamatContent.category));
     }
 }

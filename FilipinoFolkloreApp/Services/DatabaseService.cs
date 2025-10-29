@@ -46,6 +46,7 @@ namespace FilipinoFolkloreApp.Services
                 {
                     // Copy monitored fields into the in-memory story
                     story.IsPurchased = dbEntry.IsPurchased;
+                    story.Category = dbEntry.Category;
                     story.IsRewardClaimed = dbEntry.IsRewardClaimed;
                     story.NarratorEagleUnlocked = dbEntry.NarratorEagleUnlocked;
                     story.NarratorMonkeyUnlocked = dbEntry.NarratorMonkeyUnlocked;
@@ -56,6 +57,7 @@ namespace FilipinoFolkloreApp.Services
                     await _database.InsertAsync(new StoryMonitored
                     {
                         StoryIndex = story.StoryIndex,
+                        Category = story.Category,
                         IsPurchased = story.IsPurchased,
                         IsRewardClaimed = story.IsRewardClaimed,
                         NarratorEagleUnlocked = story.NarratorEagleUnlocked,
@@ -95,6 +97,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 // Update DB record
                 dbStory.IsPurchased = story.IsPurchased;
+                dbStory.Category = story.Category;
                 dbStory.IsRewardClaimed = story.IsRewardClaimed;
                 dbStory.NarratorEagleUnlocked = story.NarratorEagleUnlocked;
                 dbStory.NarratorMonkeyUnlocked = story.NarratorMonkeyUnlocked;
@@ -107,6 +110,7 @@ namespace FilipinoFolkloreApp.Services
                 {
                     StoryIndex = story.StoryIndex,
                     IsPurchased = story.IsPurchased,
+                    Category = story.Category,
                     IsRewardClaimed = story.IsRewardClaimed,
                     NarratorEagleUnlocked = story.NarratorEagleUnlocked,
                     NarratorMonkeyUnlocked = story.NarratorMonkeyUnlocked

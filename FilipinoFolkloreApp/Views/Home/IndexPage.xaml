@@ -147,6 +147,7 @@
               TextColor="White"
               FontAttributes="Bold"
               CornerRadius="40"
+                    Clicked="OnEpikoClicked"
               WidthRequest="130"
               HeightRequest="40"/>
 
@@ -154,8 +155,10 @@
               BackgroundColor="#99CC33"
               TextColor="White"
               FontAttributes="Bold"
+                    Clicked="OnPabulaClicked"
               CornerRadius="40"
               WidthRequest="130"
+                    
               HeightRequest="40"/>
 
             <Button Grid.Column="3" Text="MGA LARO"
