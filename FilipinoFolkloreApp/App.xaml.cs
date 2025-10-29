@@ -22,6 +22,7 @@ namespace FilipinoFolkloreApp
         public App()
         {
             InitializeComponent();
+            Task.Run(async () => await Database.LoadStoriesAsync());
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

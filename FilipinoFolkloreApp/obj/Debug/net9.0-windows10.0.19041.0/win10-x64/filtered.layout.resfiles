@@ -1,3 +1,6 @@
+FluentUI.cs
+OpenSans-Regular.ttf
+OpenSans-Semibold.ttf
 a.scale-100.png
 appicon.ico
 appiconLargeTile.scale-100.png
@@ -67,6 +70,7 @@ bg_8.scale-100.jpeg
 bg_avatarselectpage.scale-100.jpeg
 bg_index.scale-100.jpeg
 c.scale-100.png
+close.scale-100.png
 d.scale-100.png
 defaultavatar.scale-100.png
 dotnet_bot.scale-100.png
@@ -91,6 +95,9 @@ j.scale-100.png
 juan_tamad_scene1.scale-100.png
 juan_tamad_scene2.scale-100.png
 juan_tamad_thumb.scale-100.png
+juantamad_quiz1a.scale-100.png
+juantamad_quiz1b.scale-100.png
+juantamad_quiz1c.scale-100.png
 k.scale-100.png
 l.scale-100.png
 lock.scale-100.png

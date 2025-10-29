@@ -1292,3 +1292,17 @@ C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\n
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\qualifiers.txt
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\qualifiers.txt.intermediate
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\MultipleQualifiersPerDimensionFound.txt
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\FluentUI.cs
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\OpenSans-Regular.ttf
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\OpenSans-Semibold.ttf
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\juantamad_quiz1b.scale-100.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\juantamad_quiz1a.scale-100.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\close.scale-100.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\juantamad_quiz1c.scale-100.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\f\FluentUI.cs
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\f\OpenSans-Regular.ttf
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\f\OpenSans-Semibold.ttf
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\juantamad_quiz1b.scale-100.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\juantamad_quiz1a.scale-100.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\close.scale-100.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\juantamad_quiz1c.scale-100.png

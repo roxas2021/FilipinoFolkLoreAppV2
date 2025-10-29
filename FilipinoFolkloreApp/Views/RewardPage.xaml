@@ -10,7 +10,7 @@
             <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
                 <Image Source="ui/badge.png" HeightRequest="150"/>
                 <Label x:Name="RewardText" Text="+20 ⭐" FontAttributes="Bold" FontSize="28" TextColor="White" HorizontalTextAlignment="Center"/>
-                <Button Text="OK" Clicked="OnRewardOk" />
+                <Button x:Name ="OkButton" Text="OK" Clicked="OnRewardOk" />
             </VerticalStackLayout>
         </Border>
     </Grid>

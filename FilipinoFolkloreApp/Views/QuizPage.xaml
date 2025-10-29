@@ -12,14 +12,14 @@
         <!-- ===== Header (unchanged) ===== -->
         <Grid Grid.Row="0"
           ColumnDefinitions="Auto,*,Auto"
-          ColumnSpacing="16"
+          ColumnSpacing="4"
           VerticalOptions="Start">
 
             <!-- LEFT/MID: Avatar + Name/Stars + Hearts -->
             <Grid Grid.Column="0"
             RowDefinitions="Auto, Auto"
             ColumnDefinitions="Auto, Auto, *, Auto"
-            ColumnSpacing="16">
+            ColumnSpacing="4" RowSpacing="8">
 
                 <!-- Avatar -->
                 <Frame Grid.RowSpan="2"

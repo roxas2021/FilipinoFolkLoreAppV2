@@ -745,3 +745,7 @@ C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\n
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-maccatalyst\maccatalyst-x64\FilipinoFolkloreApp.pdb
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-maccatalyst\maccatalyst-x64\FilipinoFolkloreApp.genruntimeconfig.cache
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-maccatalyst\maccatalyst-x64\ref\FilipinoFolkloreApp.dll
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-maccatalyst\maccatalyst-x64\resizetizer\r\Resources\juantamad_quiz1b.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-maccatalyst\maccatalyst-x64\resizetizer\r\Resources\juantamad_quiz1a.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-maccatalyst\maccatalyst-x64\resizetizer\r\Resources\juantamad_quiz1c.png
+C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-maccatalyst\maccatalyst-x64\resizetizer\r\Resources\close.png

@@ -11,7 +11,9 @@ namespace FilipinoFolkloreApp.Models
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        public string name { get; set; }
+        public string name { get; set; } = "";
+        public string avatar { get; set; } = "";
         public int points { get; set; }
+        public int stars { get; set; } = 0;
     }
 }

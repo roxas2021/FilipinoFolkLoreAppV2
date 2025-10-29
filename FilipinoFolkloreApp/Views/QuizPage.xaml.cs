@@ -70,10 +70,10 @@ public partial class QuizPage : ContentPage
         _cts?.Cancel();
 
         var reward = AlamatContent.GetStory(_storyId).RewardStars;
-        AlamatContent.Stars += reward;
+        //AlamatContent.Stars += reward;
         RefreshStars(); // reflect new stars in header
 
-        await Navigation.PushAsync(new RewardPage(reward));
+        await Navigation.PushAsync(new RewardPage(reward,_storyId));
     }
 
     async Task HandleWrongAsync()
@@ -182,6 +182,34 @@ public partial class QuizPage : ContentPage
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
         _cts?.Cancel();
+        var pages = Navigation.NavigationStack.ToList();
+        foreach (var page in pages)
+        {
+            if (page is RewardPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is QuizPage)
+            {
+                // Remove QuizPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is StoryPage)
+            {
+                // Remove StoryPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is NarratorPage)
+            {
+                Navigation.RemovePage(page);
+            }
+            if (page is AlamatPage)
+            {
+                Navigation.RemovePage(page);
+            }
+        }
+
         await Navigation.PushAsync(new IndexPage());
     }
 }
