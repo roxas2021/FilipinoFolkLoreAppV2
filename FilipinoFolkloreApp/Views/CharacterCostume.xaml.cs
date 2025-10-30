@@ -17,13 +17,9 @@ namespace FilipinoFolkloreApp.Views
 
         // awaitable alert TCS
         TaskCompletionSource<bool> _alertTcs;
-
+        private AvatarCustomizationHelper.AvatarSet currentAvatarSet = AvatarCustomizationHelper.CurrentAvatarSet(AvatarCustomizationHelper.SelectedAvatarSetId);
         // expose the username so it can be changed programmatically or bound from VM
         public string CurrentUserName { get; set; } = "Nichol";
-//        CurrentUserName = "New Name";
-//BindingContext = this;            // re-set if necessary, or raise PropertyChanged
-//PilonStarNicholLabel.Text = PilonStarNicholAmountValue.ToString(); // balance unchanged
-//AlertMessageLabel.Text = $"You don't have enough {CurrentUserName}!"; // update default alert text
 
         public List<TapisItem> TapisItems { get; set; }
 
@@ -33,18 +29,24 @@ namespace FilipinoFolkloreApp.Views
 
             // set binding context so XAML bindings work
             BindingContext = this;
-
-            purchasedCostumes = new List<bool> { false, false, false, false, false, false };
+            
+        }
+        protected override async void OnAppearing()
+        {
+            base. OnAppearing();
+            CharacterImage.Source = currentAvatarSet.CostumePaths[0];
+            await AvatarCustomizationHelper.LoadPurchasedCostume();
+            purchasedCostumes = AvatarCustomizationHelper.purchasedCostumes;
             costumePrices = new List<int> { 100, 150, 180, 200, 250, 280 };
 
             TapisItems = new List<TapisItem>
             {
-                new TapisItem { TapisImageSource = "avatarcustomization/tapis_blue.png", AvatarImageSource = "avatarcustomization/avatar_blue.png", Price = "100", TapisId = 1 },
-                new TapisItem { TapisImageSource = "avatarcustomization/tapis_green.png", AvatarImageSource = "avatarcustomization/avatar_green.png", Price = "150", TapisId = 2 },
-                new TapisItem { TapisImageSource = "avatarcustomization/tapis_red.png", AvatarImageSource = "avatarcustomization/avatar_red.png", Price = "180", TapisId = 3 },
-                new TapisItem { TapisImageSource = "avatarcustomization/tapis_bluered.png", AvatarImageSource = "avatarcustomization/avatar_bluered.png", Price = "200", TapisId = 4 },
-                new TapisItem { TapisImageSource = "avatarcustomization/tapis_white.png", AvatarImageSource = "avatarcustomization/avatar_white.png", Price = "250", TapisId = 5 },
-                new TapisItem { TapisImageSource = "avatarcustomization/tapis_pink.png", AvatarImageSource = "avatarcustomization/avatar_pink.png", Price = "280", TapisId = 6 }
+                new TapisItem { TapisImageSource = "avatarcustomization/tapis_blue.png", AvatarImageSource = currentAvatarSet.CostumePaths[1], Price = "100", TapisId = 1 },
+                new TapisItem { TapisImageSource = "avatarcustomization/tapis_green.png", AvatarImageSource = currentAvatarSet.CostumePaths[2], Price = "150", TapisId = 2 },
+                new TapisItem { TapisImageSource = "avatarcustomization/tapis_red.png", AvatarImageSource = currentAvatarSet.CostumePaths[3], Price = "180", TapisId = 3 },
+                new TapisItem { TapisImageSource = "avatarcustomization/tapis_bluered.png", AvatarImageSource = currentAvatarSet.CostumePaths[4], Price = "200", TapisId = 4 },
+                new TapisItem { TapisImageSource = "avatarcustomization/tapis_white.png", AvatarImageSource = currentAvatarSet.CostumePaths[5], Price = "250", TapisId = 5 },
+                new TapisItem { TapisImageSource = "avatarcustomization/tapis_pink.png", AvatarImageSource = currentAvatarSet.CostumePaths[6], Price = "280", TapisId = 6 }
             };
 
             TapisCollectionView.ItemsSource = TapisItems;
@@ -54,23 +56,26 @@ namespace FilipinoFolkloreApp.Views
 
             // also ensure alert message uses current user name by default
             AlertMessageLabel.Text = $"You don't have enough {CurrentUserName}!";
-        }
 
+        }
         private async void OnTapisSelected(object sender, SelectionChangedEventArgs e)
         {
+            if (purchasedCostumes == null || purchasedCostumes.Count < 6)
+                await AvatarCustomizationHelper.LoadPurchasedCostume(); // ensures list exists
+            
             var selectedTapis = e.CurrentSelection.FirstOrDefault() as TapisItem;
             if (selectedTapis == null) return;
 
             selectedCostumeId = selectedTapis.TapisId;
-
-            // animate avatar change (crossfade + pop + bounce)
-            await AnimateAvatarChangeAsync(selectedTapis.AvatarImageSource);
-
-            // Update Buy button text depending on purchase state
             if (purchasedCostumes[selectedCostumeId - 1])
                 BuyButton.Text = "SELECT";
             else
                 BuyButton.Text = "BUY";
+            // animate avatar change (crossfade + pop + bounce)
+            await AnimateAvatarChangeAsync(selectedTapis.AvatarImageSource);
+
+            // Update Buy button text depending on purchase state
+            
         }
         private async Task AnimateAvatarChangeAsync(string newAvatarSource)
         {
@@ -80,7 +85,7 @@ namespace FilipinoFolkloreApp.Views
                 await CharacterImage.FadeTo(0.25, 120, Easing.CubicIn);
 
                 // swap image source
-                CharacterImage.Source = $"avatarcustomization/{newAvatarSource}";
+                CharacterImage.Source = $"{newAvatarSource}";
 
                 // prepare for pop/rotate: ensure base transforms are reset
                 CharacterImage.Rotation = 0;
@@ -118,6 +123,9 @@ namespace FilipinoFolkloreApp.Views
         private async void OnBuyButtonClicked(object sender, EventArgs e)
         {
             if (selectedCostumeId == 0) return;
+            if (purchasedCostumes == null || purchasedCostumes.Count < selectedCostumeId) return;
+
+            if (selectedCostumeId == 0) return;
 
             int itemCost = costumePrices[selectedCostumeId - 1];
 
@@ -127,7 +135,7 @@ namespace FilipinoFolkloreApp.Views
                 await ShowGameAlertAsync(PilonStarNicholAmountValue, "You have selected this costume.", "emoji_happy.png");
 
                 // still set the avatar to the selected one (keeps previous behavior)
-                CharacterImage.Source = $"avatarcustomization/{TapisItems[selectedCostumeId - 1].AvatarImageSource}";
+                CharacterImage.Source = $"{TapisItems[selectedCostumeId - 1].AvatarImageSource}";
             }
             else
             {
@@ -135,15 +143,30 @@ namespace FilipinoFolkloreApp.Views
                 {
                     // Purchase success -> deduct, update UI, show happy emoji
                     PilonStarNicholAmountValue -= itemCost;
+                    if (purchasedCostumes == null || purchasedCostumes.Count < 6)
+                        await AvatarCustomizationHelper.LoadPurchasedCostume();
                     purchasedCostumes[selectedCostumeId - 1] = true;
+                    string avatarId = AvatarCustomizationHelper.SelectedAvatarSetId; // use your current avatar id (e.g. "avatar1")
+                    string costumeKey = (selectedCostumeId - 1) switch
+                    {
+                        0 => "avatarblue",
+                        1 => "avatarbluered",
+                        2 => "avatargreen",
+                        3 => "avatarpink",
+                        4 => "avatarred",
+                        5 => "avatarwhite",
+                        _ => throw new ArgumentOutOfRangeException(nameof(selectedCostumeId))
+                    };
 
+                    await App.Database.UnlockCostumeAsync(avatarId, costumeKey);
+                    AvatarCustomizationHelper.purchasedCostumes[selectedCostumeId - 1] = true;
                     // update UI
                     PilonStarNicholLabel.Text = PilonStarNicholAmountValue.ToString();
 
                     // show success modal (happy emoji)
                     await ShowGameAlertAsync(PilonStarNicholAmountValue, "You bought the item!", "emoji_happy.png");
 
-                    CharacterImage.Source = $"avatarcustomization/{TapisItems[selectedCostumeId - 1].AvatarImageSource}";
+                    CharacterImage.Source = $"{TapisItems[selectedCostumeId - 1].AvatarImageSource}";
                     BuyButton.Text = "SELECT";
                 }
                 else

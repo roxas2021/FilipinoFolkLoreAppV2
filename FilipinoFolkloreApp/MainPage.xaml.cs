@@ -21,7 +21,7 @@ namespace FilipinoFolkloreApp
             {
                 if (letter == "enter")
                 {
-                    //await App.Database.SaveCharAsync(new Character { name = OutputEntry.Text });
+                    await App.Database.SaveCharAsync(new Character { name = OutputEntry.Text, stars = 50 });
 
                     await Navigation.PushAsync(new AvatarSelectionPage());
                 }

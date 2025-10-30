@@ -17,6 +17,8 @@ namespace FilipinoFolkloreApp.Services
             _database = new SQLiteAsyncConnection(dbPath);
             _database.CreateTableAsync<Character>().Wait();
             _database.CreateTableAsync<StoryMonitored>().Wait();
+
+            _database.CreateTableAsync<AvatarCostumeSet>().Wait();
         }
 
         public Task<Character> GetCharAsync()
@@ -165,6 +167,111 @@ namespace FilipinoFolkloreApp.Services
                     return false;
             }
         }
+        public Task<List<AvatarCostumeSet>> GetAllAvatarSetsAsync()
+        {
+            return _database.Table<AvatarCostumeSet>().ToListAsync();
+        }
 
+        // get by avatarid (string)
+        public Task<AvatarCostumeSet> GetAvatarSetByAvatarIdAsync(string avatarId)
+        {
+            return _database.Table<AvatarCostumeSet>()
+                            .Where(a => a.avatarid == avatarId)
+                            .FirstOrDefaultAsync();
+        }
+
+        // insert or update (returns rows affected)
+        // Upsert by avatarid: update existing row when present, otherwise insert a new one.
+        public async Task<int> SaveAvatarSetAsync(AvatarCostumeSet set)
+        {
+            if (set == null) throw new ArgumentNullException(nameof(set));
+            if (string.IsNullOrWhiteSpace(set.avatarid)) throw new ArgumentException("avatarid required", nameof(set.avatarid));
+
+            try
+            {
+                // try to find an existing record with the same avatarid
+                var existing = await GetAvatarSetByAvatarIdAsync(set.avatarid);
+
+                if (existing != null)
+                {
+                    // ensure we're updating the existing row (preserve its PK)
+                    set.id = existing.id;
+                    return await _database.UpdateAsync(set);
+                }
+                else
+                {
+                    // no existing record -> insert
+                    return await _database.InsertAsync(set);
+                }
+            }
+            catch (Exception)
+            {
+                // rethrow so calling code can inspect the exception details (or log here)
+                throw;
+            }
+        }
+        public async Task<bool> UnlockCostumeAsync(string avatarId, string costumeKey)
+        {
+            if (string.IsNullOrWhiteSpace(avatarId)) throw new ArgumentNullException(nameof(avatarId));
+            if (string.IsNullOrWhiteSpace(costumeKey)) throw new ArgumentNullException(nameof(costumeKey));
+
+            var set = await GetAvatarSetByAvatarIdAsync(avatarId);
+
+            if (set == null)
+            {
+                // create default set if not exists
+                set = new AvatarCostumeSet
+                {
+                    avatarid = avatarId
+                };
+            }
+
+            // set the right flag
+            switch (costumeKey.ToLowerInvariant())
+            {
+                case "avatarblue":
+                    set.avatarblueunlocked = true;
+                    break;
+                case "avatarbluered":
+                    set.avatarblueredunlocked = true;
+                    break;
+                case "avatargreen":
+                    set.avatargreenunlocked = true;
+                    break;
+                case "avatarpink":
+                    set.avatarpinkunlocked = true;
+                    break;
+                case "avatarred":
+                    set.avatarredunlocked = true;
+                    break;
+                case "avatarwhite":
+                    set.avatarwhiteunlocked = true;
+                    break;
+                default:
+                    // unknown key - optionally throw or return false
+                    return false;
+            }
+
+            await SaveAvatarSetAsync(set);
+            return true;
+        }
+
+        // helper to check if costume unlocked
+        public async Task<bool> IsCostumeUnlockedAsync(string avatarId, string costumeKey)
+        {
+            var set = await GetAvatarSetByAvatarIdAsync(avatarId);
+            if (set == null) return false;
+
+            switch (costumeKey.ToLowerInvariant())
+            {
+                case "avatarblue": return set.avatarblueunlocked;
+                case "avatarbluered": return set.avatarblueredunlocked;
+                case "avatargreen": return set.avatargreenunlocked;
+                case "avatarpink": return set.avatarpinkunlocked;
+                case "avatarred": return set.avatarredunlocked;
+                case "avatarwhite": return set.avatarwhiteunlocked;
+                default: return false;
+            }
+        }
     }
 }
