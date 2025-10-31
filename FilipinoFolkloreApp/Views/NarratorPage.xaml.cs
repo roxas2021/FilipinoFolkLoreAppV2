@@ -121,7 +121,8 @@ public partial class NarratorPage : ContentPage
 
                 // DO NOT add to AlamatContent.UnlockedNarrators here if you want per-story behavior.
                 // AlamatContent.UnlockedNarrators.Add(c.Id); // <-- remove this line
-
+                await App.Database.SetStarsAsync(CharacterHelper.CurrentStars - c.Price);
+                CharacterHelper.CurrentStars -= c.Price; // keep in sync
                 saved = true;
             }
             catch (Exception ex)
@@ -153,9 +154,9 @@ public partial class NarratorPage : ContentPage
 
     void LoadHud()
     {
-        HudAvatar.Source = "avatar/avatar1.png";
-        StarsLabel.Text = AlamatContent.Stars.ToString();
-
+        HudAvatar.Source = CharacterHelper.CurrentAvatar;
+        StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
+        PlayerNameLabel.Text = CharacterHelper.CurrentName;
         HeartsPanel.Children.Clear();
         for (int i = 0; i < AlamatContent.Hearts; i++)
             HeartsPanel.Children.Add(new Image { Source = "heart_full.png", WidthRequest = 24, HeightRequest = 24, Aspect = Aspect.AspectFit });

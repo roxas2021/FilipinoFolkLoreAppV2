@@ -28,7 +28,7 @@
                         <!-- Add a TapGestureRecognizer to handle tap events -->
                         <TapGestureRecognizer Tapped="OnAvatarTapped"/>
                     </Frame.GestureRecognizers>
-                    <Image Source="avatar1.png"
+                    <Image Source="avatar1.png" x:Name="HudAvatar"
              Aspect="AspectFill"/>
                 </Frame>
 
@@ -44,7 +44,7 @@
 
                     <Grid ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center">
                         <!-- Name -->
-                        <Label Grid.Column="0"
+                        <Label Grid.Column="0" x:Name="PlayerNameLabel"
          Text="NICHOL"
          FontAttributes="Bold"
          FontSize="18"
@@ -70,7 +70,7 @@
                                         Opacity="0.5" />
                             </Frame.Shadow>
                             <StackLayout Orientation="Horizontal" Spacing="4">
-                                <Label Text="50"
+                                <Label Text="50" x:Name="StarsLabel"
                                  FontAttributes="Bold"
                                  FontSize="20"
                                  TextColor="#FFCC00"/>

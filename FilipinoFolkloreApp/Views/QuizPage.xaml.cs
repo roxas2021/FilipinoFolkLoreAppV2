@@ -71,6 +71,8 @@ public partial class QuizPage : ContentPage
 
         var reward = AlamatContent.GetStory(_storyId).RewardStars;
         //AlamatContent.Stars += reward;
+        await App.Database.SetStarsAsync(CharacterHelper.CurrentStars + reward);
+        CharacterHelper.CurrentStars += reward; // keep in sync
         RefreshStars(); // reflect new stars in header
 
         await Navigation.PushAsync(new RewardPage(reward,_storyId));
@@ -152,15 +154,15 @@ public partial class QuizPage : ContentPage
     // ---------- HUD helpers ----------
     void LoadHud()
     {
-        HudAvatar.Source = AlamatContent.CurrentNarrator.Avatar;
-        PlayerNameLabel.Text = "NICHOL"; // replace if you have a real player name
+        HudAvatar.Source = CharacterHelper.CurrentAvatar;
+        PlayerNameLabel.Text = CharacterHelper.CurrentName; // replace if you have a real player name
         RefreshStars();
         RefreshHearts();
     }
 
     void RefreshStars()
     {
-        StarsLabel.Text = AlamatContent.Stars.ToString();
+        StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
     }
 
     void RefreshHearts()

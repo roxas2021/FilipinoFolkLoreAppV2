@@ -139,6 +139,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\avatar1.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\avatar_blue1.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\avatar_bluered1.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\avatar_green1.png" />
@@ -146,6 +147,7 @@
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\avatar_red1.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\avatar_white1.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\defaultavatar1.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar2\avatar2.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar2\avatar_blue2.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar2\avatar_bluered2.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar2\avatar_green2.png" />
@@ -153,6 +155,7 @@
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar2\avatar_red2.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar2\avatar_white2.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar2\defaultavatar2.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar3\avatar3.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar3\avatar_blue3.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar3\avatar_bluered3.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar3\avatar_green3.png" />
@@ -160,6 +163,7 @@
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar3\avatar_red3.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar3\avatar_white3.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar3\defaultavatar3.png" />
+	  <MauiImage Include="Resources\Images\avatarcustomization\avatar4\avatar4.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar4\avatar_blue4.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar4\avatar_bluered4.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar4\avatar_green4.png" />
@@ -210,10 +214,6 @@
     <MauiImage Include="Resources\Images\keys\ok.png" />
 
 		<!--avatar-->
-    <MauiImage Include="Resources\Images\avatar\avatar1.png" />
-    <MauiImage Include="Resources\Images\avatar\avatar2.png" />
-    <MauiImage Include="Resources\Images\avatar\avatar3.png" />
-    <MauiImage Include="Resources\Images\avatar\avatar4.png" />
 
 		<!---background-->
     <MauiImage Include="Resources\Images\bg\selectionpage.jpg" />

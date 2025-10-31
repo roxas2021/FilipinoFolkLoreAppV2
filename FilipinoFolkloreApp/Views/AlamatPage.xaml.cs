@@ -29,6 +29,7 @@ public partial class AlamatPage : ContentPage
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
         AlamatContent.category = category;
+
         LoadHud();
         //LoadStories();
     }
@@ -54,9 +55,9 @@ public partial class AlamatPage : ContentPage
 
     void LoadHud()
     {
-        HudAvatar.Source = "avatar/avatar1.png";
-        PlayerNameLabel.Text = PlayerNameLabel.Text is null ? "NICHOL" : PlayerNameLabel.Text;
-        StarsLabel.Text = AlamatContent.Stars.ToString();
+        HudAvatar.Source = CharacterHelper.CurrentAvatar;
+        PlayerNameLabel.Text = CharacterHelper.CurrentName;
+        StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
         HeartsPanel.Children.Clear();
         for (int i = 0; i < AlamatContent.Hearts; i++)
         {
@@ -130,7 +131,8 @@ public partial class AlamatPage : ContentPage
                 // Keep the fast-check set in sync (UpdateStoryAsync also tries to sync it,
                 // but we ensure it here immediately so UI checks are consistent).
                 AlamatContent.UnlockedStories.Add(story.Id);
-
+                await App.Database.SetStarsAsync(CharacterHelper.CurrentStars - card.Price);
+                CharacterHelper.CurrentStars -= card.Price; // keep in sync
                 savedToDb = true;
             }
             catch (Exception ex)

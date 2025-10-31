@@ -10,24 +10,192 @@ namespace FilipinoFolkloreApp.Services
 {
     public class DatabaseService
     {
+        private const int MAIN_CHAR_ID = 1;
         readonly SQLiteAsyncConnection _database;
-
+        private readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
         public DatabaseService(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
             _database.CreateTableAsync<Character>().Wait();
             _database.CreateTableAsync<StoryMonitored>().Wait();
-
             _database.CreateTableAsync<AvatarCostumeSet>().Wait();
         }
 
         public Task<Character> GetCharAsync()
         {
             return _database.Table<Character>()
-                            .Where(a => a.Id == 1)
+                            .Where(c => c.Id == MAIN_CHAR_ID)
                             .FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Ensures the single row with Id==1 exists. If it doesn't, create it (with Id = 1).
+        /// Returns the character that exists/was created.
+        /// </summary>
+        public async Task<Character> EnsureMainCharacterExistsAsync()
+        {
+            var c = await GetCharAsync().ConfigureAwait(false);
+            if (c != null) return c;
+
+            var defaultChar = new Character
+            {
+                Id = MAIN_CHAR_ID,      // assign the ID explicitly so the single-row is always id==1
+                name = "Player",
+                currentavatar = string.Empty,
+                points = 0,
+                stars = 0
+            };
+
+            // InsertAsync will use the provided Id value
+            await _database.InsertAsync(defaultChar).ConfigureAwait(false);
+
+            // return the inserted row
+            return await GetCharAsync().ConfigureAwait(false);
+        }
+
+        // ---------- Update operations (no id parameter) ----------
+
+        /// <summary>
+        /// Update currentavatar of the single character.
+        /// </summary>
+        public async Task<Character> UpdateCurrentAvatarAsync(string newAvatar)
+        {
+            await _lock.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                var c = await GetCharAsync().ConfigureAwait(false);
+                if (c == null) throw new InvalidOperationException("Character row missing — call EnsureMainCharacterExistsAsync() first.");
+
+                c.currentavatar = newAvatar ?? string.Empty;
+                await _database.UpdateAsync(c).ConfigureAwait(false);
+                return c;
+            }
+            finally
+            {
+                _lock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Set stars to an absolute non-negative value.
+        /// </summary>
+        public async Task<Character> SetStarsAsync(int stars)
+        {
+            if (stars < 0) stars = 0;
+            await _lock.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                var c = await GetCharAsync().ConfigureAwait(false);
+                if (c == null) throw new InvalidOperationException("Character row missing — call EnsureMainCharacterExistsAsync() first.");
+
+                c.stars = stars;
+                await _database.UpdateAsync(c).ConfigureAwait(false);
+                return c;
+            }
+            finally
+            {
+                _lock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Add (or subtract if negative) a delta to stars. Ensures stars never go below 0.
+        /// Returns updated character.
+        /// </summary>
+        public async Task<Character> AddStarsAsync(int delta)
+        {
+            await _lock.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                var c = await GetCharAsync().ConfigureAwait(false);
+                if (c == null) throw new InvalidOperationException("Character row missing — call EnsureMainCharacterExistsAsync() first.");
+
+                long newStars = (long)c.stars + delta;
+                if (newStars < 0) newStars = 0;
+                c.stars = (int)newStars;
+
+                await _database.UpdateAsync(c).ConfigureAwait(false);
+                return c;
+            }
+            finally
+            {
+                _lock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Update avatar and change stars together (atomic from caller POV).
+        /// </summary>
+        public async Task<Character> UpdateAvatarAndAddStarsAsync(string newAvatar, int starDelta)
+        {
+            await _lock.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                var c = await GetCharAsync().ConfigureAwait(false);
+                if (c == null) throw new InvalidOperationException("Character row missing — call EnsureMainCharacterExistsAsync() first.");
+
+                c.currentavatar = newAvatar ?? string.Empty;
+                long newStars = (long)c.stars + starDelta;
+                if (newStars < 0) newStars = 0;
+                c.stars = (int)newStars;
+
+                await _database.UpdateAsync(c).ConfigureAwait(false);
+                return c;
+            }
+            finally
+            {
+                _lock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Optional helper: reset the character back to defaults (keeps Id == 1).
+        /// </summary>
+        public async Task<Character> ResetCharacterToDefaultsAsync()
+        {
+            await _lock.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                var defaultChar = new Character
+                {
+                    Id = MAIN_CHAR_ID,
+                    name = "Player",
+                    currentavatar = string.Empty,
+                    points = 0,
+                    stars = 0
+                };
+
+                // If a row exists -> Update, otherwise Insert
+                var existing = await GetCharAsync().ConfigureAwait(false);
+                if (existing == null)
+                {
+                    await _database.InsertAsync(defaultChar).ConfigureAwait(false);
+                }
+                else
+                {
+                    // keep the Id==1 and update other fields
+                    existing.name = defaultChar.name;
+                    existing.currentavatar = defaultChar.currentavatar;
+                    existing.points = defaultChar.points;
+                    existing.stars = defaultChar.stars;
+                    await _database.UpdateAsync(existing).ConfigureAwait(false);
+                }
+
+                return await GetCharAsync().ConfigureAwait(false);
+            }
+            finally
+            {
+                _lock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Return everything (should be only one row) - useful for debugging.
+        /// </summary>
+        public Task<List<Character>> GetAllCharactersAsync()
+        {
+            return _database.Table<Character>().ToListAsync();
+        }
         public Task<int> SaveCharAsync(Character word)
         {
             return _database.InsertAsync(word);
@@ -88,9 +256,6 @@ namespace FilipinoFolkloreApp.Services
 
             return AlamatContent.Stories;
         }
-
-
-
         // Update a story’s monitored data
         public async Task UpdateStoryAsync(AlamatContent.Story story)
         {
@@ -180,8 +345,6 @@ namespace FilipinoFolkloreApp.Services
                             .FirstOrDefaultAsync();
         }
 
-        // insert or update (returns rows affected)
-        // Upsert by avatarid: update existing row when present, otherwise insert a new one.
         public async Task<int> SaveAvatarSetAsync(AvatarCostumeSet set)
         {
             if (set == null) throw new ArgumentNullException(nameof(set));

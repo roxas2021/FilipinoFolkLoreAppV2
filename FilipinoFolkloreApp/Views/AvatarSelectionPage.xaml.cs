@@ -13,28 +13,36 @@ namespace FilipinoFolkloreApp.Views
     {
         public ObservableCollection<Avatar> Avatars { get; } = new()
         {
-            new Avatar("avatar/avatar1.png"),
-            new Avatar("avatar/avatar2.png"),
-            new Avatar("avatar/avatar3.png"),
-            new Avatar("avatar/avatar4.png"),
+            new Avatar("avatarcustomization/avatar1/avatar1.png"),
+            new Avatar("avatarcustomization/avatar2/avatar2.png"),
+            new Avatar("avatarcustomization/avatar3/avatar3.png"),
+            new Avatar("avatarcustomization/avatar4/avatar4.png"),
         };
 
         public AvatarSelectionPage()
         {
             InitializeComponent();
             AvatarGrid.ItemsSource = Avatars;
+            
         }
 
         // Called when the page appears - we check if there's already a saved AvatarCostumeSet
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
+            
             // If a saved AvatarCostumeSet exists, skip this page and go to IndexPage
             var existing = await App.Database.GetAllAvatarSetsAsync();
             if (existing != null && existing.Count > 0)
             {
                 AvatarCustomizationHelper.SelectedAvatarSetId =existing[0].avatarid;
+                var existingChar = await App.Database.GetCharAsync();
+                if (existingChar != null)
+                {
+                    CharacterHelper.CurrentName = existingChar.name;
+                    CharacterHelper.CurrentStars = existingChar.stars;
+                    CharacterHelper.CurrentAvatar = existingChar.currentavatar;
+                }
                 // Replace this page with IndexPage (prevents stacking this selection page)
                 await Navigation.PushAsync(new IndexPage());
                 Navigation.RemovePage(this);
@@ -91,8 +99,12 @@ namespace FilipinoFolkloreApp.Views
                 };
 
                 await App.Database.SaveAvatarSetAsync(set);
-            }
+                AvatarCustomizationHelper.SelectedAvatarSetId = set.avatarid;
+                CharacterHelper.CurrentAvatar = AvatarCustomizationHelper.GetFirstCostumePathOrDefault(set.avatarid);
+                await App.Database.UpdateCurrentAvatarAsync(CharacterHelper.CurrentAvatar);
 
+            }
+            
             // Navigate to IndexPage and remove this page from stack so user can't go back to selection
             await Navigation.PushAsync(new IndexPage());
             Navigation.RemovePage(this);

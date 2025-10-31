@@ -1,3 +1,5 @@
+using FilipinoFolkloreApp.Services;
+
 namespace FilipinoFolkloreApp.Views.Home;
 
 public partial class IndexPage : ContentPage
@@ -6,7 +8,20 @@ public partial class IndexPage : ContentPage
 	{
 		InitializeComponent();
 
+        loadhud();
         var data = App.Database.GetCharAsync();
+    }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        loadhud();
+    }
+    void loadhud()
+    {
+        HudAvatar.Source = CharacterHelper.CurrentAvatar;
+        PlayerNameLabel.Text = CharacterHelper.CurrentName;
+        StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
+
     }
     private async void OnAvatarTapped(object sender, EventArgs e)
     {

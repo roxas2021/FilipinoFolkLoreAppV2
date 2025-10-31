@@ -28,7 +28,7 @@ namespace FilipinoFolkloreApp.Services
                 AvatarIdSet = "avatar1",
                 CostumePaths = new List<string>
                 {
-                    "avatarcustomization/avatar1/defaultavatar1.png",
+                    "avatarcustomization/avatar1/avatar1.png",
                     "avatarcustomization/avatar1/avatar_blue1.png",
                     "avatarcustomization/avatar1/avatar_bluered1.png",
                     "avatarcustomization/avatar1/avatar_green1.png",
@@ -42,7 +42,7 @@ namespace FilipinoFolkloreApp.Services
                 AvatarIdSet = "avatar2",
                 CostumePaths = new List<string>
                 {
-                    "avatarcustomization/avatar2/defaultavatar2.png",
+                    "avatarcustomization/avatar2/avatar2.png",
                     "avatarcustomization/avatar2/avatar_blue2.png",
                     "avatarcustomization/avatar2/avatar_bluered2.png",
                     "avatarcustomization/avatar2/avatar_green2.png",
@@ -56,7 +56,7 @@ namespace FilipinoFolkloreApp.Services
                 AvatarIdSet = "avatar3",
                 CostumePaths = new List<string>
                 {
-                    "avatarcustomization/avatar3/defaultavatar3.png",
+                    "avatarcustomization/avatar3/avatar3.png",
                     "avatarcustomization/avatar3/avatar_blue3.png",
                     "avatarcustomization/avatar3/avatar_bluered3.png",
                     "avatarcustomization/avatar3/avatar_green3.png",
@@ -70,7 +70,7 @@ namespace FilipinoFolkloreApp.Services
                 AvatarIdSet = "avatar4",
                 CostumePaths = new List<string>
                 {
-                    "avatarcustomization/avatar4/defaultavatar4.png",
+                    "avatarcustomization/avatar4/avatar4.png",
                     "avatarcustomization/avatar4/avatar_blue4.png",
                     "avatarcustomization/avatar4/avatar_bluered4.png",
                     "avatarcustomization/avatar4/avatar_green4.png",
@@ -107,6 +107,23 @@ namespace FilipinoFolkloreApp.Services
         };
                 
             }
+        }
+        public static string? GetFirstCostumePath(string avatarSetId)
+        {
+            if (string.IsNullOrWhiteSpace(avatarSetId)) return null;
+
+            var set = Avatars
+                        .FirstOrDefault(a => a.AvatarIdSet == avatarSetId);
+
+            if (set == null) return null;
+            if (set.CostumePaths == null || set.CostumePaths.Count == 0) return null;
+
+            return set.CostumePaths[0];
+        }
+        public static string GetFirstCostumePathOrDefault(string avatarSetId, string fallback = "avatarcustomization/default.png")
+        {
+            var first = GetFirstCostumePath(avatarSetId);
+            return string.IsNullOrEmpty(first) ? fallback : first;
         }
         /// <summary>
         /// Returns costume info (path + unlock status) for the given avatar.

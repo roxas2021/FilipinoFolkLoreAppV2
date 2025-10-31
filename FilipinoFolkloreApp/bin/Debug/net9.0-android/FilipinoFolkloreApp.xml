@@ -4,6 +4,43 @@
         <name>FilipinoFolkloreApp</name>
     </assembly>
     <members>
+        <member name="M:FilipinoFolkloreApp.Services.DatabaseService.EnsureMainCharacterExistsAsync">
+            <summary>
+            Ensures the single row with Id==1 exists. If it doesn't, create it (with Id = 1).
+            Returns the character that exists/was created.
+            </summary>
+        </member>
+        <member name="M:FilipinoFolkloreApp.Services.DatabaseService.UpdateCurrentAvatarAsync(System.String)">
+            <summary>
+            Update currentavatar of the single character.
+            </summary>
+        </member>
+        <member name="M:FilipinoFolkloreApp.Services.DatabaseService.SetStarsAsync(System.Int32)">
+            <summary>
+            Set stars to an absolute non-negative value.
+            </summary>
+        </member>
+        <member name="M:FilipinoFolkloreApp.Services.DatabaseService.AddStarsAsync(System.Int32)">
+            <summary>
+            Add (or subtract if negative) a delta to stars. Ensures stars never go below 0.
+            Returns updated character.
+            </summary>
+        </member>
+        <member name="M:FilipinoFolkloreApp.Services.DatabaseService.UpdateAvatarAndAddStarsAsync(System.String,System.Int32)">
+            <summary>
+            Update avatar and change stars together (atomic from caller POV).
+            </summary>
+        </member>
+        <member name="M:FilipinoFolkloreApp.Services.DatabaseService.ResetCharacterToDefaultsAsync">
+            <summary>
+            Optional helper: reset the character back to defaults (keeps Id == 1).
+            </summary>
+        </member>
+        <member name="M:FilipinoFolkloreApp.Services.DatabaseService.GetAllCharactersAsync">
+            <summary>
+            Return everything (should be only one row) - useful for debugging.
+            </summary>
+        </member>
         <member name="T:FilipinoFolkloreApp.Resource">
             <summary>
             Android Resource Designer class.
