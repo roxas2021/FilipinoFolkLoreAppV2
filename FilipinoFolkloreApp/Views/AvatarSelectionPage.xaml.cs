@@ -95,7 +95,6 @@ namespace FilipinoFolkloreApp.Views
                     avatargreenunlocked = false,
                     avatarpinkunlocked = false,
                     avatarredunlocked = false,
-                    avatarwhiteunlocked = false,
                 };
 
                 await App.Database.SaveAvatarSetAsync(set);

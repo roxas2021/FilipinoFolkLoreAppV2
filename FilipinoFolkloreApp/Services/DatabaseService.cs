@@ -406,9 +406,7 @@ namespace FilipinoFolkloreApp.Services
                     break;
                 case "avatarred":
                     set.avatarredunlocked = true;
-                    break;
-                case "avatarwhite":
-                    set.avatarwhiteunlocked = true;
+                 
                     break;
                 default:
                     // unknown key - optionally throw or return false
@@ -432,7 +430,6 @@ namespace FilipinoFolkloreApp.Services
                 case "avatargreen": return set.avatargreenunlocked;
                 case "avatarpink": return set.avatarpinkunlocked;
                 case "avatarred": return set.avatarredunlocked;
-                case "avatarwhite": return set.avatarwhiteunlocked;
                 default: return false;
             }
         }

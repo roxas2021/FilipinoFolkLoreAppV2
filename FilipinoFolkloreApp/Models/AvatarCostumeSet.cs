@@ -17,6 +17,5 @@ namespace FilipinoFolkloreApp.Models
         public bool avatargreenunlocked { get; set; } = false;
         public bool avatarpinkunlocked { get; set; } = false;
         public bool avatarredunlocked { get; set; } = false;
-        public bool avatarwhiteunlocked { get; set; } = false;
     }
 }
