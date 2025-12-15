@@ -13,9 +13,11 @@
               ColumnDefinitions="*, Auto"
               Padding="8,8,8,16"
               ColumnSpacing="8"
-              RowSpacing="8">
+              RowSpacing="8"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
 
-            <Grid Grid.Row="0" Grid.Column="0"
+            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
                   HorizontalOptions="Center"
                   VerticalOptions="Center"
                   RowSpacing="8">
@@ -90,21 +92,21 @@
 
                         <Image x:Name="CharacterImage"
                                Source="avatarcustomization/defaultavatar.png"
-                               WidthRequest="136"
-                               HeightRequest="184"
+                               WidthRequest="140"
+                               HeightRequest="200"
                                Aspect="AspectFit"/>
                     </StackLayout>
                 </Border>
 
                 <Button Grid.Row="1"
                         x:Name="BuyButton"
-                        Text="BUY"
+                        Text="EQUIPPED"
                         FontSize="Large"
                         FontAttributes="Bold"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         CornerRadius="22"
-                        BackgroundColor="DeepPink"
+                        BackgroundColor="SeaGreen"
                         TextColor="yellow"
                         Clicked="OnBuyButtonClicked">
                     <Button.Shadow>
@@ -117,10 +119,14 @@
             </Grid>
 
             <!-- Right side and CollectionView unchanged -->
-            <Border Grid.Row="0" Grid.Column="1"
+            <Border Grid.Row="0" 
+                    Grid.Column="1"
+                    Grid.RowSpan="3"
                     Padding="8"
                     BackgroundColor="#4D87CEFA"
-                    StrokeThickness="0">
+                    StrokeThickness="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="16"/>
                 </Border.StrokeShape>
@@ -164,14 +170,19 @@
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="8"
-                                      HorizontalOptions="Center"
-                                      VerticalOptions="Center">
-                                    <Border InputTransparent="True"
-                                            BackgroundColor="White"
-                                            StrokeThickness="1"
-                                            HorizontalOptions="Fill"
-                                            VerticalOptions="Fill">
+                                <Grid Padding="8">
+
+                                    <!-- MAIN CARD -->
+                                    <Border BackgroundColor="White"
+                                        StrokeThickness="2"
+                                        Stroke="Transparent">
+
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="Stroke" Value="DeepPink"/>
+                                            </DataTrigger>
+                                        </Border.Triggers>
+
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="12"/>
                                         </Border.StrokeShape>
@@ -180,38 +191,72 @@
                                     <Image Source="{Binding TapisImageSource}"
                                            WidthRequest="72"
                                            HeightRequest="112"
-                                           BackgroundColor="Transparent"
-                                           Aspect="AspectFit" />
+                                           Aspect="AspectFit"/>
 
-                                    <Frame InputTransparent="True"
-                                           Padding="8,4"
-                                           BackgroundColor="DeepPink"
+                                    <!-- PRICE BADGE -->
+                                    <Frame Padding="6,4"
                                            CornerRadius="12"
-                                           HasShadow="False"
                                            HorizontalOptions="Center"
                                            VerticalOptions="End"
-                                           BorderColor="Black"
-                                           TranslationY="-4">
+                                           TranslationY="-4"
+                                           HasShadow="False"
+                                           BackgroundColor="DeepPink">
+
+                                        <!-- Switch the badge background -->
                                         <Frame.Triggers>
-                                            <DataTrigger TargetType="Frame" Binding="{Binding IsPurchased}" Value="True">
-                                                <Setter Property="IsVisible" Value="False" />
+                                            <DataTrigger TargetType="Frame"
+                                                         Binding="{Binding IsPurchased}"
+                                                         Value="True">
+                                                <Setter Property="BackgroundColor" Value="SeaGreen"/>
                                             </DataTrigger>
                                         </Frame.Triggers>
-                                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
-                                            <Label Text="{Binding Price}"
-                                                   TextColor="Yellow"
-                                                   FontSize="12"
-                                                   VerticalTextAlignment="Center"/>
-                                            <Image Grid.Column="1"
-                                                   Source="icon_star_yellow.png"
-                                                   WidthRequest="16"
-                                                   HeightRequest="16"
-                                                   Aspect="AspectFit"
-                                                   VerticalOptions="Center"/>
+
+                                        <!-- ✅ Only ONE Content (Grid) -->
+                                        <Grid>
+
+                                            <!-- PRICE (shown when NOT purchased) -->
+                                            <StackLayout x:Name="PriceBadge"
+                                                         Orientation="Horizontal"
+                                                         Spacing="6"
+                                                         IsVisible="True">
+                                                <Label Text="{Binding Price}"
+                                                       TextColor="Yellow"
+                                                       FontSize="12"
+                                                       VerticalTextAlignment="Center" />
+                                                <Image Source="icon_star_yellow.png"
+                                                       WidthRequest="14"
+                                                       HeightRequest="14"
+                                                       Aspect="AspectFit"
+                                                       VerticalOptions="Center" />
+                                            </StackLayout>
+
+                                            <!-- OWNED (shown when purchased) -->
+                                            <Label x:Name="OwnedBadge"
+                                                   Text="OWNED"
+                                                   FontSize="11"
+                                                   TextColor="White"
+                                                   FontAttributes="Bold"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="False" />
+
+                                            <!-- Toggle which one is visible -->
+                                            <Grid.Triggers>
+                                                <DataTrigger TargetType="Grid"
+                                                             Binding="{Binding IsPurchased}"
+                                                             Value="True">
+                                                    <Setter TargetName="PriceBadge" Property="IsVisible" Value="False"/>
+                                                    <Setter TargetName="OwnedBadge" Property="IsVisible" Value="True"/>
+                                                </DataTrigger>
+                                            </Grid.Triggers>
+
                                         </Grid>
                                     </Frame>
 
+
+
                                 </Grid>
+
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -264,14 +309,10 @@
                                    MinimumWidthRequest="72">
 
                                 <StackLayout Orientation="Horizontal"
-                                             Spacing="6"
+                                             Spacing="6" 
                                              VerticalOptions="Center"
                                              HorizontalOptions="Center">
-                                    <Image Source="icon_star_yellow.png"
-                                           WidthRequest="18"
-                                           HeightRequest="18"
-                                           VerticalOptions="Center"
-                                           Aspect="AspectFit" />
+
 
                                     <Label x:Name="AlertAmountLabel"
                                            Text="0"
@@ -279,8 +320,13 @@
                                            FontAttributes="Bold"
                                            VerticalOptions="Center"
                                            HorizontalOptions="Center" />
+                                    <Image Source="icon_star_yellow.png"
+                                           WidthRequest="18"
+                                           HeightRequest="18"
+                                           VerticalOptions="Center"
+                                           Aspect="AspectFit" />
                                 </StackLayout>
-                                
+
                             </Frame>
                         </Grid>
 
