@@ -29822,11 +29822,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\NiX\\Source\\Repos\\FilipinoFolkLoreAppV2\\FilipinoFolkloreApp\\FilipinoFolkloreApp.csproj",
+      "projectUniqueName": "C:\\Users\\NiX\\Desktop\\FolkApp\\Latest3\\FilipinoFolkloreApp\\FilipinoFolkloreApp.csproj",
       "projectName": "FilipinoFolkloreApp",
-      "projectPath": "C:\\Users\\NiX\\Source\\Repos\\FilipinoFolkLoreAppV2\\FilipinoFolkloreApp\\FilipinoFolkloreApp.csproj",
+      "projectPath": "C:\\Users\\NiX\\Desktop\\FolkApp\\Latest3\\FilipinoFolkloreApp\\FilipinoFolkloreApp.csproj",
       "packagesPath": "C:\\Users\\NiX\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\NiX\\Source\\Repos\\FilipinoFolkLoreAppV2\\FilipinoFolkloreApp\\obj\\",
+      "outputPath": "C:\\Users\\NiX\\Desktop\\FolkApp\\Latest3\\FilipinoFolkloreApp\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [

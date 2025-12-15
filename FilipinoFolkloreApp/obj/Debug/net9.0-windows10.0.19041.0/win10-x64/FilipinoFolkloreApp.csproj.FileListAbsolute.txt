@@ -1306,3 +1306,15 @@ C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\n
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\juantamad_quiz1a.scale-100.png
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\close.scale-100.png
 C:\Users\user\Source\Repos\FilipinoFolkLoreAppV2\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\juantamad_quiz1c.scale-100.png
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\FilipinoFolkloreApp.csproj.AssemblyReference.cache
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\mauiimage.inputs
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\mauifont.inputs
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\mauisplash.inputs
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\mauimanifest.stamp
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\Platforms\Windows\App.g.i.cs
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\Platforms\Windows\App.g.cs
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\Platforms\Windows\App.xaml
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\Platforms\Windows\App.xbf
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\FilipinoFolkloreApp.dll
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\refint\FilipinoFolkloreApp.dll
+C:\Users\NiX\Desktop\FolkApp\Latest3\FilipinoFolkloreApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\FilipinoFolkloreApp.pdb

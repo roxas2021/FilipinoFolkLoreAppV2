@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "k4ig8Q+WHcs=",
+  "dgSpecHash": "+9lRdNhdeh8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\NiX\\Source\\Repos\\FilipinoFolkLoreAppV2\\FilipinoFolkloreApp\\FilipinoFolkloreApp.csproj",
+  "projectFilePath": "C:\\Users\\NiX\\Desktop\\FolkApp\\Latest3\\FilipinoFolkloreApp\\FilipinoFolkloreApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\NiX\\.nuget\\packages\\communitytoolkit.maui\\9.1.1\\communitytoolkit.maui.9.1.1.nupkg.sha512",
     "C:\\Users\\NiX\\.nuget\\packages\\communitytoolkit.maui.core\\9.1.1\\communitytoolkit.maui.core.9.1.1.nupkg.sha512",
