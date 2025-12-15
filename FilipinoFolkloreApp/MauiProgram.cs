@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using FilipinoFolkloreApp.Services;
 using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;    
 namespace FilipinoFolkloreApp
@@ -19,6 +20,7 @@ namespace FilipinoFolkloreApp
                 });
 
             builder.Services.AddSingleton(AudioManager.Current);
+            builder.Services.AddSingleton<HeartService>();
             // other configuration (services, handlers) here
 
             return builder.Build();

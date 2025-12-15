@@ -11,6 +11,8 @@ namespace FilipinoFolkloreApp.Views;
 public partial class NarratorPage : ContentPage
 {
     private readonly string _storyId;
+    private HeartService HeartService =>
+    Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
 
     class Card
     {
@@ -24,7 +26,7 @@ public partial class NarratorPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
+        AlamatContent.Hearts = HeartService.GetHearts();
         try
         {
             // Sync in-memory story monitored fields from DB.
@@ -157,11 +159,22 @@ public partial class NarratorPage : ContentPage
         HudAvatar.Source = CharacterHelper.CurrentAvatar;
         StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
         PlayerNameLabel.Text = CharacterHelper.CurrentName;
+        RefreshHearts();    
+    }
+    void RefreshHearts()
+    {
         HeartsPanel.Children.Clear();
         for (int i = 0; i < AlamatContent.Hearts; i++)
-            HeartsPanel.Children.Add(new Image { Source = "heart_full.png", WidthRequest = 24, HeightRequest = 24, Aspect = Aspect.AspectFit });
+        {
+            HeartsPanel.Children.Add(new Image
+            {
+                Source = "heart_full.png",
+                WidthRequest = 24,
+                HeightRequest = 24,
+                Aspect = Aspect.AspectFit
+            });
+        }
     }
-
     async void OnBackTapped(object? s, TappedEventArgs e)
     {
         if (Navigation.NavigationStack.Count > 1)

@@ -14,6 +14,9 @@ public partial class QuizPage : ContentPage
     private readonly string _storyId;
     int _correctIndex = 0;
     CancellationTokenSource? _cts;
+    private HeartService HeartService =>
+    Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
+
 
     public QuizPage(string storyId)
     {
@@ -62,8 +65,26 @@ public partial class QuizPage : ContentPage
         catch (TaskCanceledException) { }
     }
 
-    Task HandlePickAsync(int idx) =>
-        idx == _correctIndex ? HandleCorrectAsync() : HandleWrongAsync();
+    async Task HandlePickAsync(int idx)
+    {
+        // ?? Guard: no hearts left
+        if (HeartService.GetHearts() <= 0)
+        {
+            await DisplayAlert(
+                "Wala nang ??",
+                "Babalik ang mga puso pagkalipas ng 5 minuto.",
+                "OK"
+            );
+            return;
+        }
+
+        // Normal flow
+        if (idx == _correctIndex)
+            await HandleCorrectAsync();
+        else
+            await HandleWrongAsync();
+    }
+
 
     async Task HandleCorrectAsync()
     {
@@ -75,16 +96,13 @@ public partial class QuizPage : ContentPage
         CharacterHelper.CurrentStars += reward; // keep in sync
         RefreshStars(); // reflect new stars in header
 
-        await Navigation.PushAsync(new RewardPage(reward,_storyId));
+        await Navigation.PushAsync(new RewardPage(reward, _storyId));
     }
 
     async Task HandleWrongAsync()
     {
         _cts?.Cancel();
-
-        if (AlamatContent.Hearts > 0)
-            AlamatContent.Hearts--;
-
+        HeartService.LoseHeart();
         RefreshHearts();
 
         await ShowWrongModalAsync();
@@ -128,6 +146,14 @@ public partial class QuizPage : ContentPage
 );
         GameAlertOverlay.IsVisible = false;
     }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        AlamatContent.Hearts = HeartService.GetHearts();
+        // ?? Restore hearts if 5 minutes already passed
+        RefreshHearts();
+    }
 
     async void OnAlertReplayTapped(object? s, TappedEventArgs e)
     {
@@ -155,6 +181,7 @@ public partial class QuizPage : ContentPage
     void LoadHud()
     {
         HudAvatar.Source = CharacterHelper.CurrentAvatar;
+        NarratorAvatar.Source = AlamatContent.CurrentNarrator.Avatar;
         PlayerNameLabel.Text = CharacterHelper.CurrentName; // replace if you have a real player name
         RefreshStars();
         RefreshHearts();

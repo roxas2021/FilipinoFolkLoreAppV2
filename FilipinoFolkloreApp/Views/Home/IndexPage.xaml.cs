@@ -4,9 +4,11 @@ namespace FilipinoFolkloreApp.Views.Home;
 
 public partial class IndexPage : ContentPage
 {
-	public IndexPage()
-	{
-		InitializeComponent();
+    private HeartService HeartService =>
+    Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
+    public IndexPage()
+    {
+        InitializeComponent();
 
         loadhud();
         var data = App.Database.GetCharAsync();
@@ -14,6 +16,8 @@ public partial class IndexPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        AlamatContent.Hearts = HeartService.GetHearts();
         loadhud();
     }
     void loadhud()
@@ -22,6 +26,22 @@ public partial class IndexPage : ContentPage
         PlayerNameLabel.Text = CharacterHelper.CurrentName;
         StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
 
+        RefreshHearts();
+
+    }
+    void RefreshHearts()
+    {
+        HeartsPanel.Children.Clear();
+        for (int i = 0; i < AlamatContent.Hearts; i++)
+        {
+            HeartsPanel.Children.Add(new Image
+            {
+                Source = "heart_full.png",
+                WidthRequest = 24,
+                HeightRequest = 24,
+                Aspect = Aspect.AspectFit
+            });
+        }
     }
     private async void OnAvatarTapped(object sender, EventArgs e)
     {
@@ -43,4 +63,4 @@ public partial class IndexPage : ContentPage
         // Navigate to the AlamatList page
         await Navigation.PushAsync(new AlamatPage("pabula"));
     }
-}       
+}

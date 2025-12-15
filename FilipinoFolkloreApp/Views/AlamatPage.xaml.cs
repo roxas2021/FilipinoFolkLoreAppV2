@@ -11,6 +11,8 @@ namespace FilipinoFolkloreApp.Views;
 
 public partial class AlamatPage : ContentPage
 {
+    private HeartService HeartService =>
+    Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
     public class StoryCard
     {
         public string Id { get; set; } = "";
@@ -52,12 +54,8 @@ public partial class AlamatPage : ContentPage
         LoadHud();
         LoadStories();
     }
-
-    void LoadHud()
+    void RefreshHearts()
     {
-        HudAvatar.Source = CharacterHelper.CurrentAvatar;
-        PlayerNameLabel.Text = CharacterHelper.CurrentName;
-        StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
         HeartsPanel.Children.Clear();
         for (int i = 0; i < AlamatContent.Hearts; i++)
         {
@@ -65,9 +63,17 @@ public partial class AlamatPage : ContentPage
             {
                 Source = "heart_full.png",
                 WidthRequest = 24,
-                HeightRequest = 24
+                HeightRequest = 24,
+                Aspect = Aspect.AspectFit
             });
         }
+    }
+    void LoadHud()
+    {
+        HudAvatar.Source = CharacterHelper.CurrentAvatar;
+        PlayerNameLabel.Text = CharacterHelper.CurrentName;
+        StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
+        RefreshHearts();
     }
     async void OnBackTapped(object? s, TappedEventArgs e)
     {

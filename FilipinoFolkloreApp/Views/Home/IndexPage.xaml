@@ -33,78 +33,40 @@
                 </Frame>
 
                 <!-- Name + Stars pill -->
-                <Frame  Margin="10,0,0,0"
-                      Grid.Row="0"
-                      Grid.Column="1"
-                      BackgroundColor="LightGreen"
-                      CornerRadius="10"
-                      Padding="8,4"
-                      HorizontalOptions="Start"
-                      VerticalOptions="Center">
-
-                    <Grid ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center">
-                        <!-- Name -->
-                        <Label Grid.Column="0" x:Name="PlayerNameLabel"
-         Text="NICHOL"
-         FontAttributes="Bold"
-         FontSize="18"
-         TextColor="#FF66CC"
-         VerticalOptions="Center"/>
-
-                        <!-- Spacer -->
-                        <BoxView Grid.Column="1" />
-
-                        <!-- Stars wrapped in a Frame for background + border -->
-                        <Frame Grid.Column="2"
-                             Padding="10,4"
-                             BackgroundColor="LightGreen"
-                             BorderColor="Black"
-                             CornerRadius="12"
-                             HasShadow="False"
-                             VerticalOptions="Center"
-                               Margin="10,0,0,0">
+                <Frame Margin="10,0,0,0"
+   Grid.Row="0" Grid.Column="1"
+   BackgroundColor="LightGreen"
+   CornerRadius="10" Padding="8,4"
+   HorizontalOptions="Start" VerticalOptions="Center">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+                        <Label x:Name="PlayerNameLabel"
+       Grid.Column="0" Text="NICHOL"
+       FontAttributes="Bold" FontSize="18" TextColor="#FF66CC"
+       VerticalOptions="Center"/>
+                        <BoxView Grid.Column="1"/>
+                        <Frame Grid.Column="2" Padding="10,4"
+       BackgroundColor="LightGreen" BorderColor="Black"
+       CornerRadius="12" HasShadow="False"
+       VerticalOptions="Center" Margin="10,0,0,0">
                             <Frame.Shadow>
-                                <Shadow Brush="Black"
-                                        Offset="-4,4"
-                                        Radius="8"
-                                        Opacity="0.5" />
+                                <Shadow Brush="Black" Offset="-4,4" Radius="8" Opacity="0.5"/>
                             </Frame.Shadow>
-                            <StackLayout Orientation="Horizontal" Spacing="4">
-                                <Label Text="50" x:Name="StarsLabel"
-                                 FontAttributes="Bold"
-                                 FontSize="20"
-                                 TextColor="#FFCC00"/>
-                                <Image Source="icon_star_yellow.png"
-                                 WidthRequest="35"
-                                 HeightRequest="35"/>
-                            </StackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label x:Name="StarsLabel" Text="50" VerticalOptions="Center"
+           FontAttributes="Bold" FontSize="20" TextColor="#FFCC00"/>
+                                <Image Source="icon_star_yellow.png" WidthRequest="35" HeightRequest="35"/>
+                            </HorizontalStackLayout>
                         </Frame>
                     </Grid>
-
                 </Frame>
 
-                <!-- Hearts in row 1 across columns 1–3 -->
-                <Frame Grid.Row="1"
-           Grid.Column="1"
-           Grid.ColumnSpan="3"
-           CornerRadius="12"
-           Padding="6,2" Margin="10,0,0,0"
-           BackgroundColor="White"
-           HorizontalOptions="Start">
-                    <StackLayout Orientation="Horizontal" Spacing="4">
-                        <Image Source="heart_full.png"
-               WidthRequest="20"
-               HeightRequest="20"/>
-                        <Image Source="heart_full.png"
-               WidthRequest="20"
-               HeightRequest="20"/>
-                        <Image Source="heart_full.png"
-               WidthRequest="20"
-               HeightRequest="20"/>
-                    </StackLayout>
+                <!-- Hearts row -->
+                <Frame Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+   CornerRadius="12" Padding="6,2" Margin="10,0,0,0"
+   BackgroundColor="White" HorizontalOptions="Start">
+                    <HorizontalStackLayout x:Name="HeartsPanel" Spacing="8"/>
                 </Frame>
             </Grid>
-
             <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalOptions="Start">
                 <Button Text="MEDALYA"
                 FontAttributes="Bold"

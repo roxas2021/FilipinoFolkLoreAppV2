@@ -10,8 +10,16 @@
         </Grid.GestureRecognizers>
 
         <!-- double buffer for cross-fade -->
-        <Image x:Name="BgA" Aspect="AspectFill" />
-        <Image x:Name="BgB" Aspect="AspectFill" Opacity="0" />
+        <Image x:Name="BgA"
+       Aspect="Fill"
+       HorizontalOptions="FillAndExpand"
+       VerticalOptions="FillAndExpand" />
+
+        <Image x:Name="BgB"
+       Aspect="Fill"
+       HorizontalOptions="FillAndExpand"
+       VerticalOptions="FillAndExpand"
+       Opacity="0" />
 
         <!-- layered character sprites -->
         <Grid x:Name="CharacterLayer" InputTransparent="True" />
