@@ -44,7 +44,7 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
 		<!--<MauiSplashScreen Include="Resources\Splash\splash.jpg" Color="#512BD4" />-->
@@ -58,6 +58,23 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AndroidResource Remove="Resources\Images\storiespabula\pagongatbuwaya\**" />
+	  <AndroidResource Remove="Resources\Images\storiespabula\pagongatmatsing\**" />
+	  <Compile Remove="Resources\Images\storiespabula\pagongatbuwaya\**" />
+	  <Compile Remove="Resources\Images\storiespabula\pagongatmatsing\**" />
+	  <EmbeddedResource Remove="Resources\Images\storiespabula\pagongatbuwaya\**" />
+	  <EmbeddedResource Remove="Resources\Images\storiespabula\pagongatmatsing\**" />
+	  <MauiCss Remove="Resources\Images\storiespabula\pagongatbuwaya\**" />
+	  <MauiCss Remove="Resources\Images\storiespabula\pagongatmatsing\**" />
+	  <MauiImage Remove="Resources\Images\storiespabula\pagongatbuwaya\**" />
+	  <MauiImage Remove="Resources\Images\storiespabula\pagongatmatsing\**" />
+	  <MauiXaml Remove="Resources\Images\storiespabula\pagongatbuwaya\**" />
+	  <MauiXaml Remove="Resources\Images\storiespabula\pagongatmatsing\**" />
+	  <None Remove="Resources\Images\storiespabula\pagongatbuwaya\**" />
+	  <None Remove="Resources\Images\storiespabula\pagongatmatsing\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -119,6 +136,41 @@
 	  <None Remove="Resources\Images\elements\pause.png" />
 	  <None Remove="Resources\Images\elements\play.png" />
 	  <None Remove="Resources\Images\elements\prev.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan1.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan10.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan11.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan12.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan13.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan14.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan15.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan2.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan3.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan4.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan5.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan6.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan7.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan8.png" />
+	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan9.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon1.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon10.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon11.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon12.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon13.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon14.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon2.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon3.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon4.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon5.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon6.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon7.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon8.png" />
+	  <None Remove="Resources\Images\storiesepiko\ibalon\ibalon9.png" />
+	  <None Remove="Resources\Images\storiesepiko\kudaman\kudaman1.png" />
+	  <None Remove="Resources\Images\storiesepiko\kudaman\kudaman2.png" />
+	  <None Remove="Resources\Images\storiesepiko\kudaman\kudaman3.png" />
+	  <None Remove="Resources\Images\storiesepiko\kudaman\kudaman4.png" />
+	  <None Remove="Resources\Images\storiesepiko\kudaman\kudaman5.png" />
+	  <None Remove="Resources\Images\storiesepiko\kudaman\kudaman6.png" />
 	  <None Remove="Resources\Images\storiespabula\pagong_at_kuneho1.png" />
 	  <None Remove="Resources\Images\storiespabula\pagong_at_kuneho10.png" />
 	  <None Remove="Resources\Images\storiespabula\pagong_at_kuneho11.png" />
@@ -297,6 +349,41 @@
     <MauiImage Include="Resources\Images\elements\star.png" />
     <MauiImage Include="Resources\Images\elements\tarsier.png" />
     <MauiImage Include="Resources\Images\elements\pluss.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan1.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan10.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan11.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan12.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan13.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan14.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan15.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan2.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan3.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan4.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan5.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan6.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan7.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan8.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan9.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon1.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon10.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon11.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon12.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon13.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon14.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon2.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon3.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon4.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon5.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon6.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon7.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon8.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\ibalon\ibalon9.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\kudaman\kudaman1.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\kudaman\kudaman2.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\kudaman\kudaman3.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\kudaman\kudaman4.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\kudaman\kudaman5.png" />
+    <MauiImage Include="Resources\Images\storiesepiko\kudaman\kudaman6.png" />
     <MauiImage Include="Resources\Images\storiespabula\pagongatkuneho\pagong_at_kuneho1.png" />
     <MauiImage Include="Resources\Images\storiespabula\pagongatkuneho\pagong_at_kuneho10.png" />
     <MauiImage Include="Resources\Images\storiespabula\pagongatkuneho\pagong_at_kuneho11.png" />

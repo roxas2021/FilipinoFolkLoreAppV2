@@ -505,7 +505,7 @@ namespace FilipinoFolkloreApp.Services
         public static bool TrySpendStars(int amount)
         {
             if (CharacterHelper.CurrentStars < amount) return false;
-            CharacterHelper.CurrentStars -= amount; return true;
+            return true;
         }
     }
 }
