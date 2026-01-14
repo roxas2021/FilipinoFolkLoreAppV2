@@ -92,9 +92,15 @@ public partial class QuizPage : ContentPage
 
         var reward = AlamatContent.GetStory(_storyId).RewardStars;
         //AlamatContent.Stars += reward;
-        await App.Database.SetStarsAsync(CharacterHelper.CurrentStars + reward);
-        CharacterHelper.CurrentStars += reward; // keep in sync
-        RefreshStars(); // reflect new stars in header
+        var getStory = AlamatContent.GetStory(_storyId).IsRewardClaimed;
+
+        if (!getStory)
+        {
+            await App.Database.SetStarsAsync(CharacterHelper.CurrentStars + reward);
+            CharacterHelper.CurrentStars += reward; // keep in sync
+            RefreshStars(); // reflect new stars in header
+        }
+        
 
         await Navigation.PushAsync(new RewardPage(reward, _storyId));
     }

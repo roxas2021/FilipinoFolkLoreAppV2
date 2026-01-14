@@ -3,7 +3,7 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="Choose Your Character"
-             BackgroundImageSource="selectionpage.jpg"
+             BackgroundImageSource="char_choicebg.jpg"
              Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="Auto, *" Padding="20" VerticalOptions="Center">

@@ -23,6 +23,7 @@ obj\Debug\net9.0-android\resizetizer\r\drawable\avatar4_whiteblack.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\avatar4_whitegreen.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\avatar4_whiteorange.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\avatar4_whitered.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\avatar_bg.jpg
 obj\Debug\net9.0-android\resizetizer\r\drawable\b.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\bantugan1.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\bantugan10.png
@@ -55,6 +56,7 @@ obj\Debug\net9.0-android\resizetizer\r\drawable\bred.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\bwhiteblue.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\bwhitered.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\c.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\char_choicebg.jpg
 obj\Debug\net9.0-android\resizetizer\r\drawable\chocolate_hills1.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\chocolate_hills10.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\chocolate_hills11.png
@@ -84,6 +86,7 @@ obj\Debug\net9.0-android\resizetizer\r\drawable\gwhiteorange.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\gwhitered.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\h.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\heart_full.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\homepage_bg.jpg
 obj\Debug\net9.0-android\resizetizer\r\drawable\i.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\ibalon1.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\ibalon10.png
@@ -143,6 +146,7 @@ obj\Debug\net9.0-android\resizetizer\r\drawable\m.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\mainpage_bg.jpeg
 obj\Debug\net9.0-android\resizetizer\r\drawable\monkey.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\n.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\narator_bg.jpg
 obj\Debug\net9.0-android\resizetizer\r\drawable\next.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\o.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\ok.png
@@ -192,6 +196,7 @@ obj\Debug\net9.0-android\resizetizer\r\drawable\pluss.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\prev.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\q.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\r.png
+obj\Debug\net9.0-android\resizetizer\r\drawable\reward_bg.jpg
 obj\Debug\net9.0-android\resizetizer\r\drawable\s.png
 obj\Debug\net9.0-android\resizetizer\r\drawable\selectionpage.jpg
 obj\Debug\net9.0-android\resizetizer\r\drawable\star.png

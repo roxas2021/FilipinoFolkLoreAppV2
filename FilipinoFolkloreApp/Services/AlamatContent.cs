@@ -326,6 +326,183 @@ namespace FilipinoFolkloreApp.Services
                 }
             },
             new Story{
+                StoryIndex = 21,
+                Category = "epiko",
+                Id = "6_bantugan",
+                Title = "Bantugan",
+                PriceStars = 0,
+                RewardStars = 50,
+                Thumb = "storiesepiko/bantugan/bantugan1.png",
+                Slides = new()
+                {
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan1.png",
+                        Subtitle = "Si Bantugan ay isang magiting na mandirigma sa epikong-bayang Darangan ng mga Maranaw. Siya ay kilala sa kaniyang kahariang Bumbaran dahil sa mga naipanalo niyang mga digma at labanan."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan2.png",
+                        Subtitle = "Sagisag ng tapang at kakisigan, si Prinsipe Bantugan ay sikat na sikat sa kanilang kahariang Bumbaran lalo na sa mga dalaga."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan3.png",
+                        Subtitle = "Sinasabing naligawan na niya ang 50 na pinakamagandang prinsesa sa mundo."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan4.png",
+                        Subtitle = "Dahil dito, lubhang naiinggit sa kaniya ang mas nakatatandang kapatid na si Haring Madali. Ipinagbawal ni Madali na kausapin ng kahit sino ang kaniyang kapatid."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan5.png",
+                        Subtitle = "Sa labis na kalungkutan, umalis ng kanilang kaharian si Bantugën."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan6.png",
+                        Subtitle = "Hanggang nagkasakit at namatay malapit sa Kaharian ng Lupaing nása Pagitan ng Dalawang Dagat."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan7.png",
+                        Subtitle = "Nakita ng hari at ni Prinsesa Datimbang ang katawan ni Bantugan."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan8.png",
+                        Subtitle = "Agad nilang inilapit ang balita sa pulong ng mga tagapayo."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan9.png",
+                        Subtitle = "Isang loro ang pumasok at sinabi kung sino at kung saan gáling ang patay na manlalakbay."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan10.png",
+                        Subtitle = "Nang mabalitaan ito ni Haring Madali, binawi niya ang kaluluwa ng kapatid sa langit upang maibalik sa katawan ni Bantugën."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan11.png",
+                        Subtitle = "Kumalat ang balita ng kaniyang pagkabuhay hanggang sa kaaway na kaharian at kay Haring Miskoyaw."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan12.png",
+                        Subtitle = "Sinugod ng kawal ni Miskoyaw ang Bumbaran at nabihag si Prinsipe Bantugën na may nanghihinà pang katawan."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan13.png",
+                        Subtitle = "Nang magbalik ang lakas, pinuksa niya ang hukbo ng kaaway na hari at iniligtas ang buong Bumbaran."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan14.png",
+                        Subtitle = "Nagkaroon silá ng malaking pagdiriwang at nawala na ang inggit sa puso ni Haring Madali."
+                    },
+                    new Slide{
+                        Background = "storiesepiko/bantugan/bantugan15.png",
+                        Subtitle = "Matagal at masayang namuhay sa kaharian ng Bumbaran si Prinsipe Bantugan kasáma ng mga pinakasalan niyang prinsesa."
+                    }
+                }
+            },
+            new Story{
+            StoryIndex = 22,
+            Category = "epiko",
+            Id = "6_ibalon",
+            Title = "Ibalon",
+            PriceStars = 50,
+            RewardStars = 50,
+            Thumb = "storiesepiko/ibalon/ibalon1.png",
+            Slides = new()
+            {
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon1.png",
+                    Subtitle = "Si Baltog ay nakarating sa lupain ng Ibalon dahil sa pagtugis niya sa isang malaking baboy-ramo. Siya’y nanggaling pa sa lupain ng Batawara. Mayaman ang lupain ng Ibalon at doon na siya nanirahan. Siya ang kinilalang hari ng Ibalon. Naging maunlad ang pamumuhay ng mga tao."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon2.png",
+                    Subtitle = "Subalit may muling kinatakutan ang mga tao, isang malaki at mapaminsalang baboy-ramo na tuwing sumasapit ang gabi ay namiminsala ng mga pananim."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon3.png",
+                    Subtitle = "Si Baltog ay matanda na upang makilaban. Tinulungan siya ng kanyang kaibigang si Handiong."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon4.png",
+                    Subtitle = "Pinamunuan ni Handiong ang mga lalaki ng Ibalon upang kanilang lipulin ang mga dambuhalang buwaya, mababangis na tamaraw at lumilipad na mga pating at mga halimaw na kumakain ng tao.\n Napatay nila ang mga ito maliban sa isang engkantadang nakapag-aanyong magandang dalaga na may matamis na tinig."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon5.png",
+                    Subtitle = "Ito ay si Oriol. Tumulong si Oriol sa paglipol ng iba pang mga masasamang hayop sa Ibalon."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon6.png",
+                    Subtitle = "Naging payapa ang Ibalon. Ang mga tao ay umunlad. Tinuruan niya ang mga tao ng maayos na pagsasaka. Ang mga piling tauhan ni Handiong ay tumulong sa kanyang pamamahala at pagtuturo sa mga tao ng maraming bagay."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon7.png",
+                    Subtitle = "Ang sistema ng pagsulat ay itinuro ni Sural. Itinuro ni Dinahong Pandak ang paggawa ng palayok na Iluad at ng iba pang kagamitan sa pagluluto."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon8.png",
+                    Subtitle = "Si Hablon naman ay nagturo sa mga tao ng paghabi ng tela. Si Ginantong ay gumawa ng kauna-unahang bangka, ng araro, itak at iba pang kasangkapan sa bahay."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon9.png",
+                    Subtitle = "Naging lalong maunlad at masagana ang Ibalon. Subalit may isang halimaw na namang sumipot. Ito ay kalahating tao at kalahating hayop na si Rabut."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon10.png",
+                    Subtitle = "Nagagawa niyang bato ang mga tao o hayop na kanyang maengkanto. Nabalitaan ito ni Bantong at inihandog niya ang sarili kay Handiong upang siyang pumatay kay Rabut."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon11.png",
+                    Subtitle = "Nalaman ni Bantong na sa araw ay tulog na tulog si Rabut. Kaniya itong pinatay habang natutulog."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon12.png",
+                    Subtitle = "Nagalit ang Diyos sa ginawang pataksil na pagpatay kay Rabut. Diumano, masama man si Rabut, dapat ay binigyan ng pagkakataong magtanggol sa sarili nito."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon13.png",
+                    Subtitle = "Pinarusahan ng Diyos ang Ibalon sa pamamagitan ng isang napakalaking baha."
+                },
+                new Slide{
+                    Background = "storiesepiko/ibalon/ibalon14.png",
+                    Subtitle = "Nasira ang mga bahay at pananim. Nalunod ang maraming tao. Nakaligtas lamang ang ilang nakaakyat sa taluktok ng matataas na bundok. Nang kumati ang tubig, iba na ang anyo ng Ibalon. Nagpanibagong buhay ang mga tao ngayon ay sa pamumuno ni Bantong."
+                }
+            }
+        },
+            new Story{
+            StoryIndex = 23,
+            Category = "epiko",
+            Id = "6_kudaman",
+            Title = "Kudaman",
+            PriceStars = 0,
+            RewardStars = 50,
+            Thumb = "storiesepiko/kudaman/kudaman1.png",
+            Slides = new()
+            {
+                new Slide{
+                    Background = "storiesepiko/kudaman/kudaman1.png",
+                    Subtitle = "Nagsisimula ito sa istorya kung paano napangasawa ni Kudaman si Tuwan Putli, at pagkaraan, ang tatlo pang asawa na nagturingang magkakapatid at nagsáma-sáma sa isang tahanan."
+                },
+                new Slide{
+                    Background = "storiesepiko/kudaman/kudaman2.png",
+                    Subtitle = "Sinundan ito ng pagdalo sa isang pagdiriwang ng mga Ilanun upang manggulo. Ilang taóng naglaban si Kudaman at ang pinunòng Ilanun at sa ganitong labanan ay nagwawagi sa dulo ang bayani upang kaibiganin ang nakalaban."
+                },
+                new Slide{
+                    Background = "storiesepiko/kudaman/kudaman3.png",
+                    Subtitle = "Anupa’t malimit magtapos ang mga bahagi ng tultul sa malaking inuman ng tabad, ang alak ng Palawan, at pagkonsumo ng mahigit sandaang tapayan ng alak."
+                },
+                new Slide{
+                    Background = "storiesepiko/kudaman/kudaman4.png",
+                    Subtitle = "Dili kayâ’y nagsisimula ito sa malaking inuman na nauuwi sa labanan kapag nalasing ang mga panauhin. Sa dulo ng mga nairekord na tultul, sampu na ang asawa ni Kudaman na nakatagpo sa iba’t ibang abentura."
+                },
+                new Slide{
+                    Background = "storiesepiko/kudaman/kudaman5.png",
+                    Subtitle = "Gayunman, mapapansin diumano ang taglay na hinahon at paghahangad ng kapayapaan ni Kudaman. Maraming tagpo ng sigalot na tinatapos sa kasunduang pangkapayapaan at pagpapasiya alinsunod sa tradisyong Palawan."
+                },
+                new Slide{
+                    Background = "storiesepiko/kudaman/kudaman6.png",
+                    Subtitle = "Nakapalaman din sa tultul ang mga kapaniwalaan ng Palawan at ang konsepto nilá ng sandaigdigan."
+                }
+            }
+        },
+
+            new Story{
                 StoryIndex = 9,Category = "pabula",
                 Id="6_pagong_at_kuneho", Title="Pagong at si Kuneho", PriceStars=0, RewardStars=25,Thumb ="storiespablula/pagongatkuneho/pagong_at_kuneho1.png",
                 Slides = new()
@@ -405,6 +582,123 @@ namespace FilipinoFolkloreApp.Services
                     }
                 }
             },
+            new Story{
+            StoryIndex = 31,
+            Category = "pabula",
+            Id = "6_pagong_at_buwaya",
+            Title = "Pagong at Buwaya",
+            PriceStars = 0,
+            RewardStars = 50,
+            Thumb = "storiespabula/pagongatbuwaya/pagong_at_buwaya1.png",
+            Slides = new()
+            {
+                new Slide{
+                    Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya1.png",
+                    Subtitle = "Isang araw, habang naghahanap ng pagkain ang matalinong unggoy sa tabi ng ilog, nakita niya ang puno ng makopa na hitik na hitik sa hinog na bunga. Ang puno ay nasa kabilang pampang lang ng ilog kung saan nakatira ang batang buwaya."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya2.png",
+                    Subtitle = "Matapos niyang makain ang lahat ng prutas na gusto niya, bumaba na sa puno ang unggoy at napagpasiyahang pumunta sa kabila ng malawak na ilog, ngunit hindi niya alam kung paano."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya3.png",
+                    Subtitle = "Sa wakas, nakita niya ang buwaya na kagigising lamang mula sa kaniyang siyesta."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya4.png",
+                    Subtitle = "Magiliw na nagwika ang unggoy, “Mahal kong buwaya, puwede bang humingi ng pabor?”\n\nNabigla ang buwaya sa ganitong kabait na pagbati ng unggoy.\n\nPero mapagkumababa itong sumagot, “Oo ba! Kung anuman ang maaaring maitulong ko sa iyo, malugod ko itong gagawin.”\n\nSinabi ng unggoy sa buwaya na gusto niyang pumunta sa kabilang dako ng ilog.\n\nSabi ng buwaya, “Buong puso kitang ihahatid doon. Umupo ka lang sa likod ko at aalis tayo kaagad.”"
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya5.png",
+                    Subtitle = "Nang nakapirme na sa pagkakaupo ang unggoy sa likod ng buwaya, nagsimula na silang maglakbay. Hindi nagtagal, narating nila ang kalagitnaan ng ilog, at nagsimulang humalakhak ang buwaya."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya6.png",
+                    Subtitle = "“Ngayon, unggoy na uto-uto,” sabi niya, “kakainin ko ang iyong atay at mga bato dahil gutom na gutom na ako.”\n\nKinabahan ang unggoy pero hindi niya ipinahalata. Sa halip, sinabi niya, “Pinaghandaan ko na yan! Naisip ko nang baka nagugutom ka kaya inihanda ko na ang aking atay at mga bato para sa hapunan mo. Sa kasamaang-palad, naiwan kong nakasabit ang mga ito sa puno ng makopa dahil sa pagmamadali natin. Masaya ako na nabanggit mo iyan. Bumalik tayo at kukunin ko ang pagkain para sa iyo.”"
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya7.png",
+                    Subtitle = "Sa pag-aakala ng uto-utong buwaya na nagsasabi ng totoo ang unggoy, bumalik ito sa tabing-ilog na pinanggalingan nila. Nang malapit na sila, mabilis na lumundag ang unggoy sa tuyong lupa at kumaripas ng takbo paakyat sa puno.\n\nNang makita ng buwaya kung paano siya nalinlang, sabi niya, “Isa akong uto-uto”."
+                }
+            }
+        },
+            new Story{
+            StoryIndex = 32,
+            Category = "pabula",
+            Id = "6_pagong_at_matsing",
+            Title = "Pagong at Matsing",
+            PriceStars = 0,
+            RewardStars = 50,
+            Thumb = "storiespabula/pagongatmatsing/pagong_at_matsing1.png",
+            Slides = new()
+            {
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing1.png",
+                    Subtitle = "Sina Pagong at Matsing ay matalik na magkaibigan. Mabait at matulungin si Pagong, subalit si Matsing ay tuso at palabiro. Isang araw sila ay binigyan ni Aling Muning ng isang supot ng pansit. “Halika Matsing, kainin natin ang pansit”, nag-aayang sabi ni Pagong.\n\n“Naku baka panis na yan” sabi ni Matsing.\n\n“Ang mabuti pa, hayaan mo muna akong kumain n’yan para masiguro natin na walang lason ang pagkain,” dagdag pa nito.\n\n“Hindi naman amoy panis Matsing at saka hindi naman magbibigay ng panis na pagkain si Aling Muning,” sabi ni Pagong.\n\n“Kahit na, ako muna ang kakain,” pagmamatigas ni Matsing.\n\nWalang nagawa ang kawawang Pagong kundi pagbigyan ang makulit na kaibigan. Naubos ni Matsing ang pansit at walang natira para kay Pagong.\n\n“Pasensya ka na kaibigan, napasarap ang kain ko ng pansit kaya wala ng natira. Sa susunod ka na lang kumain,” paliwanag ng tusong matsing."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing2.png",
+                    Subtitle = "Dahil sa likas na mabait at pasensyoso si Pagong, hindi na siya nakipagtalo sa kaibigan."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing3.png",
+                    Subtitle = "Sa kanilang paglilibot sa kagubatan, nakakita si Pagong ng isang puno ng saging.\n\n“Matsing! Matsing! tignan mo ang puno ng saging na ito. Maganda ang pagkakatubo. Gusto ko itong itanim sa aking bakuran para pag nagkabunga ay makakain natin ito,” masayang sabi ni Pagong.\n\n“Gusto ko rin ng saging na ‘yan Pagong, ibigay mo na lang sa akin,” sabi ni Matsing.\n\n“Pasensya ka na, gusto ko rin kasi nito. Kung gusto mo hatiin na lang natin.”\n\n“Hahatiin? O sige pero sa akin ang itaas na bahagi. Ung parte na may mga dahon ha?” nakangising sabi ni Matsing.\n\n“Ha? sa akin ang ibabang bahagi?” tanong ni Pagong.\n\n“Oo, wala akong panahon para magpatubo pa ng dahon ng saging kaya sa akin na lang ang itaas na parte,” sabi ni Matsing."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing4.png",
+                    Subtitle = "Umuwing malungkot si Pagong dala ang kalahating bahagi ng saging na may ugat. Samantalang si Matsing ay masayang umuwi dala ang madahon na bahagi ng puno."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing5.png",
+                    Subtitle = "Inalagaan ni Pagong ang kanyang halaman. Araw-araw dinidiligan niya ito at nilalagyan ng pataba ang lupa. Ganoon din ang ginawa ni Matsing. Subalit makalipas ang isang linggo, nalanta ang tanim na saging ni Matsing.\n\nSi Pagong naman ay natuwa nang makita ang umuusbong na dahon sa puno ng saging. Lalo nitong inalaagaan ang tanim hanggang sa mamunga ito nang hitik na hitik."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing6.png",
+                    Subtitle = "Nainggit si Matsing nang makita ang bunga ng saging sa halaman ni Pagong.\n\n“Aba, nagkabunga ang tanim mo. Paano nangyari iyon? Ang aking tanim ay nalanta at natuyo,” sabi ni Matsing.\n\n“Inalagaan ko kasi ito ng mabuti. Sabi ni Mang Islaw Kalabaw, malaki ang pag-asang tutubo ang bahagi ng halaman na pinutol kung ito ay may ugat,” paliwanag ni Pagong.\n\n“Hmp! Kaya pala nalanta ang aking tanim,” nanggigil na sambit ni Matsing.\n\n“Mukhang hinog na ang mga bunga nito. Halika, kunin natin,” anyaya nito.\n\n“Gusto ko sana kaya lang masyadong mataas ang mga bunga. Hindi ko kayang akyatin,” sabi ni Pagong.\n\n“Kung gusto mo, ako na lang ang aakyat, ibibigay ko sa iyo ang lahat ng mga bunga. Basta’t bigyan mo lang ako ng konti para sa aking miryenda,” sabi ni Matsing."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing7.png",
+                    Subtitle = "Pumayag si Pagong sa alok ni Matsing. Subalit nang makarating na si Matsing sa taas ng puno. Kinain niya lahat ng bunga ng puno. Wala itong itinira para kay Pagong.\n\n“Akin na lahat ito Pagong. Gutom na gutom na ako. Kulang pa ito para sa akin. Hahaha!” tuwang-tuwang sabi ni Matsing."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing8.png",
+                    Subtitle = "Nanatili sa itaas ng puno si Matsing at nakatulog sa sobrang kabusugan."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing9.png",
+                    Subtitle = "Galit na galit si Pagong sa ginawa ni Matsing. Habang natutulog ito, naglagay siya ng mga tinik sa ilalim ng puno. Nang magising si Matsing ay nakita niya ang mga tinik kaya’t humingi ito ng tulong kay Pagong.\n\n“Pagong, tulungan mo ako! Alisin mo ang mga tinik na ito. Malapit ng dumilim at mukhang uulan ng malakas,” pagmamakaawa ni Matsing.\n\n“Ayoko! Napakasalbahe mo. Lagi mo na lang akong iniisahan! Aalis muna ako. Mukhang malakas ang ulan. Sa bahay ni Aling Muning muna ako habang umuulan.” Sabi ni Pagong sabay alis papunta sa bahay ni Aling Muning."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing10.png",
+                    Subtitle = "Makalipas ang ilang sandali, nagsimulang bumuhos ang malakas na ulan. Walang nagawa si Matsing kundi bumaba sa puno ng saging.\n\n“Arrrraayyy! Aaaarayy! natutusok ako sa mga tinik Arrrrrrrrruuyyyyyy!!!!” daing ng tusong matsing.\n\n“Humanda ka bukas Pagong. Gaganti ako sa ginawa mo sa akin,” bulong nito sa sarili."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing11.png",
+                    Subtitle = "Kinabukasan, kahit mahapdi pa rin ang mga sugat ni Matsing ay hinanap niya si Pagong. Nakita niya itong naglalakad sa may kakahuyan.\n\n“Hoy Pagong humanda ka ngayon!” galit na sabi ni Matsing sabay huli sa pagong.\n\n“Anong gagawin mo sa akin?” takot na tanong ni Pagong\n\n“Tatadtarin kita ng pinong pino,” sabi ni Matsing.\n\nNag-isip ng paraan si Pagong para maisahan ang tusong matsing.\n\n“Oo sige tadtarin mo ako ng pinong-pino at pagputul-putullin nang sa gayon ako ay dadami at susugurin ka namin ng mga parte ng katawan kong pinutol mo hahaha,” sabi ni Pagong."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing12.png",
+                    Subtitle = "Nag-isip ng malalin si Matsing.\n\n“Haha, susunugin na lang kita hanggang sa maging abo ka,” sabi ni Matsing.\n\n“Hindi ka ba nag-iisip Matsing? Hindi kami tinatablan ng apoy! Nakikita mo ba ang makapal at matibay kong bahay? Kahit ang pinakamatinding apoy ay walang panama dito,” pagyayabang ni Pagong."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing13.png",
+                    Subtitle = "Nag-isip na naman ng malalim si Matsing. Hanggang sa maisipan niyang pumunta sa dalampasigan.\n\n“Tignan natin kung saan ang tapang mo. Itatapon kita dito sa dalampasigan hanggang sa malunod ka! Hahaha!” sabi ni Matsing"
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing14.png",
+                    Subtitle = "Lihim na natuwa si Pagong. Nagpanggap itong takot sa dalampasigan.\n\n“Naku huwag mo akong itatapon sa dalampasigan. Takot ako sa tubig at hindi ako marunong lumangoy. Parang awa mo na…” pagmamakaawa ni Pagong."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing15.png",
+                    Subtitle = "Tuwang-tuwa si Matsing sa pag-aakalang magagantihan na niya si Pagong. Todo lakas niya itong itinapon sa dalampasigan. Nagulat ito nang makitang marunong lumangoy si Pagong. Ang bilis-bilis ng pagkilos ni Pagong sa tubig. Kung mabagal ito sa lupa ay parang ang gaan ng katawan nito sa tubig.\n\n“Hahaha. Naisahan din kita Matsing. Hindi mo ba alam na gustong-gusto ko ang lumagoy sa dalampasigan at magbabad sa tubig? Salamat kaibigan!!!” natutuwang sabi ni Pagong.\n\nMalungkot na umuwi si Matsing. Naisip niya na napakasakit pala na maisahan ng isang kaibigan. Naramdaman niya kung paano masaktan kapag naloloko ng isang kaibigan."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing16.png",
+                    Subtitle = "Mula noon nagbago na si Matsing. Hindi na sila muling nagkita ni Pagong."
+                }
+            }
+        },
+
 
         };
 

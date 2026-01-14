@@ -2,7 +2,7 @@
 <ContentPage x:Class="FilipinoFolkloreApp.Views.Home.IndexPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    BackgroundImageSource="bg_index.jpeg"
+    BackgroundImageSource="homepage_bg.jpg"
     Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="Auto, Auto, *"
