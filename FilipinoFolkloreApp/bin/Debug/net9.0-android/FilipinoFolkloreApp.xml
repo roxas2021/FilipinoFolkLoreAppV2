@@ -4,11 +4,12 @@
         <name>FilipinoFolkloreApp</name>
     </assembly>
     <members>
-        <member name="M:FilipinoFolkloreApp.Services.DatabaseService.EnsureMainCharacterExistsAsync">
+        <member name="M:FilipinoFolkloreApp.Services.DatabaseService.LoadMedalsAsync">
             <summary>
             Ensures the single row with Id==1 exists. If it doesn't, create it (with Id = 1).
             Returns the character that exists/was created.
             </summary>
+            
         </member>
         <member name="M:FilipinoFolkloreApp.Services.DatabaseService.UpdateCurrentAvatarAsync(System.String)">
             <summary>

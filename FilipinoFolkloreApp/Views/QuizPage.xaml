@@ -88,8 +88,9 @@
 
         <!-- ===== Question bar (FULL WIDTH pink with yellow text + narrator avatar on left) ===== -->
         <!-- ===== Question (avatar left, pink pill around text only) ===== -->
-
-        <Grid Grid.Row="1"
+        <Grid x:Name="QuizContentWrapper" Grid.Row="1" RowDefinitions="Auto, Auto"
+      RowSpacing="16">
+        <Grid Grid.Row="0"
       ColumnDefinitions="Auto,Auto"
       ColumnSpacing="8"
       HorizontalOptions="Center"
@@ -128,78 +129,80 @@
 
         <!-- ===== Choices (smaller) ===== -->
         <!-- ===== Choices (tight cards, colored, smaller) ===== -->
-        <Grid Grid.Row="2"
-      ColumnDefinitions="Auto,Auto,Auto"
-      ColumnSpacing="8"
-      Padding="8,0"
-      HorizontalOptions="Center"
-      VerticalOptions="Center">
-
-            <!-- Choice 0: transparent white -->
-            <Border BackgroundColor="#80FFFFFF"
-          StrokeThickness="0"
-          Padding="8"
+        
+            <Grid Grid.Row="1"
+          ColumnDefinitions="Auto,Auto,Auto"
+          ColumnSpacing="8"
+          Padding="8,0"
           HorizontalOptions="Center"
           VerticalOptions="Center">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16"/>
-                </Border.StrokeShape>
-                <Image x:Name="Choice0"
-           Aspect="AspectFit"
-           HeightRequest="88"
-           WidthRequest="120"
-           HorizontalOptions="Center"
-           VerticalOptions="Center">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnPick0"/>
-                    </Image.GestureRecognizers>
-                </Image>
-            </Border>
 
-            <!-- Choice 1: transparent red -->
-            <Border Grid.Column="1"
-          BackgroundColor="#66FF0000"
-          StrokeThickness="0"
-          Padding="8"
-          HorizontalOptions="Center"
-          VerticalOptions="Center">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16"/>
-                </Border.StrokeShape>
-                <Image x:Name="Choice1"
-           Aspect="AspectFit"
-           HeightRequest="88"
-           WidthRequest="120"
-           HorizontalOptions="Center"
-           VerticalOptions="Center">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnPick1"/>
-                    </Image.GestureRecognizers>
-                </Image>
-            </Border>
+                <!-- Choice 0: transparent white -->
+                <Border BackgroundColor="#80FFFFFF"
+              StrokeThickness="0"
+              Padding="8"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"/>
+                    </Border.StrokeShape>
+                    <Image x:Name="Choice0"
+               Aspect="AspectFit"
+               HeightRequest="88"
+               WidthRequest="120"
+               HorizontalOptions="Center"
+               VerticalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPick0"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Border>
 
-            <!-- Choice 2: transparent yellow -->
-            <Border Grid.Column="2"
-          BackgroundColor="#66FFFF00"
-          StrokeThickness="0"
-          Padding="8"
-          HorizontalOptions="Center"
-          VerticalOptions="Center">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16"/>
-                </Border.StrokeShape>
-                <Image x:Name="Choice2"
-           Aspect="AspectFit"
-           HeightRequest="88"
-           WidthRequest="120"
-           HorizontalOptions="Center"
-           VerticalOptions="Center">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnPick2"/>
-                    </Image.GestureRecognizers>
-                </Image>
-            </Border>
+                <!-- Choice 1: transparent red -->
+                <Border Grid.Column="1"
+              BackgroundColor="#66FF0000"
+              StrokeThickness="0"
+              Padding="8"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"/>
+                    </Border.StrokeShape>
+                    <Image x:Name="Choice1"
+               Aspect="AspectFit"
+               HeightRequest="88"
+               WidthRequest="120"
+               HorizontalOptions="Center"
+               VerticalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPick1"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Border>
 
+                <!-- Choice 2: transparent yellow -->
+                <Border Grid.Column="2"
+              BackgroundColor="#66FFFF00"
+              StrokeThickness="0"
+              Padding="8"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"/>
+                    </Border.StrokeShape>
+                    <Image x:Name="Choice2"
+               Aspect="AspectFit"
+               HeightRequest="88"
+               WidthRequest="120"
+               HorizontalOptions="Center"
+               VerticalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPick2"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Border>
+
+            </Grid>
         </Grid>
         <Grid x:Name="GameAlertOverlay"
       IsVisible="False"

@@ -39,6 +39,7 @@ namespace FilipinoFolkloreApp.Services
             public int StoryIndex { get; set; } = 0;
             public string Id { get; set; } = ""; // monitor
             public string Title { get; set; } = "";
+            public int MedalId { get; set; } = 0;
             public int PriceStars { get; set; } = 0;
             public string Category { get; set; } = "";
             public int RewardStars { get; set; } = 20;
@@ -100,7 +101,7 @@ namespace FilipinoFolkloreApp.Services
             //    }
             //},
             new Story{
-                StoryIndex=1, Category = "alamat",
+                StoryIndex=1, Category = "alamat", MedalId = 1,
                 Id="1_juan_tamad", Title="Juan Tamad", PriceStars=0, RewardStars=20, Thumb ="stories/juantamad/juan_tamad_thumb.png",
                 Slides = new()
                 {
@@ -150,7 +151,11 @@ namespace FilipinoFolkloreApp.Services
                     },
                     new Slide{
                         Background="stories/juantamad/juan_tamad12.PNG",
-                        Subtitle="Ikalawa, inihayag ni Juan Tamad ang kwento tungkol sa pagtanggap ng kanyang ina ng trabaho na magbenta ng palayok sa palengke. Dahil sa kagustuhang kumita ng pera, nagdesisyon siyang maglakad papunta sa palengke nang may dalang palayok. Sa daan, nakasalubong niya si Mariang Masipag na nagmamaneho ng bisikleta. Dahil sa antok at kaantukan, nabangga ni Juan si Mariang Masipag, at nasira ang mga bitbit nitong palayok. Dahil doon, napilitan siyang gumawa ng paraan para magkaroon ng pambayad: binayaran niya ang mga palayok nang pino-pino, itinaga sa malambot na dahon, at ipinakalat bilang “gamot sa galis.”"
+                        Subtitle="Ikalawa, inihayag ni Juan Tamad ang kwento tungkol sa pagtanggap ng kanyang ina ng trabaho na magbenta ng palayok sa palengke. Dahil sa kagustuhang kumita ng pera, nagdesisyon siyang maglakad papunta sa palengke nang may dalang palayok. Sa daan, nakasalubong niya si Mariang Masipag na nagmamaneho ng bisikleta."
+                    },
+                    new Slide{
+                        Background="stories/juantamad/juan_tamad12.PNG",
+                        Subtitle="Dahil sa antok at kaantukan, nabangga ni Juan si Mariang Masipag, at nasira ang mga bitbit nitong palayok. Dahil doon, napilitan siyang gumawa ng paraan para magkaroon ng pambayad: binayaran niya ang mga palayok nang pino-pino, itinaga sa malambot na dahon, at ipinakalat bilang “gamot sa galis.”"
                     },
                     new Slide{
                         Background="stories/juantamad/juan_tamad13.PNG",
@@ -180,7 +185,7 @@ namespace FilipinoFolkloreApp.Services
                 }
             },
             new Story{
-                StoryIndex =2,Category = "alamat",
+                StoryIndex =2,Category = "alamat", MedalId = 2,
                 Id="2_chocolate_hills", Title="Alamat ng Chocolate Hills", PriceStars=1, RewardStars=20,Thumb="stories/chocolatehills/chocolate_hillsicon.png",
                 Slides=new()
                 {
@@ -242,7 +247,7 @@ namespace FilipinoFolkloreApp.Services
                            CorrectIndex=1 } }
             },
             new Story{
-                StoryIndex =3,Category = "alamat",
+                StoryIndex =3,Category = "alamat", MedalId = 3,
                 Id="3_maton", Title="Alamat ng Maton", PriceStars=2, RewardStars=20,
                 Slides=new(){ new Slide{ Background="stories/maton/s1.png", Subtitle="" } }, // no subtitle example
                 Quiz=new(){ new QuizQuestion{ Prompt="Sino ang bida?",
@@ -250,7 +255,7 @@ namespace FilipinoFolkloreApp.Services
                            CorrectIndex=2 } }
             },
             new Story{
-                StoryIndex=4,Category = "alamat",
+                StoryIndex=4,Category = "alamat", MedalId= 4,
                 Id="4_mangga", Title="Alamat ng Mangga", PriceStars=3, RewardStars=20,
                 Slides=new(){ new Slide{ Background="stories/mangga/s1.png", Subtitle="..." } },
                 Quiz=new(){ new QuizQuestion{ Prompt="Anong prutas?",
@@ -258,38 +263,17 @@ namespace FilipinoFolkloreApp.Services
                            CorrectIndex=1 } }
             },
             new Story{
-                StoryIndex= 5,Category = "alamat",
+                StoryIndex= 5,Category = "alamat", MedalId = 5,
                 Id="5_saging", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
                 Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
                 Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
                            ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
                            CorrectIndex=0 } }
             },
-            new Story{
-                StoryIndex =6,Category = "alamat",
-                Id="5_luya", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
-                Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
-                Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
-                           ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
-                           CorrectIndex=0 } }
-            },new Story{
-                StoryIndex = 6,Category = "alamat",
-                Id="5_kamatis", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
-                Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
-                Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
-                           ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
-                           CorrectIndex=0 } }
-            },new Story{
-                StoryIndex =7,Category = "alamat",
-                Id="5_bawang", Title="Alamat ng Saging", PriceStars=50, RewardStars=25,
-                Slides=new(){ new Slide{ Background="stories/saging/s1.png", Subtitle="..." } },
-                Quiz=new(){ new QuizQuestion{ Prompt="Anong halaman?",
-                           ChoiceImages=new(){ "quiz/saging/a.png","quiz/saging/b.png","quiz/saging/c.png"},
-                           CorrectIndex=0 } }
-            },
+            
             //Epiko
             new Story{
-                StoryIndex =8,Category = "epiko",
+                StoryIndex =21,Category = "epiko", MedalId =6,
                 Id="6_Lapulapu", Title="Lapu-Lapu", PriceStars=50, RewardStars=25,Thumb ="storiesepiko/lapulapu/lapulapu_thumbnail.png",
                 Slides = new()
                 {
@@ -322,14 +306,20 @@ namespace FilipinoFolkloreApp.Services
                         Prompt="Sino ang pangunahing tauhan?",
                         ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
                         CorrectIndex=0, TimeLimitSec=20
+                    },
+                    new QuizQuestion{
+                        Prompt="Sino ang kontrabida sa kwento?",
+                        ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
+                        CorrectIndex=0, TimeLimitSec=20
                     }
                 }
             },
             new Story{
-                StoryIndex = 21,
+                StoryIndex = 22,
                 Category = "epiko",
                 Id = "6_bantugan",
                 Title = "Bantugan",
+                MedalId = 7,
                 PriceStars = 0,
                 RewardStars = 50,
                 Thumb = "storiesepiko/bantugan/bantugan1.png",
@@ -395,13 +385,27 @@ namespace FilipinoFolkloreApp.Services
                         Background = "storiesepiko/bantugan/bantugan15.png",
                         Subtitle = "Matagal at masayang namuhay sa kaharian ng Bumbaran si Prinsipe Bantugan kasáma ng mga pinakasalan niyang prinsesa."
                     }
+                },
+                Quiz = new()
+                {
+                    new QuizQuestion{
+                        Prompt="Sino ang pangunahing tauhan?",
+                        ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
+                        CorrectIndex=0, TimeLimitSec=20
+                    },
+                    new QuizQuestion{
+                        Prompt="Sino ang pangunahing tauhan?",
+                        ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
+                        CorrectIndex=0, TimeLimitSec=20
+                    }
                 }
             },
             new Story{
-            StoryIndex = 22,
+            StoryIndex = 23,
             Category = "epiko",
             Id = "6_ibalon",
             Title = "Ibalon",
+            MedalId = 8,
             PriceStars = 50,
             RewardStars = 50,
             Thumb = "storiesepiko/ibalon/ibalon1.png",
@@ -463,13 +467,17 @@ namespace FilipinoFolkloreApp.Services
                     Background = "storiesepiko/ibalon/ibalon14.png",
                     Subtitle = "Nasira ang mga bahay at pananim. Nalunod ang maraming tao. Nakaligtas lamang ang ilang nakaakyat sa taluktok ng matataas na bundok. Nang kumati ang tubig, iba na ang anyo ng Ibalon. Nagpanibagong buhay ang mga tao ngayon ay sa pamumuno ni Bantong."
                 }
-            }
+            },
+            Quiz=new(){ new QuizQuestion{ Prompt="Ano ang paksa?",
+                           ChoiceImages=new(){ "quiz/choco/a.png","quiz/choco/b.png","quiz/choco/c.png"},
+                           CorrectIndex=1 } }
         },
             new Story{
-            StoryIndex = 23,
+            StoryIndex = 24,
             Category = "epiko",
             Id = "6_kudaman",
             Title = "Kudaman",
+            MedalId = 9,
             PriceStars = 0,
             RewardStars = 50,
             Thumb = "storiesepiko/kudaman/kudaman1.png",
@@ -499,11 +507,22 @@ namespace FilipinoFolkloreApp.Services
                     Background = "storiesepiko/kudaman/kudaman6.png",
                     Subtitle = "Nakapalaman din sa tultul ang mga kapaniwalaan ng Palawan at ang konsepto nilá ng sandaigdigan."
                 }
-            }
+            },
+            Quiz=new(){ new QuizQuestion{ Prompt="Ano ang paksa?",
+                           ChoiceImages=new(){ "quiz/choco/a.png","quiz/choco/b.png","quiz/choco/c.png"},
+                           CorrectIndex=1 } }
         },
+        new Story{
+                StoryIndex =25,Category = "epiko", MedalId = 10,
+                Id="3_maton", Title="Alamat ng Maton", PriceStars=2, RewardStars=20,
+                Slides=new(){ new Slide{ Background="stories/maton/s1.png", Subtitle="" } }, // no subtitle example
+                Quiz=new(){ new QuizQuestion{ Prompt="Sino ang bida?",
+                           ChoiceImages=new(){ "quiz/maton/a.png","quiz/maton/b.png","quiz/maton/c.png"},
+                           CorrectIndex=2 } }
+            },
 
             new Story{
-                StoryIndex = 9,Category = "pabula",
+                StoryIndex = 31,Category = "pabula", MedalId = 11,
                 Id="6_pagong_at_kuneho", Title="Pagong at si Kuneho", PriceStars=0, RewardStars=25,Thumb ="storiespablula/pagongatkuneho/pagong_at_kuneho1.png",
                 Slides = new()
                 {
@@ -583,10 +602,11 @@ namespace FilipinoFolkloreApp.Services
                 }
             },
             new Story{
-            StoryIndex = 31,
+            StoryIndex = 32,
             Category = "pabula",
             Id = "6_pagong_at_buwaya",
             Title = "Pagong at Buwaya",
+            MedalId =  12,
             PriceStars = 0,
             RewardStars = 50,
             Thumb = "storiespabula/pagongatbuwaya/pagong_at_buwaya1.png",
@@ -606,7 +626,7 @@ namespace FilipinoFolkloreApp.Services
                 },
                 new Slide{
                     Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya4.png",
-                    Subtitle = "Magiliw na nagwika ang unggoy, “Mahal kong buwaya, puwede bang humingi ng pabor?”\n\nNabigla ang buwaya sa ganitong kabait na pagbati ng unggoy.\n\nPero mapagkumababa itong sumagot, “Oo ba! Kung anuman ang maaaring maitulong ko sa iyo, malugod ko itong gagawin.”\n\nSinabi ng unggoy sa buwaya na gusto niyang pumunta sa kabilang dako ng ilog.\n\nSabi ng buwaya, “Buong puso kitang ihahatid doon. Umupo ka lang sa likod ko at aalis tayo kaagad.”"
+                    Subtitle = "Magiliw na nagwika ang unggoy, “Mahal kong buwaya, puwede bang humingi ng pabor?”\nNabigla ang buwaya sa ganitong kabait na pagbati ng unggoy.\nPero mapagkumababa itong sumagot, “Oo ba! Kung anuman ang maaaring maitulong ko sa iyo, malugod ko itong gagawin.”\nSinabi ng unggoy sa buwaya na gusto niyang pumunta sa kabilang dako ng ilog.\nSabi ng buwaya, “Buong puso kitang ihahatid doon. Umupo ka lang sa likod ko at aalis tayo kaagad.”"
                 },
                 new Slide{
                     Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya5.png",
@@ -614,19 +634,33 @@ namespace FilipinoFolkloreApp.Services
                 },
                 new Slide{
                     Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya6.png",
-                    Subtitle = "“Ngayon, unggoy na uto-uto,” sabi niya, “kakainin ko ang iyong atay at mga bato dahil gutom na gutom na ako.”\n\nKinabahan ang unggoy pero hindi niya ipinahalata. Sa halip, sinabi niya, “Pinaghandaan ko na yan! Naisip ko nang baka nagugutom ka kaya inihanda ko na ang aking atay at mga bato para sa hapunan mo. Sa kasamaang-palad, naiwan kong nakasabit ang mga ito sa puno ng makopa dahil sa pagmamadali natin. Masaya ako na nabanggit mo iyan. Bumalik tayo at kukunin ko ang pagkain para sa iyo.”"
+                    Subtitle = "“Ngayon, unggoy na uto-uto,” sabi niya, “kakainin ko ang iyong atay at mga bato dahil gutom na gutom na ako.”\nKinabahan ang unggoy pero hindi niya ipinahalata. Sa halip, sinabi niya, “Pinaghandaan ko na yan! Naisip ko nang baka nagugutom ka kaya inihanda ko na ang aking atay at mga bato para sa hapunan mo. Sa kasamaang-palad, naiwan kong nakasabit ang mga ito sa puno ng makopa dahil sa pagmamadali natin. Masaya ako na nabanggit mo iyan. Bumalik tayo at kukunin ko ang pagkain para sa iyo.”"
                 },
                 new Slide{
                     Background = "storiespabula/pagongatbuwaya/pagong_at_buwaya7.png",
-                    Subtitle = "Sa pag-aakala ng uto-utong buwaya na nagsasabi ng totoo ang unggoy, bumalik ito sa tabing-ilog na pinanggalingan nila. Nang malapit na sila, mabilis na lumundag ang unggoy sa tuyong lupa at kumaripas ng takbo paakyat sa puno.\n\nNang makita ng buwaya kung paano siya nalinlang, sabi niya, “Isa akong uto-uto”."
+                    Subtitle = "Sa pag-aakala ng uto-utong buwaya na nagsasabi ng totoo ang unggoy, bumalik ito sa tabing-ilog na pinanggalingan nila. Nang malapit na sila, mabilis na lumundag ang unggoy sa tuyong lupa at kumaripas ng takbo paakyat sa puno.\nNang makita ng buwaya kung paano siya nalinlang, sabi niya, “Isa akong uto-uto”."
                 }
-            }
+            },
+            Quiz = new()
+                {
+                    new QuizQuestion{
+                        Prompt="Sino ang pangunahing tauhan?",
+                        ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
+                        CorrectIndex=0, TimeLimitSec=20
+                    },
+                    new QuizQuestion{
+                        Prompt="Sino ang pangunahing tauhan?",
+                        ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
+                        CorrectIndex=0, TimeLimitSec=20
+                    }
+                }
         },
             new Story{
-            StoryIndex = 32,
+            StoryIndex = 33,
             Category = "pabula",
             Id = "6_pagong_at_matsing",
             Title = "Pagong at Matsing",
+            MedalId = 13,
             PriceStars = 0,
             RewardStars = 50,
             Thumb = "storiespabula/pagongatmatsing/pagong_at_matsing1.png",
@@ -634,7 +668,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing1.png",
-                    Subtitle = "Sina Pagong at Matsing ay matalik na magkaibigan. Mabait at matulungin si Pagong, subalit si Matsing ay tuso at palabiro. Isang araw sila ay binigyan ni Aling Muning ng isang supot ng pansit. “Halika Matsing, kainin natin ang pansit”, nag-aayang sabi ni Pagong.\n\n“Naku baka panis na yan” sabi ni Matsing.\n\n“Ang mabuti pa, hayaan mo muna akong kumain n’yan para masiguro natin na walang lason ang pagkain,” dagdag pa nito.\n\n“Hindi naman amoy panis Matsing at saka hindi naman magbibigay ng panis na pagkain si Aling Muning,” sabi ni Pagong.\n\n“Kahit na, ako muna ang kakain,” pagmamatigas ni Matsing.\n\nWalang nagawa ang kawawang Pagong kundi pagbigyan ang makulit na kaibigan. Naubos ni Matsing ang pansit at walang natira para kay Pagong.\n\n“Pasensya ka na kaibigan, napasarap ang kain ko ng pansit kaya wala ng natira. Sa susunod ka na lang kumain,” paliwanag ng tusong matsing."
+                    Subtitle = "Sina Pagong at Matsing ay matalik na magkaibigan. Mabait at matulungin si Pagong, subalit si Matsing ay tuso at palabiro. Isang araw sila ay binigyan ni Aling Muning ng isang supot ng pansit. “Halika Matsing, kainin natin ang pansit”, nag-aayang sabi ni Pagong.\n“Naku baka panis na yan” sabi ni Matsing.\n“Ang mabuti pa, hayaan mo muna akong kumain n’yan para masiguro natin na walang lason ang pagkain,” dagdag pa nito.\n“Hindi naman amoy panis Matsing at saka hindi naman magbibigay ng panis na pagkain si Aling Muning,” sabi ni Pagong.\n“Kahit na, ako muna ang kakain,” pagmamatigas ni Matsing.\nWalang nagawa ang kawawang Pagong kundi pagbigyan ang makulit na kaibigan. Naubos ni Matsing ang pansit at walang natira para kay Pagong.\n“Pasensya ka na kaibigan, napasarap ang kain ko ng pansit kaya wala ng natira. Sa susunod ka na lang kumain,” paliwanag ng tusong matsing."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing2.png",
@@ -642,7 +676,7 @@ namespace FilipinoFolkloreApp.Services
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing3.png",
-                    Subtitle = "Sa kanilang paglilibot sa kagubatan, nakakita si Pagong ng isang puno ng saging.\n\n“Matsing! Matsing! tignan mo ang puno ng saging na ito. Maganda ang pagkakatubo. Gusto ko itong itanim sa aking bakuran para pag nagkabunga ay makakain natin ito,” masayang sabi ni Pagong.\n\n“Gusto ko rin ng saging na ‘yan Pagong, ibigay mo na lang sa akin,” sabi ni Matsing.\n\n“Pasensya ka na, gusto ko rin kasi nito. Kung gusto mo hatiin na lang natin.”\n\n“Hahatiin? O sige pero sa akin ang itaas na bahagi. Ung parte na may mga dahon ha?” nakangising sabi ni Matsing.\n\n“Ha? sa akin ang ibabang bahagi?” tanong ni Pagong.\n\n“Oo, wala akong panahon para magpatubo pa ng dahon ng saging kaya sa akin na lang ang itaas na parte,” sabi ni Matsing."
+                    Subtitle = "Sa kanilang paglilibot sa kagubatan, nakakita si Pagong ng isang puno ng saging.\n“Matsing! Matsing! tignan mo ang puno ng saging na ito. Maganda ang pagkakatubo. Gusto ko itong itanim sa aking bakuran para pag nagkabunga ay makakain natin ito,” masayang sabi ni Pagong.\n“Gusto ko rin ng saging na ‘yan Pagong, ibigay mo na lang sa akin,” sabi ni Matsing.\n“Pasensya ka na, gusto ko rin kasi nito. Kung gusto mo hatiin na lang natin.”\n“Hahatiin? O sige pero sa akin ang itaas na bahagi. Ung parte na may mga dahon ha?” nakangising sabi ni Matsing.\n“Ha? sa akin ang ibabang bahagi?” tanong ni Pagong.\n“Oo, wala akong panahon para magpatubo pa ng dahon ng saging kaya sa akin na lang ang itaas na parte,” sabi ni Matsing."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing4.png",
@@ -650,15 +684,15 @@ namespace FilipinoFolkloreApp.Services
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing5.png",
-                    Subtitle = "Inalagaan ni Pagong ang kanyang halaman. Araw-araw dinidiligan niya ito at nilalagyan ng pataba ang lupa. Ganoon din ang ginawa ni Matsing. Subalit makalipas ang isang linggo, nalanta ang tanim na saging ni Matsing.\n\nSi Pagong naman ay natuwa nang makita ang umuusbong na dahon sa puno ng saging. Lalo nitong inalaagaan ang tanim hanggang sa mamunga ito nang hitik na hitik."
+                    Subtitle = "Inalagaan ni Pagong ang kanyang halaman. Araw-araw dinidiligan niya ito at nilalagyan ng pataba ang lupa. Ganoon din ang ginawa ni Matsing. Subalit makalipas ang isang linggo, nalanta ang tanim na saging ni Matsing.\nSi Pagong naman ay natuwa nang makita ang umuusbong na dahon sa puno ng saging. Lalo nitong inalaagaan ang tanim hanggang sa mamunga ito nang hitik na hitik."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing6.png",
-                    Subtitle = "Nainggit si Matsing nang makita ang bunga ng saging sa halaman ni Pagong.\n\n“Aba, nagkabunga ang tanim mo. Paano nangyari iyon? Ang aking tanim ay nalanta at natuyo,” sabi ni Matsing.\n\n“Inalagaan ko kasi ito ng mabuti. Sabi ni Mang Islaw Kalabaw, malaki ang pag-asang tutubo ang bahagi ng halaman na pinutol kung ito ay may ugat,” paliwanag ni Pagong.\n\n“Hmp! Kaya pala nalanta ang aking tanim,” nanggigil na sambit ni Matsing.\n\n“Mukhang hinog na ang mga bunga nito. Halika, kunin natin,” anyaya nito.\n\n“Gusto ko sana kaya lang masyadong mataas ang mga bunga. Hindi ko kayang akyatin,” sabi ni Pagong.\n\n“Kung gusto mo, ako na lang ang aakyat, ibibigay ko sa iyo ang lahat ng mga bunga. Basta’t bigyan mo lang ako ng konti para sa aking miryenda,” sabi ni Matsing."
+                    Subtitle = "Nainggit si Matsing nang makita ang bunga ng saging sa halaman ni Pagong.\n“Aba, nagkabunga ang tanim mo. Paano nangyari iyon? Ang aking tanim ay nalanta at natuyo,” sabi ni Matsing.\n“Inalagaan ko kasi ito ng mabuti. Sabi ni Mang Islaw Kalabaw, malaki ang pag-asang tutubo ang bahagi ng halaman na pinutol kung ito ay may ugat,” paliwanag ni Pagong.\n“Hmp! Kaya pala nalanta ang aking tanim,” nanggigil na sambit ni Matsing.\n“Mukhang hinog na ang mga bunga nito. Halika, kunin natin,” anyaya nito.\n“Gusto ko sana kaya lang masyadong mataas ang mga bunga. Hindi ko kayang akyatin,” sabi ni Pagong.\n“Kung gusto mo, ako na lang ang aakyat, ibibigay ko sa iyo ang lahat ng mga bunga. Basta’t bigyan mo lang ako ng konti para sa aking miryenda,” sabi ni Matsing."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing7.png",
-                    Subtitle = "Pumayag si Pagong sa alok ni Matsing. Subalit nang makarating na si Matsing sa taas ng puno. Kinain niya lahat ng bunga ng puno. Wala itong itinira para kay Pagong.\n\n“Akin na lahat ito Pagong. Gutom na gutom na ako. Kulang pa ito para sa akin. Hahaha!” tuwang-tuwang sabi ni Matsing."
+                    Subtitle = "Pumayag si Pagong sa alok ni Matsing. Subalit nang makarating na si Matsing sa taas ng puno. Kinain niya lahat ng bunga ng puno. Wala itong itinira para kay Pagong.\n“Akin na lahat ito Pagong. Gutom na gutom na ako. Kulang pa ito para sa akin. Hahaha!” tuwang-tuwang sabi ni Matsing."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing8.png",
@@ -666,39 +700,67 @@ namespace FilipinoFolkloreApp.Services
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing9.png",
-                    Subtitle = "Galit na galit si Pagong sa ginawa ni Matsing. Habang natutulog ito, naglagay siya ng mga tinik sa ilalim ng puno. Nang magising si Matsing ay nakita niya ang mga tinik kaya’t humingi ito ng tulong kay Pagong.\n\n“Pagong, tulungan mo ako! Alisin mo ang mga tinik na ito. Malapit ng dumilim at mukhang uulan ng malakas,” pagmamakaawa ni Matsing.\n\n“Ayoko! Napakasalbahe mo. Lagi mo na lang akong iniisahan! Aalis muna ako. Mukhang malakas ang ulan. Sa bahay ni Aling Muning muna ako habang umuulan.” Sabi ni Pagong sabay alis papunta sa bahay ni Aling Muning."
+                    Subtitle = "Galit na galit si Pagong sa ginawa ni Matsing. Habang natutulog ito, naglagay siya ng mga tinik sa ilalim ng puno. Nang magising si Matsing ay nakita niya ang mga tinik kaya’t humingi ito ng tulong kay Pagong.\n“Pagong, tulungan mo ako! Alisin mo ang mga tinik na ito. Malapit ng dumilim at mukhang uulan ng malakas,” pagmamakaawa ni Matsing.\n“Ayoko! Napakasalbahe mo. Lagi mo na lang akong iniisahan! Aalis muna ako. Mukhang malakas ang ulan. Sa bahay ni Aling Muning muna ako habang umuulan.” Sabi ni Pagong sabay alis papunta sa bahay ni Aling Muning."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing10.png",
-                    Subtitle = "Makalipas ang ilang sandali, nagsimulang bumuhos ang malakas na ulan. Walang nagawa si Matsing kundi bumaba sa puno ng saging.\n\n“Arrrraayyy! Aaaarayy! natutusok ako sa mga tinik Arrrrrrrrruuyyyyyy!!!!” daing ng tusong matsing.\n\n“Humanda ka bukas Pagong. Gaganti ako sa ginawa mo sa akin,” bulong nito sa sarili."
+                    Subtitle = "Makalipas ang ilang sandali, nagsimulang bumuhos ang malakas na ulan. Walang nagawa si Matsing kundi bumaba sa puno ng saging.\n“Arrrraayyy! Aaaarayy! natutusok ako sa mga tinik Arrrrrrrrruuyyyyyy!!!!” daing ng tusong matsing.\n“Humanda ka bukas Pagong. Gaganti ako sa ginawa mo sa akin,” bulong nito sa sarili."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing11.png",
-                    Subtitle = "Kinabukasan, kahit mahapdi pa rin ang mga sugat ni Matsing ay hinanap niya si Pagong. Nakita niya itong naglalakad sa may kakahuyan.\n\n“Hoy Pagong humanda ka ngayon!” galit na sabi ni Matsing sabay huli sa pagong.\n\n“Anong gagawin mo sa akin?” takot na tanong ni Pagong\n\n“Tatadtarin kita ng pinong pino,” sabi ni Matsing.\n\nNag-isip ng paraan si Pagong para maisahan ang tusong matsing.\n\n“Oo sige tadtarin mo ako ng pinong-pino at pagputul-putullin nang sa gayon ako ay dadami at susugurin ka namin ng mga parte ng katawan kong pinutol mo hahaha,” sabi ni Pagong."
+                    Subtitle = "Kinabukasan, kahit mahapdi pa rin ang mga sugat ni Matsing ay hinanap niya si Pagong. Nakita niya itong naglalakad sa may kakahuyan.\n“Hoy Pagong humanda ka ngayon!” galit na sabi ni Matsing sabay huli sa pagong.\n“Anong gagawin mo sa akin?” takot na tanong ni Pagong\n“Tatadtarin kita ng pinong pino,” sabi ni Matsing.\nNag-isip ng paraan si Pagong para maisahan ang tusong matsing.\n“Oo sige tadtarin mo ako ng pinong-pino at pagputul-putullin nang sa gayon ako ay dadami at susugurin ka namin ng mga parte ng katawan kong pinutol mo hahaha,” sabi ni Pagong."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing12.png",
-                    Subtitle = "Nag-isip ng malalin si Matsing.\n\n“Haha, susunugin na lang kita hanggang sa maging abo ka,” sabi ni Matsing.\n\n“Hindi ka ba nag-iisip Matsing? Hindi kami tinatablan ng apoy! Nakikita mo ba ang makapal at matibay kong bahay? Kahit ang pinakamatinding apoy ay walang panama dito,” pagyayabang ni Pagong."
+                    Subtitle = "Nag-isip ng malalin si Matsing.\n“Haha, susunugin na lang kita hanggang sa maging abo ka,” sabi ni Matsing.\n“Hindi ka ba nag-iisip Matsing? Hindi kami tinatablan ng apoy! Nakikita mo ba ang makapal at matibay kong bahay? Kahit ang pinakamatinding apoy ay walang panama dito,” pagyayabang ni Pagong."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing13.png",
-                    Subtitle = "Nag-isip na naman ng malalim si Matsing. Hanggang sa maisipan niyang pumunta sa dalampasigan.\n\n“Tignan natin kung saan ang tapang mo. Itatapon kita dito sa dalampasigan hanggang sa malunod ka! Hahaha!” sabi ni Matsing"
+                    Subtitle = "Nag-isip na naman ng malalim si Matsing. Hanggang sa maisipan niyang pumunta sa dalampasigan.\n“Tignan natin kung saan ang tapang mo. Itatapon kita dito sa dalampasigan hanggang sa malunod ka! Hahaha!” sabi ni Matsing"
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing14.png",
-                    Subtitle = "Lihim na natuwa si Pagong. Nagpanggap itong takot sa dalampasigan.\n\n“Naku huwag mo akong itatapon sa dalampasigan. Takot ako sa tubig at hindi ako marunong lumangoy. Parang awa mo na…” pagmamakaawa ni Pagong."
+                    Subtitle = "Lihim na natuwa si Pagong. Nagpanggap itong takot sa dalampasigan.\n“Naku huwag mo akong itatapon sa dalampasigan. Takot ako sa tubig at hindi ako marunong lumangoy. Parang awa mo na…” pagmamakaawa ni Pagong."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing15.png",
-                    Subtitle = "Tuwang-tuwa si Matsing sa pag-aakalang magagantihan na niya si Pagong. Todo lakas niya itong itinapon sa dalampasigan. Nagulat ito nang makitang marunong lumangoy si Pagong. Ang bilis-bilis ng pagkilos ni Pagong sa tubig. Kung mabagal ito sa lupa ay parang ang gaan ng katawan nito sa tubig.\n\n“Hahaha. Naisahan din kita Matsing. Hindi mo ba alam na gustong-gusto ko ang lumagoy sa dalampasigan at magbabad sa tubig? Salamat kaibigan!!!” natutuwang sabi ni Pagong.\n\nMalungkot na umuwi si Matsing. Naisip niya na napakasakit pala na maisahan ng isang kaibigan. Naramdaman niya kung paano masaktan kapag naloloko ng isang kaibigan."
+                    Subtitle = "Tuwang-tuwa si Matsing sa pag-aakalang magagantihan na niya si Pagong. Todo lakas niya itong itinapon sa dalampasigan. Nagulat ito nang makitang marunong lumangoy si Pagong. Ang bilis-bilis ng pagkilos ni Pagong sa tubig. Kung mabagal ito sa lupa ay parang ang gaan ng katawan nito sa tubig.\n“Hahaha. Naisahan din kita Matsing. Hindi mo ba alam na gustong-gusto ko ang lumagoy sa dalampasigan at magbabad sa tubig? Salamat kaibigan!!!” natutuwang sabi ni Pagong.\nMalungkot na umuwi si Matsing. Naisip niya na napakasakit pala na maisahan ng isang kaibigan. Naramdaman niya kung paano masaktan kapag naloloko ng isang kaibigan."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing16.png",
                     Subtitle = "Mula noon nagbago na si Matsing. Hindi na sila muling nagkita ni Pagong."
                 }
-            }
+            },
+            Quiz = new()
+                {
+                    new QuizQuestion{
+                        Prompt="Sino ang pangunahing tauhan?",
+                        ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
+                        CorrectIndex=0, TimeLimitSec=20
+                    },
+                    new QuizQuestion{
+                        Prompt="Sino ang pangunahing tauhan?",
+                        ChoiceImages=new(){ "stories/juantamad/quiz1/juantamad_quiz1a.png", "stories/juantamad/quiz1/juantamad_quiz1b.png", "stories/juantamad/quiz1/juantamad_quiz1c.png" },
+                        CorrectIndex=0, TimeLimitSec=20
+                    }
+                }
         },
-
+        new Story{
+                StoryIndex =34,Category = "pabula", MedalId = 14,
+                Id="3_maton", Title="Alamat ng Maton", PriceStars=2, RewardStars=20,
+                Slides=new(){ new Slide{ Background="stories/maton/s1.png", Subtitle="" } }, // no subtitle example
+                Quiz=new(){ new QuizQuestion{ Prompt="Sino ang bida?",
+                           ChoiceImages=new(){ "quiz/maton/a.png","quiz/maton/b.png","quiz/maton/c.png"},
+                           CorrectIndex=2 } }
+            },
+        new Story{
+                StoryIndex =35,Category = "pabula", MedalId = 15,
+                Id="3_maton", Title="Alamat ng Maton", PriceStars=2, RewardStars=20,
+                Slides=new(){ new Slide{ Background="stories/maton/s1.png", Subtitle="" } }, // no subtitle example
+                Quiz=new(){ new QuizQuestion{ Prompt="Sino ang bida?",
+                           ChoiceImages=new(){ "quiz/maton/a.png","quiz/maton/b.png","quiz/maton/c.png"},
+                           CorrectIndex=2 } }
+            },
 
         };
 

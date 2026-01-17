@@ -76,6 +76,12 @@ build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.Views.
 build_metadata.AdditionalFiles.TargetPath = Views\Home\IndexPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\Home\IndexPage.xaml
 
+[C:/Users/NiX/Desktop/FolkApp/Latest4/FilipinoFolkloreApp/Views/MedalPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.Views.MedalPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\MedalPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\MedalPage.xaml
+
 [C:/Users/NiX/Desktop/FolkApp/Latest4/FilipinoFolkloreApp/Views/NarratorPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = FilipinoFolkloreApp.Views.NarratorPage.xaml

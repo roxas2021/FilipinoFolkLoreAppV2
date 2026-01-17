@@ -1,4 +1,4 @@
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,6 +13,8 @@ public partial class QuizPage : ContentPage
 {
     private readonly string _storyId;
     int _correctIndex = 0;
+    int _quizIndex = 0;
+
     CancellationTokenSource? _cts;
     private HeartService HeartService =>
     Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
@@ -37,21 +39,49 @@ public partial class QuizPage : ContentPage
             return;
         }
 
-        var q = story.Quiz[0];
-        QuizPrompt.Text = q.Prompt;
-        _correctIndex = q.CorrectIndex;
-        Choice0.Source = q.ChoiceImages.ElementAtOrDefault(0);
-        Choice1.Source = q.ChoiceImages.ElementAtOrDefault(1);
-        Choice2.Source = q.ChoiceImages.ElementAtOrDefault(2);
+        //var q = story.Quiz[0];
+        //QuizPrompt.Text = q.Prompt;
+        //_correctIndex = q.CorrectIndex;
+        //Choice0.Source = q.ChoiceImages.ElementAtOrDefault(0);
+        //Choice1.Source = q.ChoiceImages.ElementAtOrDefault(1);
+        //Choice2.Source = q.ChoiceImages.ElementAtOrDefault(2);
 
-        _cts = new CancellationTokenSource();
-        _ = TimerAsync(q.TimeLimitSec, _cts.Token);
+        //_cts = new CancellationTokenSource();
+        //_ = TimerAsync(q.TimeLimitSec, _cts.Token);
+        LoadQuiz();
+
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
         _cts?.Cancel();
+    }
+    async Task LoadQuiz()
+    {
+        var story = AlamatContent.GetStory(_storyId);
+
+        // Finished all quizzes
+        //if (_quizIndex >= story.Quiz.Count)
+        //{
+        //    _ = HandleAllQuizzesCompletedAsync();
+        //    return;
+        //}
+
+        var q = story.Quiz[_quizIndex];
+
+        await AnimateQuizSwapAsync(() =>
+        {
+            QuizPrompt.Text = q.Prompt;
+            _correctIndex = q.CorrectIndex;
+
+            Choice0.Source = q.ChoiceImages.ElementAtOrDefault(0);
+            Choice1.Source = q.ChoiceImages.ElementAtOrDefault(1);
+            Choice2.Source = q.ChoiceImages.ElementAtOrDefault(2);
+        });
+        _cts?.Cancel();
+        _cts = new CancellationTokenSource();
+        _ = TimerAsync(q.TimeLimitSec, _cts.Token);
     }
 
     async Task TimerAsync(int seconds, CancellationToken ct)
@@ -63,6 +93,26 @@ public partial class QuizPage : ContentPage
                 await HandleWrongAsync();
         }
         catch (TaskCanceledException) { }
+    }
+    async Task AnimateQuizSwapAsync(Action swapContent)
+    {
+        // Animate out
+        await Task.WhenAll(
+            QuizContentWrapper.FadeTo(0, 150, Easing.CubicIn),
+            QuizContentWrapper.TranslateTo(0, -12, 150, Easing.CubicIn)
+        );
+
+        // Swap quiz content
+        swapContent.Invoke();
+
+        // Reset position for animate-in
+        QuizContentWrapper.TranslationY = 12;
+
+        // Animate in
+        await Task.WhenAll(
+            QuizContentWrapper.FadeTo(1, 180, Easing.CubicOut),
+            QuizContentWrapper.TranslateTo(0, 0, 180, Easing.CubicOut)
+        );
     }
 
     async Task HandlePickAsync(int idx)
@@ -84,26 +134,54 @@ public partial class QuizPage : ContentPage
         else
             await HandleWrongAsync();
     }
-
-
     async Task HandleCorrectAsync()
     {
         _cts?.Cancel();
 
-        var reward = AlamatContent.GetStory(_storyId).RewardStars;
-        //AlamatContent.Stars += reward;
-        var getStory = AlamatContent.GetStory(_storyId).IsRewardClaimed;
+        _quizIndex++;
 
-        if (!getStory)
+        var story = AlamatContent.GetStory(_storyId);
+
+        // More quizzes left → load next quiz
+        if (_quizIndex < story.Quiz.Count)
+        {
+            await LoadQuiz();
+            return;
+        }
+
+        // No more quizzes → reward player
+        var reward = story.RewardStars;
+        var isClaimed = story.IsRewardClaimed;
+
+        if (!isClaimed)
         {
             await App.Database.SetStarsAsync(CharacterHelper.CurrentStars + reward);
-            CharacterHelper.CurrentStars += reward; // keep in sync
-            RefreshStars(); // reflect new stars in header
+            CharacterHelper.CurrentStars += reward;
+            RefreshStars();
         }
-        
 
         await Navigation.PushAsync(new RewardPage(reward, _storyId));
     }
+
+
+    //async Task HandleCorrectAsync()
+    //{
+    //    _cts?.Cancel();
+
+    //    var reward = AlamatContent.GetStory(_storyId).RewardStars;
+    //    //AlamatContent.Stars += reward;
+    //    var getStory = AlamatContent.GetStory(_storyId).IsRewardClaimed;
+
+    //    if (!getStory)
+    //    {
+    //        await App.Database.SetStarsAsync(CharacterHelper.CurrentStars + reward);
+    //        CharacterHelper.CurrentStars += reward; // keep in sync
+    //        RefreshStars(); // reflect new stars in header
+    //    }
+
+
+    //    await Navigation.PushAsync(new RewardPage(reward, _storyId));
+    //}
 
     async Task HandleWrongAsync()
     {

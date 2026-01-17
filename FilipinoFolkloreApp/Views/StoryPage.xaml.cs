@@ -9,6 +9,8 @@ namespace FilipinoFolkloreApp.Views;
 
 public partial class StoryPage : ContentPage
 {
+    bool _isNavigatingToQuiz = false;
+
     private readonly string _storyId;
     int _idx = 0;
     bool _playing = true;
@@ -36,6 +38,9 @@ public partial class StoryPage : ContentPage
         // If past the last slide, stop timers/audio and go to quiz.
         if (_idx >= story.Slides.Count)
         {
+            if (_isNavigatingToQuiz)
+                return;
+            _isNavigatingToQuiz = true;
             _cts?.Cancel();
             _player?.Stop();
             _player?.Dispose();
@@ -187,6 +192,7 @@ public partial class StoryPage : ContentPage
     }
     protected override void OnDisappearing()
     {
+        _isNavigatingToQuiz = true;
         base.OnDisappearing();
 
         _cts?.Cancel();
@@ -241,6 +247,8 @@ public partial class StoryPage : ContentPage
 
     async void OnNext(object? s, TappedEventArgs e)
     {
+        if (_isNavigatingToQuiz)
+            return;
         _ = ShowControlsTemporarilyAsync();
         _cts?.Cancel();
         StopAudio();

@@ -42,6 +42,10 @@
 		
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#512BD4" />
@@ -125,6 +129,21 @@
 	  <None Remove="Resources\Images\elements\pause.png" />
 	  <None Remove="Resources\Images\elements\play.png" />
 	  <None Remove="Resources\Images\elements\prev.png" />
+	  <None Remove="Resources\Images\medals\medal1.jpg" />
+	  <None Remove="Resources\Images\medals\medal10.jpg" />
+	  <None Remove="Resources\Images\medals\medal11.jpg" />
+	  <None Remove="Resources\Images\medals\medal12.jpg" />
+	  <None Remove="Resources\Images\medals\medal13.jpg" />
+	  <None Remove="Resources\Images\medals\medal14.jpg" />
+	  <None Remove="Resources\Images\medals\medal15.jpg" />
+	  <None Remove="Resources\Images\medals\medal2.jpg" />
+	  <None Remove="Resources\Images\medals\medal3.jpg" />
+	  <None Remove="Resources\Images\medals\medal4.jpg" />
+	  <None Remove="Resources\Images\medals\medal5.jpg" />
+	  <None Remove="Resources\Images\medals\medal6.jpg" />
+	  <None Remove="Resources\Images\medals\medal7.jpg" />
+	  <None Remove="Resources\Images\medals\medal8.jpg" />
+	  <None Remove="Resources\Images\medals\medal9.jpg" />
 	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan1.png" />
 	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan10.png" />
 	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan11.png" />
@@ -261,6 +280,9 @@
 	  <MauiXaml Update="Views\Home\IndexPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\MedalPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\NarratorPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -367,6 +389,21 @@
     <MauiImage Include="Resources\Images\elements\star.png" />
     <MauiImage Include="Resources\Images\elements\tarsier.png" />
     <MauiImage Include="Resources\Images\elements\pluss.png" />
+    <MauiImage Include="Resources\Images\medals\medal1.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal10.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal11.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal12.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal13.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal14.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal15.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal2.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal3.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal4.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal5.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal6.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal7.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal8.jpg" />
+    <MauiImage Include="Resources\Images\medals\medal9.jpg" />
     <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan1.png" />
     <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan10.png" />
     <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan11.png" />

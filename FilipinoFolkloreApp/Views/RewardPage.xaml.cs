@@ -23,7 +23,7 @@ public partial class RewardPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
+        var MedalId = AlamatContent.GetStory(_storyId).MedalId;
         // Sync DB state to ensure we show the correct "already claimed" text
         try
         {
@@ -38,10 +38,14 @@ public partial class RewardPage : ContentPage
         if (!string.IsNullOrEmpty(_storyId))
         {
             var story = AlamatContent.Stories.FirstOrDefault(st => st.Id == _storyId);
+            
+
             if (story != null && story.IsRewardClaimed)
             {
                 RewardText.Text = "Reward already claimed";
                 OkButton.Text = "Close";
+                MedalImage.Source = DatabaseService.GetMedalImagePath(MedalId);
+                
                 // keep the button enabled so user can dismiss, but prevent awarding again
                 OkButton.IsEnabled = true;
                 return;
@@ -49,6 +53,7 @@ public partial class RewardPage : ContentPage
         }
 
         // otherwise show the normal reward text
+        MedalImage.Source = DatabaseService.GetMedalImagePath(MedalId);
         RewardText.Text = $"+{_stars} ⭐";
         OkButton.Text = "OK";
         OkButton.IsEnabled = true;
@@ -104,10 +109,11 @@ public partial class RewardPage : ContentPage
                 {
                     story.IsRewardClaimed = true;
                     AlamatContent.Stars += _stars;
-
+                    await App.Database.UnlockMedalAsync(story.MedalId);
                     try
                     {
                         await App.Database.UpdateStoryAsync(story);
+
                         rewardGiven = true;
                     }
                     catch (Exception ex)

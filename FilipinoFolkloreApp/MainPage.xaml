@@ -6,7 +6,7 @@
     Shell.NavBarIsVisible="False"
     BackgroundImageSource="login_bg.jpg">
 
-    <Grid>
+    
         <Grid VerticalOptions="Center" HorizontalOptions="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -17,6 +17,7 @@
                Grid.Row="0"
                FontSize="30"
                Placeholder="Type here..."
+               TextColor="PaleVioletRed"
                IsReadOnly="True" />
 
             <Grid Grid.Row="1" x:Name="KeyboardGrid" VerticalOptions="Center" HorizontalOptions="Center">
@@ -74,5 +75,5 @@
                 <ImageButton Source="keys/ok.png" Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" Clicked="Letter_Clicked" CommandParameter="enter" Aspect="AspectFit" WidthRequest="120" />
             </Grid>
         </Grid>
-    </Grid>
+    
 </ContentPage>

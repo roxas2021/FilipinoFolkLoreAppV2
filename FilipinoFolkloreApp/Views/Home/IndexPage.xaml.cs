@@ -63,4 +63,8 @@ public partial class IndexPage : ContentPage
         // Navigate to the AlamatList page
         await Navigation.PushAsync(new AlamatPage("pabula"));
     }
+    private async void OnMedalyaClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new MedalPage());
+    }
 }

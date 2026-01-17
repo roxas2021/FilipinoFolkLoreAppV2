@@ -8,7 +8,7 @@
         <Border BackgroundColor="#66000000" StrokeShape="RoundRectangle 24"
             Padding="26" HorizontalOptions="Center" VerticalOptions="Center">
             <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                <Image Source="ui/badge.png" HeightRequest="150"/>
+                <Image Source="ui/badge.png" HeightRequest="150" x:Name="MedalImage"/>
                 <Label x:Name="RewardText" Text="+20 ⭐" FontAttributes="Bold" FontSize="28" TextColor="White" HorizontalTextAlignment="Center"/>
                 <Button x:Name ="OkButton" Text="OK" Clicked="OnRewardOk" />
             </VerticalStackLayout>

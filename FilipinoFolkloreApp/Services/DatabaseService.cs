@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace FilipinoFolkloreApp.Services
 {
@@ -19,6 +20,7 @@ namespace FilipinoFolkloreApp.Services
             _database.CreateTableAsync<Character>().Wait();
             _database.CreateTableAsync<StoryMonitored>().Wait();
             _database.CreateTableAsync<AvatarCostumeSet>().Wait();
+            _database.CreateTableAsync<Medals>().Wait();
         }
 
         public Task<Character> GetCharAsync()
@@ -32,6 +34,58 @@ namespace FilipinoFolkloreApp.Services
         /// Ensures the single row with Id==1 exists. If it doesn't, create it (with Id = 1).
         /// Returns the character that exists/was created.
         /// </summary>
+        /// 
+        public async Task<List<Medals>> LoadMedalsAsync()
+        {
+            var dbMedals = await _database.Table<Medals>().ToListAsync();
+
+            foreach (var medal in MedalHelper.Medals)
+            {
+                var dbEntry = dbMedals.FirstOrDefault(m => m.MedalId == medal.MedalId);
+                if (dbEntry != null)
+                {
+                    // Copy monitored fields into the in-memory medal
+                    medal.isUnlocked = dbEntry.isUnlocked;
+                }
+                else
+                {
+                    // Insert default if not found
+                    await _database.InsertAsync(new Medals
+                    {
+                        MedalId = medal.MedalId,
+                        MedalName = medal.MedalName,
+                        MedalDescription = medal.MedalDescription,
+                        MedalImagePath = medal.MedalImagePath,
+                        TimeStamp = DateTime.Now,
+                        isUnlocked = medal.isUnlocked
+                    });
+                }
+            }
+            return MedalHelper.Medals;
+        }
+
+        public async Task UnlockMedalAsync(int medalId)
+        {
+            var medal = MedalHelper.Medals.FirstOrDefault(m => m.MedalId == medalId);
+            if (medal == null || medal.isUnlocked) return;
+
+            medal.isUnlocked = true;
+            medal.TimeStamp = DateTime.UtcNow;
+            await _database.UpdateAsync(medal);
+        }
+        public async Task<List<Medals>> GetMedalAsync()
+        {
+            var medals = await _database.Table<Medals>()
+                                        .ToListAsync();
+
+            return medals;
+        }
+        public static string GetMedalImagePath(int medalId)
+        {
+            var medal = MedalHelper.Medals.FirstOrDefault(m => m.MedalId == medalId);
+            return medal?.MedalImagePath ?? string.Empty;
+        }
+
         public async Task<Character> EnsureMainCharacterExistsAsync()
         {
             var c = await GetCharAsync().ConfigureAwait(false);

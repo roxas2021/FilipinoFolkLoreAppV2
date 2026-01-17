@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FilipinoFolkloreApp.Views.MedalPage"
+             Title="MedalPage"
+             BackgroundImageSource="selectionpage.jpg"
+             Shell.NavBarIsVisible="False">
+    <Grid RowDefinitions="Auto, Auto, *"
+    ColumnDefinitions="*"
+    Padding="20">
+        <!-- 8-pt grid -->
+
+        <!-- ===== HUD row 0 ===== -->
+        <Grid Grid.Row="0"
+      ColumnDefinitions="Auto,*,Auto"
+      VerticalOptions="Start" >
+
+            <!-- LEFT/MID: Avatar + Name/Stars + Hearts -->
+            <Grid Grid.Column="0"
+        RowDefinitions="Auto, Auto"
+        ColumnDefinitions="Auto, Auto, *, Auto" RowSpacing="4">
+
+                <!-- Avatar -->
+                <Frame Grid.RowSpan="2"
+           Grid.Column="0"
+           WidthRequest="80" HeightRequest="90"
+           CornerRadius="10" Padding="0"
+           HasShadow="True" BackgroundColor="White">
+                    <Image x:Name="HudAvatar" Aspect="AspectFill" />
+                </Frame>
+
+                <!-- Name + Stars pill -->
+                <Frame Margin="10,0,0,0"
+           Grid.Row="0" Grid.Column="1"
+           BackgroundColor="LightGreen"
+           CornerRadius="10" Padding="8,4"
+           HorizontalOptions="Start" VerticalOptions="Center">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+                        <Label x:Name="PlayerNameLabel"
+               Grid.Column="0" Text="NICHOL"
+               FontAttributes="Bold" FontSize="18" TextColor="#FF66CC"
+               VerticalOptions="Center"/>
+                        <BoxView Grid.Column="1"/>
+                        <Frame Grid.Column="2" Padding="10,4"
+               BackgroundColor="LightGreen" BorderColor="Black"
+               CornerRadius="12" HasShadow="False"
+               VerticalOptions="Center" Margin="10,0,0,0">
+                            <Frame.Shadow>
+                                <Shadow Brush="Black" Offset="-4,4" Radius="8" Opacity="0.5"/>
+                            </Frame.Shadow>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label x:Name="StarsLabel" Text="50" VerticalOptions="Center"
+                   FontAttributes="Bold" FontSize="20" TextColor="#FFCC00"/>
+                                <Image Source="icon_star_yellow.png" WidthRequest="35" HeightRequest="35"/>
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </Grid>
+                </Frame>
+
+                <!-- Hearts row -->
+                <Frame Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+           CornerRadius="12" Padding="6,2" Margin="10,0,0,0"
+           BackgroundColor="White" HorizontalOptions="Start">
+                    <HorizontalStackLayout x:Name="HeartsPanel" Spacing="8"/>
+                </Frame>
+            </Grid>
+
+            <!-- RIGHT: Back + Home buttons (48x48 target, 32px icons) -->
+            <StackLayout Grid.Column="2"
+                   Spacing="8"
+                   VerticalOptions="Start"
+                     Orientation="Horizontal"
+                   HorizontalOptions="Start">
+
+                
+                <Image Source="icon_home.png"
+                 WidthRequest="48" HeightRequest="48"
+                 Aspect="AspectFit"
+                 Margin="0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                    </Image.GestureRecognizers>
+                </Image>
+
+            </StackLayout>
+
+        </Grid>
+
+        <!-- optional second header row -->
+        <ContentView Grid.Row="1"/>
+        <!-- ===== Medal Grid row ===== -->
+        <!-- ===== Medal Grid row ===== -->
+        <Frame Grid.Row="2"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="FillAndExpand"
+               Padding="10"
+               Margin="8"
+               BackgroundColor="#c5c6baCC"
+               CornerRadius="12"
+               HasShadow="False">
+
+            <!-- Scrollable medal list -->
+            <CollectionView x:Name="MedalsView"
+                            SelectionMode="None"
+                            VerticalScrollBarVisibility="Default"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="FillAndExpand">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="5"
+                                     VerticalItemSpacing="8"
+                                     HorizontalItemSpacing="8"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <!-- Touchable container (no fixed size) -->
+                        <Grid HorizontalOptions="Center"
+              VerticalOptions="Center">
+
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMedalTapped"/>
+                            </Grid.GestureRecognizers>
+
+                            <!-- Border hugs image -->
+                            <Border
+                Stroke="Black"
+                StrokeThickness="1"
+                BackgroundColor="Transparent"
+                Padding="6">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16"/>
+                                </Border.StrokeShape>
+
+                                <Image Source="{Binding MedalImagePath}"
+                       Aspect="AspectFit"
+                       HeightRequest="70"
+                       WidthRequest="70"/>
+                            </Border>
+
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+
+
+
+            </CollectionView>
+        </Frame>
+
+
+    </Grid>
+</ContentPage>

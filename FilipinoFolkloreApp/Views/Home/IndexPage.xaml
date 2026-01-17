@@ -73,6 +73,7 @@
                 FontSize="20"
                 BackgroundColor="LightGreen"
                 TextColor="Orange"
+                Clicked="OnMedalyaClicked"
                 CornerRadius="12"
                 Padding="12,6"
                 />
