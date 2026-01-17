@@ -31,8 +31,8 @@
 
                 <!-- Name + Stars pill -->
                 <Frame Margin="10,0,0,0"
-               Grid.Row="0" Grid.Column="1"
-               BackgroundColor="LightGreen"
+               Grid.Row="0" Grid.Column="1" BackgroundColor="#5ce1e6"
+            BorderColor="#FF66CC"
                CornerRadius="10" Padding="8,4"
                HorizontalOptions="Start" VerticalOptions="Center">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
@@ -41,8 +41,8 @@
                    FontAttributes="Bold" FontSize="18" TextColor="#FF66CC"
                    VerticalOptions="Center"/>
                         <BoxView Grid.Column="1"/>
-                        <Frame Grid.Column="2" Padding="10,4"
-                   BackgroundColor="LightGreen" BorderColor="Black"
+                        <Frame Grid.Column="2" Padding="10,4" BackgroundColor="#5ce1e6"
+            BorderColor="#FF66CC"
                    CornerRadius="12" HasShadow="False"
                    VerticalOptions="Center" Margin="10,0,0,0">
                             <Frame.Shadow>

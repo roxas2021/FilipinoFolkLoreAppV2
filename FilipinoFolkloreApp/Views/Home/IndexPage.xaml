@@ -35,7 +35,8 @@
                 <!-- Name + Stars pill -->
                 <Frame Margin="10,0,0,0"
    Grid.Row="0" Grid.Column="1"
-   BackgroundColor="LightGreen"
+           BackgroundColor="#5ce1e6"
+                       BorderColor="#FF66CC"
    CornerRadius="10" Padding="8,4"
    HorizontalOptions="Start" VerticalOptions="Center">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
@@ -45,7 +46,7 @@
        VerticalOptions="Center"/>
                         <BoxView Grid.Column="1"/>
                         <Frame Grid.Column="2" Padding="10,4"
-       BackgroundColor="LightGreen" BorderColor="Black"
+       BackgroundColor="#5ce1e6" BorderColor="#FF66CC"
        CornerRadius="12" HasShadow="False"
        VerticalOptions="Center" Margin="10,0,0,0">
                             <Frame.Shadow>
@@ -68,15 +69,12 @@
                 </Frame>
             </Grid>
             <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalOptions="Start">
-                <Button Text="MEDALYA"
-                FontAttributes="Bold"
-                FontSize="20"
-                BackgroundColor="LightGreen"
-                TextColor="Orange"
-                Clicked="OnMedalyaClicked"
-                CornerRadius="12"
-                Padding="12,6"
-                />
+                
+                <ImageButton Source="trophy.png"
+                     Clicked="OnMedalyaClicked"
+                     WidthRequest="32"
+                     HeightRequest="32"
+                     BackgroundColor="Transparent"/>
                 <ImageButton Source="icon_home.png"
                      WidthRequest="32"
                      HeightRequest="32"

@@ -76,8 +76,9 @@ namespace FilipinoFolkloreApp.Services
         public async Task<List<Medals>> GetMedalAsync()
         {
             var medals = await _database.Table<Medals>()
+                                        .Where(c => c.isUnlocked == true)
                                         .ToListAsync();
-
+            
             return medals;
         }
         public static string GetMedalImagePath(int medalId)

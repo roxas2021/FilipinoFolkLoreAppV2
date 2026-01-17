@@ -35,15 +35,36 @@ public partial class MedalPage : ContentPage
     public async Task LoadMedals()
     {
         Medals.Clear();
-        var medals = await App.Database.GetMedalAsync(); // sorted/unlocked
-        foreach (var medal in medals)
-            Medals.Add(medal);
+
+        var medalsFromDb = await App.Database.GetMedalAsync();
+
+        // Add existing medals (if any)
+        if (medalsFromDb != null)
+        {
+            foreach (var medal in medalsFromDb)
+                Medals.Add(medal);
+        }
+
+        // Fill remaining slots up to 30
+        int missingCount = 30 - Medals.Count;
+
+        for (int i = 0; i < missingCount; i++)
+        {
+            Medals.Add(new Medals
+            {
+                MedalImagePath = "medal_empty.png", // placeholder image
+                isUnlocked = false
+            });
+        }
 
         MedalsView.ItemsSource = Medals;
     }
+
+
     async void OnMedalTapped(object? sender, TappedEventArgs e)
     {
         if (sender is not Grid g || g.BindingContext is not Medals card) return;
+        if (card.isUnlocked == false) return;
         await DisplayAlert(card.MedalName, card.MedalDescription, "OK");
     }
     public ICommand MedalTappedCommand => new Command<Medals>(async (medal) =>

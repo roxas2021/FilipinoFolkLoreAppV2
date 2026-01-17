@@ -12098,12 +12098,13 @@ public final class R {
     public static final int test_level_drawable=0x7f0701c0;
     public static final int tooltip_frame_dark=0x7f0701c1;
     public static final int tooltip_frame_light=0x7f0701c2;
-    public static final int u=0x7f0701c3;
-    public static final int v=0x7f0701c4;
-    public static final int w=0x7f0701c5;
-    public static final int x=0x7f0701c6;
-    public static final int y=0x7f0701c7;
-    public static final int z=0x7f0701c8;
+    public static final int trophy=0x7f0701c3;
+    public static final int u=0x7f0701c4;
+    public static final int v=0x7f0701c5;
+    public static final int w=0x7f0701c6;
+    public static final int x=0x7f0701c7;
+    public static final int y=0x7f0701c8;
+    public static final int z=0x7f0701c9;
   }
   public static final class id {
     public static final int ALT=0x7f080000;
