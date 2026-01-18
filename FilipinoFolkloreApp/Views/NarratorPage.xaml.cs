@@ -183,16 +183,6 @@ public partial class NarratorPage : ContentPage
 
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
-        var pages = Navigation.NavigationStack.ToList();
-        foreach (var page in pages)
-        {
-            if (page is RewardPage) Navigation.RemovePage(page);
-            if (page is QuizPage) Navigation.RemovePage(page);
-            if (page is StoryPage) Navigation.RemovePage(page);
-            if (page is NarratorPage) Navigation.RemovePage(page);
-            if (page is AlamatPage) Navigation.RemovePage(page);
-        }
-
-        await Navigation.PushAsync(new IndexPage());
+        await NavigationHelper.NavigateToIndexPage(Navigation);
     }
 }

@@ -793,7 +793,7 @@ namespace FilipinoFolkloreApp.Services
 
         private static readonly HashSet<string> _narratorDbCheckInFlight = new();
         public static string CurrentStoryId { get; set; } = "";
-
+        public static bool MusicIsEnabled { get; set; } = true;
         public static bool IsNarratorUnlocked(string id)
         {
             // 'tarsier' is always available

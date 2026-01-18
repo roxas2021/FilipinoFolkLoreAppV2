@@ -1189,3 +1189,5 @@ C:\Users\NiX\Desktop\FolkApp\Latest4\FilipinoFolkloreApp\obj\Debug\net9.0-androi
 C:\Users\NiX\Desktop\FolkApp\Latest4\FilipinoFolkloreApp\obj\Debug\net9.0-android\resizetizer\r\drawable\medal8.jpg
 C:\Users\NiX\Desktop\FolkApp\Latest4\FilipinoFolkloreApp\obj\Debug\net9.0-android\resizetizer\r\drawable\medal9.jpg
 C:\Users\NiX\Desktop\FolkApp\Latest4\FilipinoFolkloreApp\obj\Debug\net9.0-android\resizetizer\r\drawable\trophy.png
+C:\Users\NiX\Desktop\FolkApp\Latest4\FilipinoFolkloreApp\obj\Debug\net9.0-android\assets\bgmusic\Homepage.mp3
+C:\Users\NiX\Desktop\FolkApp\Latest4\FilipinoFolkloreApp\obj\Debug\net9.0-android\assets\bgmusic\Loginpage.mp3

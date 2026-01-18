@@ -26,7 +26,11 @@ public partial class StoryPage : ContentPage
         NavigationPage.SetHasNavigationBar(this, false);
         _storyId = storyId;
         NarratorAvatar.Source = AlamatContent.CurrentNarrator.Avatar;
-
+        // Pause background music when story starts
+        if (Application.Current is App app)
+        {
+            app.PauseBackgroundMusic();
+        }
         // Start first slide (no timer yet; StartForSlide will decide)
         _ = ShowSlideAsync(initial: true);
     }
@@ -203,6 +207,10 @@ public partial class StoryPage : ContentPage
 
         _audioStream?.Dispose();
         _audioStream = null;
+        if (Application.Current is App app)
+        {
+            app.UpdateBackgroundMusic(AlamatContent.MusicIsEnabled);
+        }
     }
 
     void StartAutoTimerIfPlaying()

@@ -1,10 +1,14 @@
 ﻿using FilipinoFolkloreApp.Services;
+using Plugin.Maui.Audio;
 
 namespace FilipinoFolkloreApp
 {
     public partial class App : Application
     {
         static DatabaseService _database;
+
+        private IAudioPlayer? _backgroundMusicPlayer;
+        private Stream? _backgroundMusicStream;
 
         public static DatabaseService Database
         {
@@ -18,14 +22,86 @@ namespace FilipinoFolkloreApp
                 return _database;
             }
         }
-
+        
         public App()
         {
             InitializeComponent();
+            AlamatContent.MusicIsEnabled = Preferences.Get("MusicEnabled", true);
             Task.Run(async () => await Database.LoadStoriesAsync());
             Task.Run(async() => await Database.LoadMedalsAsync());
+            // Start background music
+            _ = InitializeBackgroundMusicAsync();
+        }
+        private async Task InitializeBackgroundMusicAsync()
+        {
+            try
+            {
+                
+
+                // Load your background music file (replace with your actual music file path)
+                _backgroundMusicStream = await FileSystem.OpenAppPackageFileAsync("bgmusic/Homepage.mp3");
+                _backgroundMusicPlayer = AudioManager.Current.CreatePlayer(_backgroundMusicStream);
+
+                // Set to loop
+                _backgroundMusicPlayer.Loop = true;
+                _backgroundMusicPlayer.Volume = 0.3; // 30% volume for background music
+
+                if (AlamatContent.MusicIsEnabled)
+                {
+                    _backgroundMusicPlayer.Play();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load background music: {ex.Message}");
+            }
+        }
+        public void PauseBackgroundMusic()
+        {
+            _backgroundMusicPlayer?.Pause();
+        }
+        public void ResumeBackgroundMusic()
+        {
+            // Only resume if music is enabled
+            if (AlamatContent.MusicIsEnabled && _backgroundMusicPlayer != null)
+            {
+                _backgroundMusicPlayer.Play();
+            }
         }
 
+        public void UpdateBackgroundMusic(bool isEnabled)
+        {
+            // Update the global state and save to preferences
+            AlamatContent.MusicIsEnabled = isEnabled;
+            Preferences.Set("MusicEnabled", isEnabled);
+
+            if (isEnabled)
+            {
+                if (_backgroundMusicPlayer == null)
+                {
+                    _ = InitializeBackgroundMusicAsync();
+                }
+                else
+                {
+                    _backgroundMusicPlayer.Play();
+                }
+            }
+            else
+            {
+                _backgroundMusicPlayer?.Pause();
+            }
+        }
+
+
+        public void StopBackgroundMusic()
+        {
+            _backgroundMusicPlayer?.Stop();
+            _backgroundMusicPlayer?.Dispose();
+            _backgroundMusicPlayer = null;
+
+            _backgroundMusicStream?.Dispose();
+            _backgroundMusicStream = null;
+        }
         protected override Window CreateWindow(IActivationState? activationState)
         {
             return new Window(new AppShell());

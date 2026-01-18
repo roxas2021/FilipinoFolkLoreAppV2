@@ -95,6 +95,6 @@ public partial class MedalPage : ContentPage
     }
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
-        await Navigation.PushAsync(new IndexPage());
+        await Navigation.PopAsync();
     }
 }

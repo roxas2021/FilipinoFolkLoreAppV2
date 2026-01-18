@@ -6,12 +6,14 @@ public partial class IndexPage : ContentPage
 {
     private HeartService HeartService =>
     Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
+    private static bool _hasSetAsRoot = false;
     public IndexPage()
     {
         InitializeComponent();
 
         loadhud();
         var data = App.Database.GetCharAsync();
+        LoadSettings();
     }
     protected override void OnAppearing()
     {
@@ -19,6 +21,22 @@ public partial class IndexPage : ContentPage
 
         AlamatContent.Hearts = HeartService.GetHearts();
         loadhud();
+        LoadSettings();
+        if (!_hasSetAsRoot && Application.Current?.MainPage is NavigationPage navPage)
+        {
+            // Check if we're not already the root
+            if (navPage.Navigation.NavigationStack.Count > 1 ||
+                navPage.Navigation.NavigationStack.FirstOrDefault() is not IndexPage)
+            {
+                // Set IndexPage as the new root
+                Application.Current.MainPage = new NavigationPage(this);
+                _hasSetAsRoot = true;
+            }
+        }
+        if (Application.Current is App app)
+        {
+            app.ResumeBackgroundMusic();
+        }
     }
     void loadhud()
     {
@@ -66,5 +84,33 @@ public partial class IndexPage : ContentPage
     private async void OnMedalyaClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new MedalPage());
+    }
+    private void OnSettingsClicked(object sender, EventArgs e)
+    {
+        SettingsModalOverlay.IsVisible = true;
+    }
+    private void OnCloseSettingsModal(object sender, EventArgs e)
+    {
+        SettingsModalOverlay.IsVisible = false;
+
+    }
+    private void OnMusicToggled(object sender, ToggledEventArgs e)
+    {
+        // Control background music
+        if (Application.Current is App app)
+        {
+            app.UpdateBackgroundMusic(e.Value);
+            
+        }
+    }
+    private void LoadSettings()
+    {
+
+        // Load saved settings from the global static property
+        bool musicEnabled = AlamatContent.MusicIsEnabled;
+        // Load saved settings from Preferences
+        MusicSwitch.Toggled -= OnMusicToggled;
+        MusicSwitch.IsToggled = musicEnabled;
+        MusicSwitch.Toggled += OnMusicToggled;
     }
 }

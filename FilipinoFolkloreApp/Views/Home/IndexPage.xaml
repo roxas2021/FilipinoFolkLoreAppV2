@@ -81,6 +81,7 @@
                      BackgroundColor="Transparent"/>
                 <ImageButton Source="icon_settings.png"
                      WidthRequest="32"
+                             Clicked="OnSettingsClicked"
                      HeightRequest="32"
                      BackgroundColor="Transparent"/>
             </StackLayout>
@@ -129,6 +130,70 @@
               WidthRequest="130"
               CornerRadius="40"
               HeightRequest="40"/>
+        </Grid>
+        <Grid x:Name="SettingsModalOverlay"
+       Grid.RowSpan="3"
+       IsVisible="False"
+              BackgroundColor="Transparent"
+       InputTransparent="False">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnCloseSettingsModal"/>
+            </Grid.GestureRecognizers>
+
+            <!-- Settings Modal Content - Compact Size -->
+            <Frame WidthRequest="380"
+            HeightRequest="180"
+            CornerRadius="20"
+            BackgroundColor="#E6FFFFFF"
+            Padding="25"
+            HasShadow="True"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+                <Frame.Shadow>
+                    <Shadow Brush="Black" Offset="0,4" Radius="20" Opacity="0.3"/>
+                </Frame.Shadow>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer/>
+                </Frame.GestureRecognizers>
+
+                <Grid RowDefinitions="Auto,*,Auto">
+                    <!-- Header -->
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                        <Label Text="SETTINGS"
+                        FontSize="24"
+                        FontAttributes="Bold"
+                        TextColor="#CC3333"
+                        VerticalOptions="Center"/>
+                        <ImageButton Grid.Column="1"
+                              Source="icon_settings.png"
+                              Clicked="OnCloseSettingsModal"
+                              WidthRequest="28"
+                              HeightRequest="28"
+                              BackgroundColor="Transparent"/>
+                    </Grid>
+
+                    <!-- Background Music Toggle -->
+                    <Grid Grid.Row="1" 
+                   ColumnDefinitions="*,Auto" 
+                   ColumnSpacing="20"
+                   VerticalOptions="Center">
+                        <Label Text="Background Music"
+                        FontSize="18"
+                        TextColor="#333"
+                        VerticalOptions="Center"/>
+                        <Switch Grid.Column="1"
+                         x:Name="MusicSwitch"
+                         OnColor="Green"
+                         Toggled="OnMusicToggled"
+                         IsToggled="True"
+                         Scale="1.3"
+                         VerticalOptions="Center"/>
+                    </Grid>
+
+                    <!-- Footer Button -->
+                    
+                </Grid>
+            </Frame>
         </Grid>
     </Grid>
 </ContentPage>
