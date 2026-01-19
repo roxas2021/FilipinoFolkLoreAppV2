@@ -79,7 +79,7 @@ namespace FilipinoFolkloreApp.Services
                                         .Where(c => c.isUnlocked == true)
                                         .ToListAsync();
             
-            return medals;
+            return medals.OrderBy(c => c.TimeStamp).ToList();
         }
         public static string GetMedalImagePath(int medalId)
         {

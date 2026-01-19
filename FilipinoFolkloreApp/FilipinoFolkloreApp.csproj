@@ -129,6 +129,19 @@
 	  <None Remove="Resources\Images\elements\pause.png" />
 	  <None Remove="Resources\Images\elements\play.png" />
 	  <None Remove="Resources\Images\elements\prev.png" />
+	  <None Remove="Resources\Images\medals\basa.png" />
+	  <None Remove="Resources\Images\medals\harireyna.png" />
+	  <None Remove="Resources\Images\medals\kaibigankwento.png" />
+	  <None Remove="Resources\Images\medals\kasangga.png" />
+	  <None Remove="Resources\Images\medals\lakambantay.png" />
+	  <None Remove="Resources\Images\medals\lakambayanihan.png" />
+	  <None Remove="Resources\Images\medals\lakbaykultura.png" />
+	  <None Remove="Resources\Images\medals\lakbaykwento.png" />
+	  <None Remove="Resources\Images\medals\likhakulay.png" />
+	  <None Remove="Resources\Images\medals\lipad.png" />
+	  <None Remove="Resources\Images\medals\mananalaysay.png" />
+	  <None Remove="Resources\Images\medals\manlalarobituin.png" />
+	  <None Remove="Resources\Images\medals\mapanlikha.png" />
 	  <None Remove="Resources\Images\medals\medal1.jpg" />
 	  <None Remove="Resources\Images\medals\medal10.jpg" />
 	  <None Remove="Resources\Images\medals\medal11.jpg" />
@@ -280,6 +293,9 @@
 	  <MauiXaml Update="Views\Home\IndexPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\MedalDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\MedalPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -299,6 +315,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Platforms\Android\Resources\mipmap\" />
+	  <Folder Include="Views\NewFolder\" />
 	  <Folder Include="Views\Popup\" />
 	</ItemGroup>
 
@@ -389,6 +406,19 @@
     <MauiImage Include="Resources\Images\elements\star.png" />
     <MauiImage Include="Resources\Images\elements\tarsier.png" />
     <MauiImage Include="Resources\Images\elements\pluss.png" />
+    <MauiImage Include="Resources\Images\medals\basa.png" />
+    <MauiImage Include="Resources\Images\medals\harireyna.png" />
+    <MauiImage Include="Resources\Images\medals\kaibigankwento.png" />
+    <MauiImage Include="Resources\Images\medals\kasangga.png" />
+    <MauiImage Include="Resources\Images\medals\lakambantay.png" />
+    <MauiImage Include="Resources\Images\medals\lakambayanihan.png" />
+    <MauiImage Include="Resources\Images\medals\lakbaykultura.png" />
+    <MauiImage Include="Resources\Images\medals\lakbaykwento.png" />
+    <MauiImage Include="Resources\Images\medals\likhakulay.png" />
+    <MauiImage Include="Resources\Images\medals\lipad.png" />
+    <MauiImage Include="Resources\Images\medals\mananalaysay.png" />
+    <MauiImage Include="Resources\Images\medals\manlalarobituin.png" />
+    <MauiImage Include="Resources\Images\medals\mapanlikha.png" />
     <MauiImage Include="Resources\Images\medals\medal1.jpg" />
     <MauiImage Include="Resources\Images\medals\medal10.jpg" />
     <MauiImage Include="Resources\Images\medals\medal11.jpg" />
@@ -517,6 +547,13 @@
     <MauiImage Include="Resources\Images\storiesepiko\lapulapu\lapulapu_scene1.png" />
     <MauiImage Include="Resources\Images\storiesepiko\lapulapu\lapulapu_scene2.png" />
     <MauiImage Include="Resources\Images\storiesepiko\lapulapu\lapulapu_thumbnail.png" />
+    <MauiImage Include="Resources\Images\stories\langit\langit1.png" />
+    <MauiImage Include="Resources\Images\stories\langit\langit2.png" />
+    <MauiImage Include="Resources\Images\stories\langit\langit3.png" />
+    <MauiImage Include="Resources\Images\stories\langit\langit4.png" />
+    <MauiImage Include="Resources\Images\stories\langit\langit5.png" />
+    <MauiImage Include="Resources\Images\stories\langit\langit6.png" />
+    <MauiImage Include="Resources\Images\stories\langit\langit7.png" />
 	</ItemGroup>
 
 	<ItemGroup>

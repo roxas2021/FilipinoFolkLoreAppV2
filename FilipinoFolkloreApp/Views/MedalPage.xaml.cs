@@ -63,13 +63,18 @@ public partial class MedalPage : ContentPage
 
     async void OnMedalTapped(object? sender, TappedEventArgs e)
     {
-        if (sender is not Grid g || g.BindingContext is not Medals card) return;
-        if (card.isUnlocked == false) return;
-        await DisplayAlert(card.MedalName, card.MedalDescription, "OK");
+        if (sender is not Grid g || g.BindingContext is not Medals medal) return;
+        if (medal.isUnlocked == false) return;
+
+        // Navigate to medal detail page
+        await Navigation.PushAsync(new MedalDetailPage(medal));
     }
     public ICommand MedalTappedCommand => new Command<Medals>(async (medal) =>
     {
-        await DisplayAlert(medal.MedalName, medal.MedalDescription, "OK");
+        if (medal.isUnlocked)
+        {
+            await Navigation.PushAsync(new MedalDetailPage(medal));
+        }
     });
 
     void RefreshHearts()

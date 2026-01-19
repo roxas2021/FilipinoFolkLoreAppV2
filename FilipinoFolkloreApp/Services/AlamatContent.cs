@@ -248,8 +248,41 @@ namespace FilipinoFolkloreApp.Services
             },
             new Story{
                 StoryIndex =3,Category = "alamat", MedalId = 3,
-                Id="3_maton", Title="Alamat ng Maton", PriceStars=2, RewardStars=20,
-                Slides=new(){ new Slide{ Background="stories/maton/s1.png", Subtitle="" } }, // no subtitle example
+                Id="3_langit", Title="Langit", PriceStars=2, RewardStars=50,
+                Thumb= "stories/langit/LANGIT1.png",
+                Slides=new()
+                {
+                    new Slide{
+                        Background="stories/langit/langit1.png",
+                        Subtitle="Bakit May Araw, Buwan, at mga Bituin?\r\nNoon, maaaring maabot ang langit. Gumawa si Bathala ng isang lalaki at isang babae. Ang kasipagan nila ay walang katulad. Nagtatanim sila at nagbabayo ng palay.\r\n"
+                    },
+                    new Slide{
+                        Background="stories/langit/langit2.png",
+                        Subtitle="Minsan, umalis ang lalaki para magtanim. Mangunguha rin siya ng prutas. Nagbayo naman ng palay ang babae. Nakasasagabal sa kaniyang pagbabayo ang kaniyang brilyanteng kuwintas at suklay. Tinanggal niya ang mga ito at isinabit sa ulap."
+                    },
+                    new Slide{
+                        Background="stories/langit/langit3.png",
+                        Subtitle="Nakapagbayo na siya nang kaunti at sapat sa pananghalian. Kumuha siya ng panggatong at nagsaing sa tabi ng mababang ulap. Habang nagsasaing ay muli siyang nagbayo para sa kanilang hapunan."
+                    },
+                    new Slide{
+                        Background="stories/langit/langit4.png",
+                        Subtitle="Maya-maya ay dumating na ang lalaki. Bitbit niya ang ilang prutas. Naabutan niyang nagbabayo ang babae. Tinulungan niya ang babae sa pagbabayo. Hirap siyang iunat ang kaniyang mga braso. Ginamit ng lalaki ang malaki niyang pambayo ng palay. Tinatamaan ang langit tuwing babayo ang lalaki. Kaya siya ay humiling sa Bathala, \"Bathala, pataasin mo po ang langit”"
+                    },
+                    new Slide{
+                        Background="stories/langit/langit5.png",
+                        Subtitle="Biglang lumakas ang hangin at unti-unting tumaas ang langit. Muling tinamaan ang langit ng pambayo ng lalaki. Muling pinataas ng Bathala ang langit. Kasabay nito, tumaas din ang mga ulap. Tumaas din ang brilyanteng kuwintas at suklay. Tumaas din ang palayok a apoy sa tabi ng mga ulap.\r\nAng pagtaas ng langit ay hindi na mapigilan.\r\n "
+                    },
+                    new Slide{
+                        Background="stories/langit/langit6.png",
+                        Subtitle="Ang pagtaas ng langit ay hindi na mapigilan. "
+                    },
+                    new Slide{
+                        Background="stories/langit/langit7.png",
+                        Subtitle="Hindi nagtagal, ang langit ay tuluyan nang tumaas at hindi na maabot. Hindi na natanggal sa pagkakasabit ang mga kuwintas at suklay. Mula noon, nagkaroon na ng suklay sa langit na hugis kabiyak na buwan. Nagkaroon din ng makikinang na parang mga brilyante na naging bituin. Ang palayok na may kanin ay naging maliwanag na buwan. Ang apoy naman ay naging maliwanag na araw tuwing umaga."
+                    },
+
+                }, // no subtitle example
+               
                 Quiz=new(){ new QuizQuestion{ Prompt="Sino ang bida?",
                            ChoiceImages=new(){ "quiz/maton/a.png","quiz/maton/b.png","quiz/maton/c.png"},
                            CorrectIndex=2 } }
@@ -857,7 +890,7 @@ namespace FilipinoFolkloreApp.Services
         public static Narrator CurrentNarrator => Narrators.First(n => n.Id == SelectedNarratorId);
         public static Story GetStory(string id) => Stories.First(s => s.Id == id);
 
-
+        public static double NarratorVolume { get; set; } = 1.0;
         public static bool TrySpendStars(int amount)
         {
             if (CharacterHelper.CurrentStars < amount) return false;

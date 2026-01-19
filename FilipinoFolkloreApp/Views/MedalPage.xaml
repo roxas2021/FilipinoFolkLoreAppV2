@@ -66,25 +66,6 @@
                     <HorizontalStackLayout x:Name="HeartsPanel" Spacing="8"/>
                 </Frame>
             </Grid>
-            <Frame Grid.Row="0"
-               Grid.Column="0"
-               Grid.ColumnSpan="3"
-               HeightRequest="60"
-               BackgroundColor="#5ce1e6"
-               BorderColor="#FF66CC"
-               CornerRadius="12"
-               HasShadow="False"
-               HorizontalOptions="Center"
-               VerticalOptions="Center">
-
-                <Label Text="KOLEKSYON NG MEDALYA"
-                   FontAttributes="Bold"
-                   FontSize="20"
-                   TextColor="#FF66CC"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
-            </Frame>
-
 
             <!-- RIGHT: Back + Home buttons (48x48 target, 32px icons) -->
             <StackLayout Grid.Column="2"
@@ -93,7 +74,7 @@
                      Orientation="Horizontal"
                    HorizontalOptions="Start">
 
-                
+
                 <Image Source="icon_home.png"
                  WidthRequest="48" HeightRequest="48"
                  Aspect="AspectFit"
@@ -107,9 +88,25 @@
 
         </Grid>
 
-        <!-- optional second header row -->
-        <ContentView Grid.Row="1"/>
-        <!-- ===== Medal Grid row ===== -->
+        <!-- Medal Collection Label - Row 1 -->
+        <Frame Grid.Row="1"
+               HeightRequest="60"
+               BackgroundColor="#5ce1e6"
+               BorderColor="#FF66CC"
+               CornerRadius="12"
+               HasShadow="False"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               Margin="0,8,0,0">
+
+            <Label Text="KOLEKSYON NG MEDALYA"
+                   FontAttributes="Bold"
+                   FontSize="20"
+                   TextColor="#FF66CC"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+        </Frame>
+
         <!-- ===== Medal Grid row ===== -->
         <Frame Grid.Row="2"
                HorizontalOptions="FillAndExpand"
@@ -165,9 +162,6 @@
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
-
-
 
             </CollectionView>
         </Frame>

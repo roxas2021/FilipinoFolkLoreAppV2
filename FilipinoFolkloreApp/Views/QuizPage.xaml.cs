@@ -39,15 +39,7 @@ public partial class QuizPage : ContentPage
             return;
         }
 
-        //var q = story.Quiz[0];
-        //QuizPrompt.Text = q.Prompt;
-        //_correctIndex = q.CorrectIndex;
-        //Choice0.Source = q.ChoiceImages.ElementAtOrDefault(0);
-        //Choice1.Source = q.ChoiceImages.ElementAtOrDefault(1);
-        //Choice2.Source = q.ChoiceImages.ElementAtOrDefault(2);
-
-        //_cts = new CancellationTokenSource();
-        //_ = TimerAsync(q.TimeLimitSec, _cts.Token);
+        
         LoadQuiz();
 
     }
@@ -60,13 +52,6 @@ public partial class QuizPage : ContentPage
     async Task LoadQuiz()
     {
         var story = AlamatContent.GetStory(_storyId);
-
-        // Finished all quizzes
-        //if (_quizIndex >= story.Quiz.Count)
-        //{
-        //    _ = HandleAllQuizzesCompletedAsync();
-        //    return;
-        //}
 
         var q = story.Quiz[_quizIndex];
 
@@ -248,7 +233,34 @@ public partial class QuizPage : ContentPage
     async void OnAlertCloseTapped(object? s, TappedEventArgs e)
     {
         _cts?.Cancel();
-        await Navigation.PushAsync(new AlamatPage(AlamatContent.category));
+        var pages = Navigation.NavigationStack.ToList();
+        foreach (var page in pages)
+        {
+            if (page is RewardPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is QuizPage)
+            {
+                // Remove QuizPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is StoryPage)
+            {
+                // Remove StoryPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is NarratorPage)
+            {
+                Navigation.RemovePage(page);
+            }
+            if (page is AlamatPage)
+            {
+                Navigation.RemovePage(page);
+            }
+        }
+        await Navigation.PushAsync(new IndexPage());
     }
 
     void OnAlertBackgroundTapped(object? s, TappedEventArgs e)
@@ -295,6 +307,35 @@ public partial class QuizPage : ContentPage
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
         _cts?.Cancel();
-        await NavigationHelper.NavigateToIndexPage(Navigation);
+        var pages = Navigation.NavigationStack.ToList();
+        foreach (var page in pages)
+        {
+            if (page is RewardPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is QuizPage)
+            {
+                // Remove QuizPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is StoryPage)
+            {
+                // Remove StoryPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is NarratorPage)
+            {
+                Navigation.RemovePage(page);
+            }
+            if (page is AlamatPage)
+            {
+                Navigation.RemovePage(page);
+            }
+        }
+
+        await Navigation.PushAsync(new IndexPage());
     }
+
 }

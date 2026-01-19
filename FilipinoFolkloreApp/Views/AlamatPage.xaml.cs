@@ -83,7 +83,10 @@ public partial class AlamatPage : ContentPage
 
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
-        await NavigationHelper.NavigateToIndexPage(Navigation);
+       
+        
+        await Navigation.PushAsync(new IndexPage());
+
     }
 
     void LoadStories()

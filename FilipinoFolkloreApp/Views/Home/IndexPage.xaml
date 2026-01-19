@@ -131,24 +131,26 @@
               CornerRadius="40"
               HeightRequest="40"/>
         </Grid>
+        
+        <!-- Settings Modal Overlay -->
         <Grid x:Name="SettingsModalOverlay"
-       Grid.RowSpan="3"
-       IsVisible="False"
+              Grid.RowSpan="3"
+              IsVisible="False"
               BackgroundColor="Transparent"
-       InputTransparent="False">
+              InputTransparent="False">
             <Grid.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnCloseSettingsModal"/>
             </Grid.GestureRecognizers>
 
-            <!-- Settings Modal Content - Compact Size -->
-            <Frame WidthRequest="380"
-            HeightRequest="180"
-            CornerRadius="20"
-            BackgroundColor="#E6FFFFFF"
-            Padding="25"
-            HasShadow="True"
-            HorizontalOptions="Center"
-            VerticalOptions="Center">
+            <!-- Settings Modal Content - Expanded for Volume Slider -->
+            <Frame WidthRequest="400"
+                   HeightRequest="260"
+                   CornerRadius="20"
+                   BackgroundColor="#E6FFFFFF"
+                   Padding="25"
+                   HasShadow="True"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center">
                 <Frame.Shadow>
                     <Shadow Brush="Black" Offset="0,4" Radius="20" Opacity="0.3"/>
                 </Frame.Shadow>
@@ -156,42 +158,82 @@
                     <TapGestureRecognizer/>
                 </Frame.GestureRecognizers>
 
-                <Grid RowDefinitions="Auto,*,Auto">
+                <Grid RowDefinitions="Auto,*">
                     <!-- Header -->
-                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
                         <Label Text="SETTINGS"
-                        FontSize="24"
-                        FontAttributes="Bold"
-                        TextColor="#CC3333"
-                        VerticalOptions="Center"/>
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="#CC3333"
+                               VerticalOptions="Center"/>
                         <ImageButton Grid.Column="1"
-                              Source="icon_settings.png"
-                              Clicked="OnCloseSettingsModal"
-                              WidthRequest="28"
-                              HeightRequest="28"
-                              BackgroundColor="Transparent"/>
+                                     Source="icon_settings.png"
+                                     Clicked="OnCloseSettingsModal"
+                                     WidthRequest="28"
+                                     HeightRequest="28"
+                                     BackgroundColor="Transparent"/>
                     </Grid>
 
-                    <!-- Background Music Toggle -->
-                    <Grid Grid.Row="1" 
-                   ColumnDefinitions="*,Auto" 
-                   ColumnSpacing="20"
-                   VerticalOptions="Center">
-                        <Label Text="Background Music"
-                        FontSize="18"
-                        TextColor="#333"
-                        VerticalOptions="Center"/>
-                        <Switch Grid.Column="1"
-                         x:Name="MusicSwitch"
-                         OnColor="Green"
-                         Toggled="OnMusicToggled"
-                         IsToggled="True"
-                         Scale="1.3"
-                         VerticalOptions="Center"/>
-                    </Grid>
+                    <!-- Settings Content -->
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout Spacing="18">
 
-                    <!-- Footer Button -->
-                    
+                            <!-- Background Music Volume Slider -->
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                    <Label Text="Background Music Volume"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#333"
+                       VerticalOptions="Center"/>
+                                    <Label x:Name="BackgroundVolumeLabel"
+                       Grid.Column="1"
+                       Text="30%"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="#CC3333"
+                       VerticalOptions="Center"/>
+                                </Grid>
+
+                                <Slider x:Name="BackgroundVolumeSlider"
+                    Minimum="0"
+                    Maximum="100"
+                    Value="30"
+                    MinimumTrackColor="#CC3333"
+                    MaximumTrackColor="#CCCCCC"
+                    ThumbColor="#CC3333"
+                    ValueChanged="OnBackgroundVolumeChanged"/>
+                            </VerticalStackLayout>
+
+                            <!-- Narrator Voice Volume Slider -->
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                    <Label Text="Narrator Voice Volume"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#333"
+                       VerticalOptions="Center"/>
+                                    <Label x:Name="NarratorVolumeLabel"
+                       Grid.Column="1"
+                       Text="100%"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="#CC3333"
+                       VerticalOptions="Center"/>
+                                </Grid>
+
+                                <Slider x:Name="NarratorVolumeSlider"
+                    Minimum="0"
+                    Maximum="100"
+                    Value="100"
+                    MinimumTrackColor="Green"
+                    MaximumTrackColor="#CCCCCC"
+                    ThumbColor="Green"
+                    ValueChanged="OnNarratorVolumeChanged"/>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+                    </ScrollView>
                 </Grid>
             </Frame>
         </Grid>

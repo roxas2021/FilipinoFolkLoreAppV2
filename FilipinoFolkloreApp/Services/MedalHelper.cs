@@ -14,7 +14,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 1,
                 MedalName = "Storyteller",
-                MedalImagePath = "medals/medal1.jpg",
+                MedalImagePath = "medals/basa.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 1."
             },
@@ -22,7 +22,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 2,
                 MedalName = "Cultural Enthusiast",
-                MedalImagePath = "medals/medal2.jpg",
+                MedalImagePath = "medals/harireyna.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 2."
             },
@@ -30,7 +30,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 3,
                 MedalName = "Folklore Apprentice",
-                MedalImagePath = "medals/medal3.jpg",
+                MedalImagePath = "medals/kaibigankwento.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 3."
             },
@@ -38,7 +38,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 4,
                 MedalName = "Folklore Adept",
-                MedalImagePath = "medals/medal4.jpg",
+                MedalImagePath = "medals/kasangga.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 4."
             },
@@ -46,7 +46,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 5,
                 MedalName = "Folklore Master",
-                MedalImagePath = "medals/medal5.jpg",
+                MedalImagePath = "medals/lakambantay.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 5."
             },
@@ -54,7 +54,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 6,
                 MedalName = "Legend Listener",
-                MedalImagePath = "medals/medal6.jpg",
+                MedalImagePath = "medals/lakambayanihan.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 6."
             },
@@ -62,7 +62,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 7,
                 MedalName = "Myth Seeker",
-                MedalImagePath = "medals/medal7.jpg",
+                MedalImagePath = "medals/lakbaykultura.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 7."
             },
@@ -70,7 +70,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 8,
                 MedalName = "Epic Explorer",
-                MedalImagePath = "medals/medal8.jpg",
+                MedalImagePath = "medals/lakbaykwento.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 8."
             },
@@ -78,7 +78,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 9,
                 MedalName = "Cultural Guardian",
-                MedalImagePath = "medals/medal9.jpg",
+                MedalImagePath = "medals/lakbaykwento.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 9."
             },
@@ -86,7 +86,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 10,
                 MedalName = "Oral Tradition Keeper",
-                MedalImagePath = "medals/medal10.jpg",
+                MedalImagePath = "medals/likhakulay.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 10."
             },
@@ -94,7 +94,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 11,
                 MedalName = "Legend Scholar",
-                MedalImagePath = "medals/medal11.jpg",
+                MedalImagePath = "medals/lipad.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 11."
             },
@@ -102,7 +102,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 12,
                 MedalName = "Myth Lorekeeper",
-                MedalImagePath = "medals/medal12.jpg",
+                MedalImagePath = "medals/mananalaysay.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 12."
             },
@@ -110,7 +110,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 13,
                 MedalName = "Epic Historian",
-                MedalImagePath = "medals/medal13.jpg",
+                MedalImagePath = "medals/manlalarobituin.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 13."
             },
@@ -118,7 +118,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 14,
                 MedalName = "Ancestral Voice",
-                MedalImagePath = "medals/medal14.jpg",
+                MedalImagePath = "medals/mapanlikha.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 14."
             },
@@ -126,7 +126,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 15,
                 MedalName = "Folklore Legend",
-                MedalImagePath = "medals/medal15.jpg",
+                MedalImagePath = "medals/mapanlikha.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 15."
             }

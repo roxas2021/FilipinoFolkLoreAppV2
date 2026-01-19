@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="FilipinoFolkloreApp.Views.MedalDetailPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundImageSource="narator_bg.jpg"
+             Shell.NavBarIsVisible="False">
+
+    <Grid Padding="16" ColumnDefinitions="*,*">
+
+        <!-- Back Button - Top Right -->
+        <Image Grid.ColumnSpan="2"
+               Source="prev.png"
+               WidthRequest="48" 
+               HeightRequest="48"
+               Aspect="AspectFit"
+               HorizontalOptions="End"
+               VerticalOptions="Start"
+               Margin="0">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnBackTapped"/>
+            </Image.GestureRecognizers>
+        </Image>
+
+        <!-- Main Pink Frame - Left Side -->
+        <Frame Grid.Column="0"
+               BackgroundColor="#FF69B4"
+               CornerRadius="30"
+               Padding="30"
+               HasShadow="True"
+               WidthRequest="380"
+               HeightRequest="350"
+               HorizontalOptions="End"
+               VerticalOptions="Center"
+               Margin="0,0,20,0"
+               IsClippedToBounds="False">
+
+            <Grid RowDefinitions="Auto,*"
+      ColumnDefinitions="*,Auto">
+
+                <!-- Info Icon -->
+                <Border Grid.Row="0"
+            Grid.Column="1"
+            BackgroundColor="White"
+            WidthRequest="36"
+            HeightRequest="36"
+            HorizontalOptions="End"
+            VerticalOptions="Start">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18"/>
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnInfoTapped"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="i"
+               FontSize="22"
+               FontAttributes="Bold"
+               TextColor="#FF69B4"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"/>
+                </Border>
+
+                <!-- Content -->
+                <VerticalStackLayout Grid.Row="1"
+                         Grid.ColumnSpan="2"
+                         Spacing="15"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center">
+
+                    <Label x:Name="MedalTitleLabel"
+               Text="Medal Title"
+               FontSize="24"
+               FontAttributes="Bold"
+               TextColor="White"
+               HorizontalOptions="Center"/>
+
+                    <Image x:Name="MedalImageView"
+               Source="medal_empty.png"
+               WidthRequest="180"
+               HeightRequest="180"
+               Aspect="AspectFit"
+               HorizontalOptions="Center"/>
+
+                </VerticalStackLayout>
+            </Grid>
+
+
+        </Frame>
+
+        <!-- Info Overlay (Light Blue Frame) - Right Side -->
+        <Frame x:Name="InfoOverlay"
+               Grid.Column="1"
+               IsVisible="False"
+               Opacity="0"
+               BackgroundColor="#ADD8E6"
+               CornerRadius="30"
+               Padding="30"
+               HasShadow="True"
+               WidthRequest="380"
+               HeightRequest="350"
+               HorizontalOptions="Start"
+               VerticalOptions="Center"
+               Margin="20,0,0,0">
+
+            <Grid RowDefinitions="Auto,*">
+                <!-- Header -->
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                    <Label Text="Medal Details"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#333"
+                           VerticalOptions="Center"/>
+                    <Image Grid.Column="1"
+                           Source="ui/close.png"
+                           HeightRequest="32"
+                           WidthRequest="32"
+                           HorizontalOptions="End"
+                           VerticalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCloseInfoTapped"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Grid>
+
+                <!-- Description -->
+                <ScrollView Grid.Row="1" Margin="0,15,0,0">
+                    <Label x:Name="MedalDescriptionLabel"
+                           Text="Medal description will appear here..."
+                           FontSize="18"
+                           TextColor="#333"
+                           LineBreakMode="WordWrap"
+                           HorizontalTextAlignment="Start"/>
+                </ScrollView>
+
+            </Grid>
+        </Frame>
+
+    </Grid>
+</ContentPage>

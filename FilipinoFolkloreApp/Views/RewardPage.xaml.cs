@@ -24,6 +24,7 @@ public partial class RewardPage : ContentPage
     {
         base.OnAppearing();
         var MedalId = AlamatContent.GetStory(_storyId).MedalId;
+        MedalImage.Source = DatabaseService.GetMedalImagePath(MedalId);
         // Sync DB state to ensure we show the correct "already claimed" text
         try
         {
@@ -44,7 +45,6 @@ public partial class RewardPage : ContentPage
             {
                 RewardText.Text = "Reward already claimed";
                 OkButton.Text = "Close";
-                MedalImage.Source = DatabaseService.GetMedalImagePath(MedalId);
                 
                 // keep the button enabled so user can dismiss, but prevent awarding again
                 OkButton.IsEnabled = true;
@@ -53,7 +53,7 @@ public partial class RewardPage : ContentPage
         }
 
         // otherwise show the normal reward text
-        MedalImage.Source = DatabaseService.GetMedalImagePath(MedalId);
+        
         RewardText.Text = $"+{_stars} ⭐";
         OkButton.Text = "OK";
         OkButton.IsEnabled = true;

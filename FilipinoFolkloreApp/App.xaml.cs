@@ -44,7 +44,8 @@ namespace FilipinoFolkloreApp
 
                 // Set to loop
                 _backgroundMusicPlayer.Loop = true;
-                _backgroundMusicPlayer.Volume = 0.3; // 30% volume for background music
+                double savedVolume = Preferences.Get("BackgroundMusicVolume", 0.3);
+                _backgroundMusicPlayer.Volume = savedVolume;
 
                 if (AlamatContent.MusicIsEnabled)
                 {
@@ -91,7 +92,13 @@ namespace FilipinoFolkloreApp
                 _backgroundMusicPlayer?.Pause();
             }
         }
-
+        public void SetBackgroundMusicVolume(double volume)
+        {
+            if (_backgroundMusicPlayer != null)
+            {
+                _backgroundMusicPlayer.Volume = volume;
+            }
+        }
 
         public void StopBackgroundMusic()
         {
