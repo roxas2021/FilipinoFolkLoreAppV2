@@ -128,6 +128,7 @@
               TextColor="White"
               FontAttributes="Bold"
               WidthRequest="130"
+                    Clicked="OnMgaLaroClicked"
               CornerRadius="40"
               HeightRequest="40"/>
         </Grid>

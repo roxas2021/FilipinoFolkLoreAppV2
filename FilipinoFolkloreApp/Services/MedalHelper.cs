@@ -129,6 +129,14 @@ namespace FilipinoFolkloreApp.Services
                 MedalImagePath = "medals/mapanlikha.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 15."
+            },
+            new Medals
+            {
+                MedalId = 16,
+                MedalName = "First Artist",
+                MedalImagePath = "medals/likhakulay.png",
+                isUnlocked = false,
+                MedalDescription = "Awarded for coloring your first image."
             }
 
 

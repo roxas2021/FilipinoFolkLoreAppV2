@@ -79,7 +79,11 @@ public partial class IndexPage : ContentPage
     {
         await Navigation.PushAsync(new MedalPage());
     }
-    
+    private async void OnMgaLaroClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new MgaLaroPage());
+    }
+
     private void OnSettingsClicked(object sender, EventArgs e)
     {
         SettingsModalOverlay.IsVisible = true;
@@ -158,5 +162,10 @@ public partial class IndexPage : ContentPage
         NarratorVolumeSlider.Value = savedNarratorVolume * 100;
         NarratorVolumeLabel.Text = $"{(int)(savedNarratorVolume * 100)}%";
         NarratorVolumeSlider.ValueChanged += OnNarratorVolumeChanged;
+    }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+
     }
 }

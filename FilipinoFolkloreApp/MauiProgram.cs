@@ -2,6 +2,7 @@
 using FilipinoFolkloreApp.Services;
 using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;    
+using SkiaSharp.Views.Maui.Controls.Hosting;
 namespace FilipinoFolkloreApp
 {
     public static class MauiProgram
@@ -13,6 +14,7 @@ namespace FilipinoFolkloreApp
             builder
                 .UseMauiApp<App>()                 // <-- first
                 .UseMauiCommunityToolkit()         // <-- chained immediately after
+                .UseSkiaSharp()
                 //.UseMauiCommunityToolkitMediaElement()
                 .ConfigureFonts(fonts =>
                 {

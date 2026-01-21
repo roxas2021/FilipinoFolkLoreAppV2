@@ -129,7 +129,7 @@ public partial class StoryPage : ContentPage
                 // relPath like "audio/juantamad/scene1_tarsier.mp3"
                 _audioStream = await FileSystem.OpenAppPackageFileAsync(relPath); // keep it alive
                 _player = AudioManager.Current.CreatePlayer(_audioStream);
-                _player.Volume = 1.0; // ensure not muted
+                _player.Volume = AlamatContent.NarratorVolume; // ensure not muted
 
                 _player.PlaybackEnded += async (s, e) =>
                 {
