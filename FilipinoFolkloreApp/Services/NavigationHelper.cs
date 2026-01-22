@@ -24,7 +24,7 @@ public static class NavigationHelper
                 await navigation.PopAsync(false); // false = no animation for faster execution
             }
         }
-        else
+        else 
         {
             // No IndexPage exists, remove all pages except the first and push IndexPage
             while (navigation.NavigationStack.Count > 1)

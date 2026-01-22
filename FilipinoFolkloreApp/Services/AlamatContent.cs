@@ -15,6 +15,7 @@ namespace FilipinoFolkloreApp.Services
             public string Name { get; set; } = "";
             public string Avatar { get; set; } = "";
             public int PriceStars { get; set; } = 0;
+            public string NarratorBackground { get; set; } = "";
         }
 
         public class Slide
@@ -55,9 +56,9 @@ namespace FilipinoFolkloreApp.Services
         // ------- EDIT THESE: narrators, stories, slides, quiz -------
         public static List<Narrator> Narrators { get; } = new()
         {
-            new Narrator{ Id="tarsier", Name="Tarsier", Avatar="elements/tarsier.png", PriceStars=0 },
-            new Narrator{ Id="eagle",   Name="Agila",   Avatar="elements/eagle.png",   PriceStars=50 },
-            new Narrator{ Id="monkey",  Name="Unggoy",  Avatar="elements/monkey.png",  PriceStars=100 },
+            new Narrator{ Id="tarsier", Name="Tarsier", Avatar="elements/tarsier.png",NarratorBackground ="Ako si Tarsy maliit lang ako, pero may malalaking mata na nakakatulong sa akin na makita kahit madilim ang paligid. Mula pagkabata, ako na ang bantay ng gubat tuwing gabi. Ako ang nagbabantay para siguraduhing ligtas ang lahat. Dito sa laro, tutulungan kitang makita ang mga bagay na mahirap makita kapag gabi at turuan kang maging matapang kahit madilim ang paligid. Pinili ako dahil gusto kong ipakita na kahit maliit ka, may malaking bagay kang magagawa kapag matapang ka at mapagmasid sa iyong paligid. Tara, sasamahan kita na maglakbay sa gabi.", PriceStars=0 },
+            new Narrator{ Id="eagle",   Name="Agila",   Avatar="elements/eagle.png",NarratorBackground="Ako si Agie isang agila na malakas ang pakpak at mabilis lumipad sa himpapawid. Nakikita ko ang buong mundo mula sa taas ng langit. Palagi akong nagmamasid kung ano ang nangyayari mula sa itaas, para maprotektahan ang mga naninirahan sa gubat sa baba. Pinili mo ako para maging iyong gabay dahil gusto kitang turuan na maging matapang at laging handang tumulong sa oras ng problema. Dito sa laro, tutulungan kitang tingnan ang mga bagay mula sa malayo at mapag matyag, para lagi kang handa sa kahit anong mangyayari. Sama na, lipad tayo at alamin ang mga sikreto ng gubat",   PriceStars=50 },
+            new Narrator{ Id="monkey",  Name="Unggoy",  Avatar="elements/monkey.png",NarratorBackground ="Ako si Makkie ang unggoy na laging masaya at malikot. Mahilig ako tumalon-talon sa mga puno at maghanap ng masasarap na saging na paborito kong prutas. Palagi akong naglalaro sa gubat at nakikisama sa iba pang mga hayop. Pinili mo ako para maging narrator dahil gusto kong ipakita sa'yo na ang gubat ay puno ng saya at magkaron ng mga kaibigan. Dito sa laro, tutulungan kitang maghanap ng mga kayamanan at matuto habang ikaw ay naglalaro. Halika samahan mo ako sa masayang pakikipagsapalaran sa gubat.",  PriceStars=100 },
         };
 
         public static List<Story> Stories { get; } = new()
@@ -147,7 +148,7 @@ namespace FilipinoFolkloreApp.Services
                     },
                     new Slide{
                         Background="stories/juantamad/juan_tamad11.PNG",
-                        Subtitle="Una, nagkwento si Juan Tamad kung paano siya naging tamad sa pagtinda ng puto ng kanyang ina. Sa sobrang init ng panahon, nagpasya siyang magpahinga na lamang kaysa tignan ang kalidad ng kanyang tinitindang produkto. Inabot siya ng antok at hindi napansin na kinain na pala ng mga palakang gutom ang lahat ng kanyang puto. Nang makarating siya sa bahay, kinailangan niyang magtago ng dalawang palakang gutom upang hindi siya mapagalitan ng kanyang ina."
+                        Subtitle="Una, nagkwento si Juan Tamad kung paano siya naging tamad sa pagtinda ng puto ng kanyang ina. Sa sobrang init ng panahon, nagpasya siyang magpahinga na lamang kaysa tignan ang kalidad ng kanyang tinitindang produkto. Inabot siya ng antok at hindi napansin na kinain na pala ng mga palakang gutom ang lahat ng kanyang puto. Nang makarating siya sa bahay, kinailangan niyang magtago ng dalawang palakeng gutom upang hindi siya mapagalitan ng kanyang ina."
                     },
                     new Slide{
                         Background="stories/juantamad/juan_tamad12.PNG",
@@ -270,7 +271,7 @@ namespace FilipinoFolkloreApp.Services
                     },
                     new Slide{
                         Background="stories/langit/langit5.png",
-                        Subtitle="Biglang lumakas ang hangin at unti-unting tumaas ang langit. Muling tinamaan ang langit ng pambayo ng lalaki. Muling pinataas ng Bathala ang langit. Kasabay nito, tumaas din ang mga ulap. Tumaas din ang brilyanteng kuwintas at suklay. Tumaas din ang palayok a apoy sa tabi ng mga ulap.\r\nAng pagtaas ng langit ay hindi na mapigilan.\r\n "
+                        Subtitle="Biglang lumakas ang hangin at unti-unti nang tumaas ang langit. Muling tinamaan ang langit ng pambayo ng lalaki. Muling pinataas ng Bathala ang langit. Kasabay nito, tumaas din ang mga ulap. Tumaas din ang brilyanteng kuwintas at suklay. Tumaas din ang palayok a apoy sa tabi ng mga ulap.\r\nAng pagtaas ng langit ay hindi na mapigilan.\r\n "
                     },
                     new Slide{
                         Background="stories/langit/langit6.png",
@@ -548,7 +549,7 @@ namespace FilipinoFolkloreApp.Services
         new Story{
                 StoryIndex =25,Category = "epiko", MedalId = 10,
                 Id="3_maton", Title="Alamat ng Maton", PriceStars=2, RewardStars=20,
-                Slides=new(){ new Slide{ Background="stories/maton/s1.png", Subtitle="" } }, // no subtitle example
+                Slides=new(){ new Slide{ Background="stories/maton/s1.png", Subtitle="..." } }, // no subtitle example
                 Quiz=new(){ new QuizQuestion{ Prompt="Sino ang bida?",
                            ChoiceImages=new(){ "quiz/maton/a.png","quiz/maton/b.png","quiz/maton/c.png"},
                            CorrectIndex=2 } }
@@ -801,9 +802,125 @@ namespace FilipinoFolkloreApp.Services
         public static int Stars { get; set; } = 50;
         public static int Hearts { get; set; } = 3;  // daily refill later
         public static string SelectedNarratorId { get; set; } = "tarsier";
+        public static string CurrentNarratorImage { get; set; } = "elements/tarsier.png"; // Global variable for narrator image
+        
+        // Narrator battery system
+        public static int NarratorBattery { get; set; } = 3; // 3 = full battery
+        public static DateTime LastNarratorUseTime { get; set; } = DateTime.MinValue;
+        private static System.Threading.Timer? _narratorBatteryTimer;
+        
         public static HashSet<string> UnlockedStories { get; } = new() { "1_juan_tamad" };
         public static HashSet<string> UnlockedNarrators { get; } = new() { "tarsier" };
         public static string category { get; set; } = "";
+
+        // Narrator battery helper methods
+        public static string GetNarratorBatteryImage()
+        {
+            return NarratorBattery switch
+            {
+                3 => "batteryfull.png",
+                2 => "batterythreequarters.png",
+                1 => "batteryquarter.png",
+                _ => "batteryempty.png"
+            };
+        }
+
+        public static bool CanUseNarrator()
+        {
+            CheckAndRefreshNarratorBattery();
+            return NarratorBattery > 0;
+        }
+
+        public static async Task<bool> UseNarratorAsync()
+        {
+            if (!CanUseNarrator())
+                return false;
+
+            NarratorBattery--;
+            LastNarratorUseTime = DateTime.Now;
+            
+            // Save to database
+            await App.Database.UpdateNarratorBatteryAsync(NarratorBattery, LastNarratorUseTime);
+            
+            // Start 10-minute timer if battery is depleted
+            if (NarratorBattery == 0)
+            {
+                StartNarratorBatteryRefreshTimer();
+            }
+            
+            return true;
+        }
+
+        public static void CheckAndRefreshNarratorBattery()
+        {
+            if (NarratorBattery >= 3)
+                return;
+
+            if (LastNarratorUseTime == DateTime.MinValue)
+                return;
+
+            var timeSinceLastUse = DateTime.Now - LastNarratorUseTime;
+            
+            // Check if 10 minutes have passed since last use
+            if (timeSinceLastUse.TotalMinutes >= 10)
+            {
+                // Reset to full battery after 10 minutes
+                NarratorBattery = 3;
+                LastNarratorUseTime = DateTime.MinValue; // Reset timer
+                
+                // Save to database asynchronously
+                _ = Task.Run(async () => 
+                {
+                    try
+                    {
+                        await App.Database.UpdateNarratorBatteryAsync(NarratorBattery, LastNarratorUseTime);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to update narrator battery: {ex.Message}");
+                    }
+                });
+                
+                // Stop the timer since battery is full
+                _narratorBatteryTimer?.Dispose();
+                _narratorBatteryTimer = null;
+            }
+        }
+
+        private static void StartNarratorBatteryRefreshTimer()
+        {
+            // Cancel existing timer if any
+            _narratorBatteryTimer?.Dispose();
+            
+            // Create timer that checks every 30 seconds for better responsiveness
+            _narratorBatteryTimer = new System.Threading.Timer(
+                callback: _ => 
+                {
+                    CheckAndRefreshNarratorBattery();
+                    
+                    // If battery is full, dispose the timer
+                    if (NarratorBattery >= 3)
+                    {
+                        _narratorBatteryTimer?.Dispose();
+                        _narratorBatteryTimer = null;
+                    }
+                },
+                state: null,
+                dueTime: TimeSpan.FromSeconds(30),
+                period: TimeSpan.FromSeconds(30)
+            );
+        }
+
+        public static void InitializeNarratorBatteryTimer()
+        {
+            CheckAndRefreshNarratorBattery();
+            
+            if (NarratorBattery < 3)
+            {
+                StartNarratorBatteryRefreshTimer();
+            }
+        }
+
         // Prefer checked sets but also fall back to story fields and price.
         public static bool IsStoryUnlocked(string id)
         {
@@ -822,11 +939,11 @@ namespace FilipinoFolkloreApp.Services
 
             return unlocked;
         }
-        // AlamatContent.cs (inside AlamatContent static class)
 
         private static readonly HashSet<string> _narratorDbCheckInFlight = new();
         public static string CurrentStoryId { get; set; } = "";
         public static bool MusicIsEnabled { get; set; } = true;
+        
         public static bool IsNarratorUnlocked(string id)
         {
             // 'tarsier' is always available
@@ -847,10 +964,6 @@ namespace FilipinoFolkloreApp.Services
                 return currentStory != null && currentStory.NarratorMonkeyUnlocked;
             }
 
-
-            // If we haven't already launched a DB check for this narrator, start one in background.
-            // This will update UnlockedNarrators if DB says any story has it unlocked.
-            // We guard by _narratorDbCheckInFlight so we only query once concurrently per narrator.
             if (!_narratorDbCheckInFlight.Contains(id))
             {
                 _narratorDbCheckInFlight.Add(id);
@@ -861,13 +974,7 @@ namespace FilipinoFolkloreApp.Services
                         var dbHas = await App.Database.IsAnyStoryNarratorUnlockedAsync(id);
                         if (dbHas)
                         {
-                            // Update the in-memory set for fast lookups later
                             UnlockedNarrators.Add(id);
-
-                            // Optionally: if you want UI to refresh immediately, you can
-                            // publish a message here (MessagingCenter) or call a UI refresh handler.
-                            // Example (uncomment if you use MessagingCenter):
-                            // MessagingCenter.Send<object, string>(this, "NarratorUnlocked", id);
                         }
                     }
                     catch (Exception ex)
@@ -881,10 +988,8 @@ namespace FilipinoFolkloreApp.Services
                 });
             }
 
-            // still locked for now (until DB check completes or a story flag shows unlock)
             return false;
         }
-
 
         // ------- Helpers -------
         public static Narrator CurrentNarrator => Narrators.First(n => n.Id == SelectedNarratorId);

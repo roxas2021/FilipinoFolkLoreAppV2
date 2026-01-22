@@ -29,6 +29,7 @@ namespace FilipinoFolkloreApp
             AlamatContent.MusicIsEnabled = Preferences.Get("MusicEnabled", true);
             Task.Run(async () => await Database.LoadStoriesAsync());
             Task.Run(async() => await Database.LoadMedalsAsync());
+            Task.Run(async() => await Database.LoadNarratorDataAsync()); // Load narrator data
             // Start background music
             _ = InitializeBackgroundMusicAsync();
         }

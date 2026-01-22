@@ -137,11 +137,31 @@ namespace FilipinoFolkloreApp.Services
                 MedalImagePath = "medals/likhakulay.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for coloring your first image."
+            },
+            new Medals
+            {
+                MedalId = 17,
+                MedalName = "Caring Companion",
+                MedalImagePath = "medals/kasangga.png",
+                isUnlocked = false,
+                MedalDescription = "Awarded for fully charging narrator battery for the first time."
+            },
+            new Medals
+            {
+                MedalId = 18,
+                MedalName = "Narrator Caretaker",
+                MedalImagePath = "medals/kaibigankwento.png",
+                isUnlocked = false,
+                MedalDescription = "Awarded for feeding narrator 5 times."
+            },
+            new Medals
+            {
+                MedalId = 19,
+                MedalName = "Dedicated Guardian",
+                MedalImagePath = "medals/lakambantay.png",
+                isUnlocked = false,
+                MedalDescription = "Awarded for feeding narrator 10 times."
             }
-
-
         };
-
     }
-    
-};
+}

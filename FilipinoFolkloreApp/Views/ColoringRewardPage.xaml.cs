@@ -9,14 +9,24 @@ public partial class ColoringRewardPage : ContentPage
 {
     private readonly int _stars;
     private readonly int _medalId;
-    private const string FIRST_IMAGE_REWARD_KEY = "FirstColoredImageRewardClaimed";
+    private readonly string _rewardKey;
+    private readonly string _returnPageType;
+    private readonly object? _returnPageParameter;
 
-    public ColoringRewardPage(int stars = 20, int medalId = 16)
+    public ColoringRewardPage(
+        int stars = 20, 
+        int medalId = 16, 
+        string? rewardKey = null,
+        string returnPageType = "ColoringSelection",
+        object? returnPageParameter = null)
     {
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
         _stars = stars;
         _medalId = medalId;
+        _rewardKey = rewardKey ?? "FirstColoredImageRewardClaimed";
+        _returnPageType = returnPageType;
+        _returnPageParameter = returnPageParameter;
         RewardText.Text = $"+{_stars} ?";
     }
 
@@ -38,7 +48,7 @@ public partial class ColoringRewardPage : ContentPage
         MedalImage.Source = DatabaseService.GetMedalImagePath(_medalId);
 
         // Check if reward was already claimed
-        bool alreadyClaimed = Preferences.Get(FIRST_IMAGE_REWARD_KEY, false);
+        bool alreadyClaimed = Preferences.Get(_rewardKey, false);
 
         if (alreadyClaimed)
         {
@@ -57,7 +67,7 @@ public partial class ColoringRewardPage : ContentPage
     private async void OnRewardOk(object? sender, EventArgs e)
     {
         // Check if already claimed (double-check to prevent race conditions)
-        bool alreadyClaimed = Preferences.Get(FIRST_IMAGE_REWARD_KEY, false);
+        bool alreadyClaimed = Preferences.Get(_rewardKey, false);
 
         if (alreadyClaimed)
         {
@@ -76,13 +86,13 @@ public partial class ColoringRewardPage : ContentPage
             await App.Database.UnlockMedalAsync(_medalId);
 
             // Mark the reward as claimed
-            Preferences.Set(FIRST_IMAGE_REWARD_KEY, true);
+            Preferences.Set(_rewardKey, true);
 
-            System.Diagnostics.Debug.WriteLine($"First colored image reward claimed: {_stars} stars, Medal ID: {_medalId}");
+            System.Diagnostics.Debug.WriteLine($"Reward claimed: {_stars} stars, Medal ID: {_medalId}, Key: {_rewardKey}");
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Failed to award coloring reward: {ex}");
+            System.Diagnostics.Debug.WriteLine($"Failed to award reward: {ex}");
             await DisplayAlert("Error", "Hindi naisave ang reward — subukang muli.", "OK");
             return;
         }
@@ -93,7 +103,7 @@ public partial class ColoringRewardPage : ContentPage
 
     private async Task NavigateBack()
     {
-        // Remove this reward page and navigate to ColoringSelectionPage
+        // Remove this reward page from navigation stack
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {
@@ -103,7 +113,24 @@ public partial class ColoringRewardPage : ContentPage
             }
         }
 
-        // Navigate to ColoringSelectionPage
-        await Navigation.PushAsync(new ColoringSelectionPage());
+        // Navigate based on return page type
+        switch (_returnPageType)
+        {
+            case "ColoringSelection":
+                await Navigation.PushAsync(new ColoringSelectionPage());
+                break;
+            
+            case "NarratorDetail":
+                if (_returnPageParameter is string narratorId)
+                {
+                    await Navigation.PushAsync(new NarratorDetailPage(narratorId));
+                }
+                break;
+            
+            default:
+                // Just pop if no specific navigation needed
+                await Navigation.PopAsync();
+                break;
+        }
     }
 }

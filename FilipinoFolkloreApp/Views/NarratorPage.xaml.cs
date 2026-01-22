@@ -27,10 +27,15 @@ public partial class NarratorPage : ContentPage
     {
         base.OnAppearing();
         AlamatContent.Hearts = HeartService.GetHearts();
+        
+        // Check and refresh narrator battery
+        AlamatContent.CheckAndRefreshNarratorBattery();
+        
         try
         {
             // Sync in-memory story monitored fields from DB.
             await App.Database.LoadStoriesAsync();
+            await App.Database.LoadNarratorDataAsync();
         }
         catch (Exception ex)
         {
@@ -42,18 +47,13 @@ public partial class NarratorPage : ContentPage
         RefreshNarratorList();
     }
 
-
-
-
     public NarratorPage(string storyId)
     {
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
         _storyId = storyId;
-
-        // Initial HUD load (will be refreshed in OnAppearing after DB sync)
-        
     }
+    
     void RefreshNarratorList()
     {
         // Get the current story (safe lookup)
@@ -83,8 +83,20 @@ public partial class NarratorPage : ContentPage
     {
         if (sender is not Grid g || g.BindingContext is not Card c) return;
 
+        // Check narrator battery before proceeding
+        if (!AlamatContent.CanUseNarrator())
+        {
+            // Calculate time until next battery refresh
+            var timeSinceLastUse = DateTime.Now - AlamatContent.LastNarratorUseTime;
+            var minutesUntilRefresh = 10 - ((int)timeSinceLastUse.TotalMinutes % 10);
+            
+            await DisplayAlert("Narrator Battery Empty", 
+                $"Maghintay ng {minutesUntilRefresh} minuto para sa susunod na narrator battery.", 
+                "OK");
+            return;
+        }
+
         // If already unlocked for this story or globally, just select and continue
-        // We'll rely on RefreshNarratorList() which uses the per-story flags.
         var story = AlamatContent.GetStory(_storyId);
 
         bool alreadyUnlockedForThisStory =
@@ -120,9 +132,6 @@ public partial class NarratorPage : ContentPage
             try
             {
                 await App.Database.UpdateStoryAsync(story);
-
-                // DO NOT add to AlamatContent.UnlockedNarrators here if you want per-story behavior.
-                // AlamatContent.UnlockedNarrators.Add(c.Id); // <-- remove this line
                 await App.Database.SetStarsAsync(CharacterHelper.CurrentStars - c.Price);
                 CharacterHelper.CurrentStars -= c.Price; // keep in sync
                 saved = true;
@@ -149,10 +158,16 @@ public partial class NarratorPage : ContentPage
             RefreshNarratorList();
         }
 
+        // Use narrator battery (deduct 1)
+        await AlamatContent.UseNarratorAsync();
+
+        // Save selected narrator to database
         AlamatContent.SelectedNarratorId = c.Id;
+        AlamatContent.CurrentNarratorImage = c.Avatar;
+        await App.Database.UpdateSelectedNarratorAsync(c.Id);
+        
         await Navigation.PushAsync(new StoryPage(_storyId));
     }
-
 
     void LoadHud()
     {
@@ -161,6 +176,7 @@ public partial class NarratorPage : ContentPage
         PlayerNameLabel.Text = CharacterHelper.CurrentName;
         RefreshHearts();    
     }
+    
     void RefreshHearts()
     {
         HeartsPanel.Children.Clear();
@@ -175,6 +191,7 @@ public partial class NarratorPage : ContentPage
             });
         }
     }
+    
     async void OnBackTapped(object? s, TappedEventArgs e)
     {
         if (Navigation.NavigationStack.Count > 1)

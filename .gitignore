@@ -9,6 +9,8 @@
 *.suo
 *.userosscache
 *.sln.docstates
+*.apk
+*.aab
 
 # ================================
 # Build results

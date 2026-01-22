@@ -123,13 +123,12 @@
         <!-- Optional second header row -->
         <ContentView Grid.Row="1"/>
 
-        <!-- Games Buttons (Row 2) - Vertically Centered -->
+        <!-- Games Buttons and Image (Row 2) - Vertically Centered -->
         <Grid Grid.Row="2"
-              RowDefinitions="Auto"
-              ColumnDefinitions="*"
-              HorizontalOptions="Center"
+              HorizontalOptions="Fill"
               VerticalOptions="Center">
 
+            <!-- Buttons - Centered -->
             <VerticalStackLayout Spacing="20"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
@@ -155,6 +154,49 @@
                         Clicked="OnMagpintaTapped"/>
 
             </VerticalStackLayout>
+
+            <!-- Replace the Narrator Tree Image and character sections with this: -->
+
+            <!-- Narrator Tree Image - Positioned to the left of buttons -->
+            <Image Source="narratortree.png"
+       HorizontalOptions="Center"
+       VerticalOptions="Center"
+       Aspect="AspectFit"
+       WidthRequest="200"
+       HeightRequest="200"
+       TranslationX="-200">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnNarratorTreeTapped"/>
+                </Image.GestureRecognizers>
+            </Image>
+
+            <!-- Narrator Character Image - Centered on narratortree.png -->
+            <Image x:Name="NarratorImage"
+       HorizontalOptions="Center"
+       VerticalOptions="Center"
+       Aspect="AspectFit"
+       WidthRequest="50"
+       HeightRequest="50"
+       TranslationX="-200">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnNarratorTreeTapped"/>
+                </Image.GestureRecognizers>
+            </Image>
+
+            <!-- Narrator Battery Image - To the right of narrator character -->
+            <Image x:Name="NarratorBatteryImage"
+       HorizontalOptions="Center"
+       VerticalOptions="Center"
+       Aspect="AspectFit"
+       WidthRequest="25"
+       HeightRequest="25"
+       TranslationX="-165"
+       TranslationY="0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnNarratorTreeTapped"/>
+                </Image.GestureRecognizers>
+            </Image>
+
         </Grid>
     </Grid>
 </ContentPage>

@@ -170,6 +170,12 @@
 	  <None Remove="Resources\Images\medals\medal7.jpg" />
 	  <None Remove="Resources\Images\medals\medal8.jpg" />
 	  <None Remove="Resources\Images\medals\medal9.jpg" />
+	  <None Remove="Resources\Images\narratorassets\food\apple.png" />
+	  <None Remove="Resources\Images\narratorassets\food\banana.png" />
+	  <None Remove="Resources\Images\narratorassets\food\grass.png" />
+	  <None Remove="Resources\Images\narratorassets\food\guava.png" />
+	  <None Remove="Resources\Images\narratorassets\food\sugarcane.png" />
+	  <None Remove="Resources\Images\narratorassets\narratortree.png" />
 	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan1.png" />
 	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan10.png" />
 	  <None Remove="Resources\Images\storiesepiko\bantugan\bantugan11.png" />
@@ -328,6 +334,12 @@
 	  <MauiXaml Update="Views\MgaLaroPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\NarratorDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\NarratorManagementPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\NarratorPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -469,6 +481,16 @@
     <MauiImage Include="Resources\Images\medals\medal7.jpg" />
     <MauiImage Include="Resources\Images\medals\medal8.jpg" />
     <MauiImage Include="Resources\Images\medals\medal9.jpg" />
+    <MauiImage Include="Resources\Images\narratorassets\batteryempty.png" />
+    <MauiImage Include="Resources\Images\narratorassets\batteryfull.png" />
+    <MauiImage Include="Resources\Images\narratorassets\batteryquarter.png" />
+    <MauiImage Include="Resources\Images\narratorassets\batterythreequarters.png" />
+    <MauiImage Include="Resources\Images\narratorassets\food\apple.png" />
+    <MauiImage Include="Resources\Images\narratorassets\food\banana.png" />
+    <MauiImage Include="Resources\Images\narratorassets\food\grass.png" />
+    <MauiImage Include="Resources\Images\narratorassets\food\guava.png" />
+    <MauiImage Include="Resources\Images\narratorassets\food\sugarcane.png" />
+    <MauiImage Include="Resources\Images\narratorassets\narratortree.png" />
     <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan1.png" />
     <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan10.png" />
     <MauiImage Include="Resources\Images\storiesepiko\bantugan\bantugan11.png" />

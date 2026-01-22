@@ -70,7 +70,7 @@ namespace FilipinoFolkloreApp.Services
             if (medal == null || medal.isUnlocked) return;
 
             medal.isUnlocked = true;
-            medal.TimeStamp = DateTime.UtcNow;
+            medal.TimeStamp = DateTime.Now;
             await _database.UpdateAsync(medal);
         }
         public async Task<List<Medals>> GetMedalAsync()
@@ -486,6 +486,68 @@ namespace FilipinoFolkloreApp.Services
                 case "avatarpink": return set.avatarpinkunlocked;
                 case "avatarred": return set.avatarredunlocked;
                 default: return false;
+            }
+        }
+
+        /// <summary>
+        /// Update narrator selection
+        /// </summary>
+        public async Task<Character> UpdateSelectedNarratorAsync(string narratorId)
+        {
+            await _lock.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                var c = await GetCharAsync().ConfigureAwait(false);
+                if (c == null) throw new InvalidOperationException("Character row missing — call EnsureMainCharacterExistsAsync() first.");
+
+                c.selectedNarrator = narratorId ?? "tarsier";
+                await _database.UpdateAsync(c).ConfigureAwait(false);
+                return c;
+            }
+            finally
+            {
+                _lock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Update narrator battery level and last use time
+        /// </summary>
+        public async Task<Character> UpdateNarratorBatteryAsync(int battery, DateTime lastUseTime)
+        {
+            await _lock.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                var c = await GetCharAsync().ConfigureAwait(false);
+                if (c == null) throw new InvalidOperationException("Character row missing — call EnsureMainCharacterExistsAsync() first.");
+
+                c.narratorBattery = Math.Clamp(battery, 0, 3);
+                c.lastNarratorUseTime = lastUseTime;
+                await _database.UpdateAsync(c).ConfigureAwait(false);
+                return c;
+            }
+            finally
+            {
+                _lock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Load narrator data from database
+        /// </summary>
+        public async Task LoadNarratorDataAsync()
+        {
+            var c = await GetCharAsync().ConfigureAwait(false);
+            if (c != null)
+            {
+                AlamatContent.SelectedNarratorId = c.selectedNarrator ?? "tarsier";
+                AlamatContent.CurrentNarratorImage = AlamatContent.Narrators
+                    .FirstOrDefault(n => n.Id == AlamatContent.SelectedNarratorId)?.Avatar ?? "elements/tarsier.png";
+                AlamatContent.NarratorBattery = c.narratorBattery;
+                AlamatContent.LastNarratorUseTime = c.lastNarratorUseTime;
+                
+                // Initialize battery refresh timer
+                AlamatContent.InitializeNarratorBatteryTimer();
             }
         }
     }

@@ -23,6 +23,8 @@ public partial class MgaLaroPage : ContentPage
         HudAvatar.Source = CharacterHelper.CurrentAvatar;
         PlayerNameLabel.Text = CharacterHelper.CurrentName;
         StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
+        NarratorImage.Source = AlamatContent.CurrentNarratorImage;
+        NarratorBatteryImage.Source = AlamatContent.GetNarratorBatteryImage();
         RefreshHearts();
     }
 
@@ -39,6 +41,11 @@ public partial class MgaLaroPage : ContentPage
                 Aspect = Aspect.AspectFit
             });
         }
+    }
+
+    private async void OnNarratorTreeTapped(object? sender, TappedEventArgs e)
+    {
+        await Navigation.PushAsync(new NarratorManagementPage());
     }
 
     private async void OnBugtongTapped(object? sender, EventArgs e)
