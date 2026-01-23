@@ -2,6 +2,7 @@ using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
 using FilipinoFolkloreApp.Services;
+using FilipinoFolkloreApp.Views.Home;
 
 namespace FilipinoFolkloreApp.Views;
 
@@ -195,7 +196,32 @@ public partial class ColoringSelectionPage : ContentPage
 
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
-        await NavigationHelper.NavigateToIndexPage(Navigation);
+        var pages = Navigation.NavigationStack.ToList();
+        foreach (var page in pages)
+        {
+            if (page is ColoringSelectionPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is ColoringCollectionPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is ColoringPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is MgaLaroPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+        }
+
+        await Navigation.PushAsync(new IndexPage());
     }
 
     private class ColoringTemplate

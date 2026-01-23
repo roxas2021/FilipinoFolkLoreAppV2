@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="FilipinoFolkloreApp.Views.BugtongListPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundImageSource="narator_bg.jpg"
+             Shell.NavBarIsVisible="False">
+
+    <Grid Padding="16" RowDefinitions="Auto,Auto,*" RowSpacing="16">
+
+        <!-- Header -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="Auto,*,Auto"
+              VerticalOptions="Start">
+
+            <!-- LEFT: Avatar + Name/Stars + Hearts -->
+            <Grid Grid.Column="0"
+                  RowDefinitions="Auto,Auto"
+                  ColumnDefinitions="Auto,Auto,*,Auto"
+                  RowSpacing="4">
+
+                <!-- Avatar -->
+                <Frame Grid.RowSpan="2"
+                       Grid.Column="0"
+                       WidthRequest="80"
+                       HeightRequest="90"
+                       CornerRadius="10"
+                       Padding="0"
+                       HasShadow="True"
+                       BackgroundColor="White">
+                    <Image x:Name="HudAvatar" Aspect="AspectFill"/>
+                </Frame>
+
+                <!-- Name + Stars pill -->
+                <Frame Margin="10,0,0,0"
+                       Grid.Row="0"
+                       Grid.Column="1"
+                       BackgroundColor="#5ce1e6"
+                       BorderColor="#FF66CC"
+                       CornerRadius="10"
+                       Padding="8,4"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+                        <Label x:Name="PlayerNameLabel"
+                               Grid.Column="0"
+                               Text="NICHOL"
+                               FontAttributes="Bold"
+                               FontSize="18"
+                               TextColor="#FF66CC"
+                               VerticalOptions="Center"/>
+                        <BoxView Grid.Column="1"/>
+                        <Frame Grid.Column="2"
+                               Padding="10,4"
+                               BackgroundColor="#5ce1e6"
+                               BorderColor="#FF66CC"
+                               CornerRadius="12"
+                               HasShadow="False"
+                               VerticalOptions="Center"
+                               Margin="10,0,0,0">
+                            <Frame.Shadow>
+                                <Shadow Brush="Black" Offset="-4,4" Radius="8" Opacity="0.5"/>
+                            </Frame.Shadow>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label x:Name="StarsLabel"
+                                       Text="50"
+                                       VerticalOptions="Center"
+                                       FontAttributes="Bold"
+                                       FontSize="20"
+                                       TextColor="#FFCC00"/>
+                                <Image Source="icon_star_yellow.png" WidthRequest="35" HeightRequest="35"/>
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </Grid>
+                </Frame>
+
+                <!-- Hearts row -->
+                <Frame Grid.Row="1"
+                       Grid.Column="1"
+                       Grid.ColumnSpan="3"
+                       CornerRadius="12"
+                       Padding="6,2"
+                       Margin="10,0,0,0"
+                       BackgroundColor="White"
+                       HorizontalOptions="Start">
+                    <HorizontalStackLayout x:Name="HeartsPanel" Spacing="8"/>
+                </Frame>
+            </Grid>
+
+            <!-- RIGHT: Home button -->
+            <StackLayout Grid.Column="2"
+                         Spacing="8"
+                         VerticalOptions="Start"
+                         Orientation="Horizontal"
+                         HorizontalOptions="Start">
+                <Image Source="prev.png"
+                       WidthRequest="48" 
+                       HeightRequest="48"
+                       Aspect="AspectFit">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
+                    </Image.GestureRecognizers>
+                </Image>
+                <Image Source="icon_home.png"
+                       WidthRequest="48"
+                       HeightRequest="48"
+                       Aspect="AspectFit"
+                       Margin="0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+        </Grid>
+
+        <!-- Title -->
+        <Border Grid.Row="1"
+                BackgroundColor="#FF69B4"
+                Padding="16,8"
+                StrokeThickness="0"
+                HorizontalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20"/>
+            </Border.StrokeShape>
+            <Label Text="Mga Bugtong"
+                   FontAttributes="Bold"
+                   FontSize="28"
+                   TextColor="#FFCC00"
+                   HorizontalTextAlignment="Center"/>
+        </Border>
+
+        <!-- Bugtong List -->
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Spacing="12" Padding="8">
+
+                <!-- Bugtong Items -->
+                <CollectionView x:Name="BugtongCollection"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="White"
+                                    Padding="16"
+                                    Margin="0,0,0,12"
+                                    StrokeThickness="2"
+                                    Stroke="#FF66CC">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+
+                                    <!-- Bugtong Name -->
+                                    <Label Grid.Column="0"
+                                           Text="{Binding Name}"
+                                           FontAttributes="Bold"
+                                           FontSize="20"
+                                           TextColor="#FF66CC"
+                                           VerticalOptions="Center"/>
+
+                                    <!-- Medal Icon (if available) -->
+                                    <Image Grid.Column="1"
+                                           Source="ui/badge.png"
+                                           WidthRequest="32"
+                                           HeightRequest="32"
+                                           IsVisible="{Binding HasMedal}"
+                                           VerticalOptions="Center"/>
+
+                                    <!-- Star Reward -->
+                                    <Border Grid.Column="2"
+                                            BackgroundColor="#5ce1e6"
+                                            Stroke="#FF66CC"
+                                            Padding="8,4"
+                                            StrokeThickness="2"
+                                            VerticalOptions="Center">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12"/>
+                                        </Border.StrokeShape>
+                                        <HorizontalStackLayout Spacing="4">
+                                            <Label Text="{Binding RewardStars}"
+                                                   FontAttributes="Bold"
+                                                   FontSize="16"
+                                                   TextColor="#FFCC00"
+                                                   VerticalOptions="Center"/>
+                                            <Image Source="icon_star_yellow.png"
+                                                   WidthRequest="24"
+                                                   HeightRequest="24"/>
+                                        </HorizontalStackLayout>
+                                    </Border>
+                                </Grid>
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnBugtongTapped"
+                                                          CommandParameter="{Binding Id}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

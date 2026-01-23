@@ -9,6 +9,7 @@ public partial class MgaLaroPage : ContentPage
     public MgaLaroPage()
     {
         InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false);
         LoadHUD();
     }
 
@@ -50,9 +51,8 @@ public partial class MgaLaroPage : ContentPage
 
     private async void OnBugtongTapped(object? sender, EventArgs e)
     {
-        // TODO: Navigate to Bugtong (Riddles) page
-        // await Navigation.PushAsync(new BugtongPage());
-        await DisplayAlert("Bugtong", "Ang Bugtong page ay wala pa. Gagawin pa ito!", "OK");
+         await Navigation.PushAsync(new BugtongListPage());
+        //await DisplayAlert("Bugtong", "Ang Bugtong page ay wala pa. Gagawin pa ito!", "OK");
     }
 
     private async void OnMagpintaTapped(object? sender, EventArgs e)

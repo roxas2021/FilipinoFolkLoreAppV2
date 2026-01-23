@@ -15,7 +15,8 @@ public partial class MedalPage : ContentPage
     public MedalPage()
 	{
 		InitializeComponent();
-        BindingContext=this;
+        NavigationPage.SetHasNavigationBar(this, false);
+        BindingContext =this;
 
 	}
     protected override async void OnAppearing()

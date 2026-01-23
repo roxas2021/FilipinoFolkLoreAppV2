@@ -13,6 +13,8 @@ public partial class AlamatPage : ContentPage
 {
     private HeartService HeartService =>
     Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
+    private TaskCompletionSource<bool>? _alertTcs;
+
     public class StoryCard
     {
         public string Id { get; set; } = "";
@@ -83,8 +85,8 @@ public partial class AlamatPage : ContentPage
 
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
-       
-        
+
+
         await Navigation.PushAsync(new IndexPage());
 
     }
@@ -96,20 +98,20 @@ public partial class AlamatPage : ContentPage
         StoriesView.ItemsSource = AlamatContent.Stories.Where(s => string.IsNullOrEmpty(currentCategory)
                 || (!string.IsNullOrEmpty(s.Category)
                     && s.Category.Equals(currentCategory, StringComparison.OrdinalIgnoreCase))).Select(s => new StoryCard
-        {
-            Id = s.Id,
-            Title = s.Title,
-            Thumb = s.Thumb,
-            // Persisted flags
-            IsPurchased = s.IsPurchased,
-            IsRewardClaimed = s.IsRewardClaimed,
+                    {
+                        Id = s.Id,
+                        Title = s.Title,
+                        Thumb = s.Thumb,
+                        // Persisted flags
+                        IsPurchased = s.IsPurchased,
+                        IsRewardClaimed = s.IsRewardClaimed,
 
-            // Price and display text
-            Price = s.PriceStars,
+                        // Price and display text
+                        Price = s.PriceStars,
 
-            // Locked = NOT (free OR purchased OR globally unlocked via set)
-            IsLocked = !(s.PriceStars == 0 || s.IsPurchased || AlamatContent.UnlockedStories.Contains(s.Id))
-        }).ToList();
+                        // Locked = NOT (free OR purchased OR globally unlocked via set)
+                        IsLocked = !(s.PriceStars == 0 || s.IsPurchased || AlamatContent.UnlockedStories.Contains(s.Id))
+                    }).ToList();
     }
     async void OnStoryTapped(object? sender, TappedEventArgs e)
     {
@@ -124,7 +126,7 @@ public partial class AlamatPage : ContentPage
             // Try to spend stars (updates in-memory AlamatContent.Stars)
             if (!AlamatContent.TrySpendStars(card.Price))
             {
-                await DisplayAlert("Kulang ang ⭐", $"Kailangan: {card.Price}", "OK");
+                await ShowGameAlertAsync($"Kailangan: {card.Price}", false);
                 return;
             }
 
@@ -151,7 +153,7 @@ public partial class AlamatPage : ContentPage
                 AlamatContent.Stars += card.Price; // refund
                 System.Diagnostics.Debug.WriteLine($"UpdateStoryAsync failed: {ex}");
 
-                await DisplayAlert("Error", "Hindi naisave ang binili — subukang muli.", "OK");
+                await ShowGameAlertAsync("Hindi naisave ang binili — subukang muli.", false);
             }
 
             // If saving failed, stop here (user was refunded). If saved, refresh UI.
@@ -168,63 +170,121 @@ public partial class AlamatPage : ContentPage
         await Navigation.PushAsync(new NarratorPage(card.Id));
     }
 
-    //async void OnStoryTapped(object? sender, TappedEventArgs e)
-    //{
-    //    if (sender is not Grid g || g.BindingContext is not StoryCard card) return;
+    // Custom Game Alert with Yes/No or OK buttons
+    private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
+    {
+        if (GameAlertOverlay.IsVisible && _alertTcs != null)
+            return _alertTcs.Task;
 
-    //    // Get the actual Story object (static)
-    //    var story = AlamatContent.GetStory(card.Id);
+        _alertTcs = new TaskCompletionSource<bool>();
 
-    //    // If story is not unlocked/purchased yet, attempt purchase
-    //    if (!AlamatContent.IsStoryUnlocked(card.Id))
-    //    {
-    //        // Try to spend stars
-    //        if (!AlamatContent.TrySpendStars(card.Price))
-    //        {
-    //            await DisplayAlert("Kulang ang ⭐", $"Kailangan: {card.Price}", "OK");
-    //            return;
-    //        }
+        // Set message
+        AlertMessageLabel.Text = message;
 
-    //        // Mark unlocked/purchased in memory
-    //        AlamatContent.UnlockedStories.Add(card.Id);
-    //        story.IsPurchased = true;
+        // Clear existing buttons
+        AlertButtonsPanel.Children.Clear();
 
-    //        // Persist monitored story data
-    //        try
-    //        {
-    //            await App.Database.UpdateStoryAsync(story);
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            // If DB update fails, roll back in-memory changes (optional)
-    //            System.Diagnostics.Debug.WriteLine($"UpdateStoryAsync failed: {ex}");
-    //        }
+        if (showYesNo)
+        {
+            // Add Yes button
+            var yesButton = new Button
+            {
+                Text = "Oo",
+                FontAttributes = FontAttributes.Bold,
+                CornerRadius = 18,
+                HeightRequest = 44,
+                WidthRequest = 100,
+                BackgroundColor = Color.FromArgb("#00A6FF"),
+                TextColor = Colors.White
+            };
+            yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
+            AlertButtonsPanel.Children.Add(yesButton);
 
-    //        // Refresh HUD and list
-    //        LoadHud();
-    //        LoadStories();
-    //    }
+            // Add No button
+            var noButton = new Button
+            {
+                Text = "Hindi",
+                FontAttributes = FontAttributes.Bold,
+                CornerRadius = 18,
+                HeightRequest = 44,
+                WidthRequest = 100,
+                BackgroundColor = Color.FromArgb("#FF6B6B"),
+                TextColor = Colors.White
+            };
+            noButton.Clicked += (s, e) => OnAlertNoClicked(s, e);
+            AlertButtonsPanel.Children.Add(noButton);
+        }
+        else
+        {
+            // Add OK button
+            var okButton = new Button
+            {
+                Text = "OK",
+                FontAttributes = FontAttributes.Bold,
+                CornerRadius = 18,
+                HeightRequest = 44,
+                WidthRequest = 120,
+                BackgroundColor = Color.FromArgb("#00A6FF"),
+                TextColor = Colors.White
+            };
+            okButton.Clicked += (s, e) => OnAlertOkClicked(s, e);
+            AlertButtonsPanel.Children.Add(okButton);
+        }
 
-    //    // Navigate to narrator page (story view)
-    //    await Navigation.PushAsync(new NarratorPage(card.Id));
-    //}
+        GameAlertOverlay.IsVisible = true;
+        GameAlertOverlay.Opacity = 0;
+        GameAlertCard.Scale = 0.96;
 
+        _ = AnimateShowOverlayAsync();
 
-    //async void OnStoryTapped(object? sender, TappedEventArgs e)
-    //{
-    //    if (sender is not Grid g || g.BindingContext is not StoryCard card) return;
+        return _alertTcs.Task;
+    }
 
-    //    if (!AlamatContent.IsStoryUnlocked(card.Id))
-    //    {
-    //        if (!AlamatContent.TrySpendStars(card.Price))
-    //        {
-    //            await DisplayAlert("Kulang ang ⭐", $"Kailangan: {card.Price}", "OK");
-    //            return;
-    //        }
-    //        AlamatContent.UnlockedStories.Add(card.Id);
-    //        LoadStories();
-    //    }
+    private async Task AnimateShowOverlayAsync()
+    {
+        try
+        {
+            await GameAlertOverlay.FadeTo(1, 180, Easing.CubicIn);
+            await GameAlertCard.ScaleTo(1.06, 220, Easing.CubicOut);
+            await GameAlertCard.ScaleTo(1.0, 120, Easing.CubicIn);
+        }
+        catch { }
+    }
 
-    //    await Navigation.PushAsync(new NarratorPage(card.Id));
-    //}
+    private async Task HideGameAlertAsync(bool result)
+    {
+        if (!GameAlertOverlay.IsVisible) return;
+
+        try
+        {
+            await GameAlertCard.ScaleTo(0.96, 120, Easing.CubicIn);
+            await GameAlertOverlay.FadeTo(0, 140, Easing.CubicOut);
+        }
+        catch { }
+
+        GameAlertOverlay.IsVisible = false;
+
+        _alertTcs?.TrySetResult(result);
+        _alertTcs = null;
+    }
+
+    private async void OnAlertOkClicked(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(true);
+    }
+
+    private async void OnAlertYesClicked(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(true);
+    }
+
+    private async void OnAlertNoClicked(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(false);
+    }
+
+    private async void OnAlertBackgroundTapped(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(false);
+    }
 }

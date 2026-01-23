@@ -1,4 +1,6 @@
 ﻿using FilipinoFolkloreApp.Services;
+using FilipinoFolkloreApp.Views;
+using FilipinoFolkloreApp.Views.Home;
 using Plugin.Maui.Audio;
 
 namespace FilipinoFolkloreApp
@@ -22,23 +24,25 @@ namespace FilipinoFolkloreApp
                 return _database;
             }
         }
-        
+
         public App()
         {
             InitializeComponent();
             AlamatContent.MusicIsEnabled = Preferences.Get("MusicEnabled", true);
+
+            // Initialize data asynchronously but don't await (non-blocking)
             Task.Run(async () => await Database.LoadStoriesAsync());
-            Task.Run(async() => await Database.LoadMedalsAsync());
-            Task.Run(async() => await Database.LoadNarratorDataAsync()); // Load narrator data
+            Task.Run(async () => await Database.LoadMedalsAsync());
+            Task.Run(async () => await Database.LoadNarratorDataAsync()); // Load narrator data
+
             // Start background music
             _ = InitializeBackgroundMusicAsync();
         }
+
         private async Task InitializeBackgroundMusicAsync()
         {
             try
             {
-                
-
                 // Load your background music file (replace with your actual music file path)
                 _backgroundMusicStream = await FileSystem.OpenAppPackageFileAsync("bgmusic/Homepage.mp3");
                 _backgroundMusicPlayer = AudioManager.Current.CreatePlayer(_backgroundMusicStream);
@@ -58,10 +62,12 @@ namespace FilipinoFolkloreApp
                 System.Diagnostics.Debug.WriteLine($"Failed to load background music: {ex.Message}");
             }
         }
+
         public void PauseBackgroundMusic()
         {
             _backgroundMusicPlayer?.Pause();
         }
+
         public void ResumeBackgroundMusic()
         {
             // Only resume if music is enabled
@@ -93,6 +99,7 @@ namespace FilipinoFolkloreApp
                 _backgroundMusicPlayer?.Pause();
             }
         }
+
         public void SetBackgroundMusicVolume(double volume)
         {
             if (_backgroundMusicPlayer != null)
@@ -110,9 +117,65 @@ namespace FilipinoFolkloreApp
             _backgroundMusicStream?.Dispose();
             _backgroundMusicStream = null;
         }
+
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            // Synchronously determine the initial page
+            ContentPage initialPage = DetermineInitialPage();
+
+            var navigationPage = new NavigationPage(initialPage);
+
+            // Hide navigation bar globally
+            NavigationPage.SetHasNavigationBar(initialPage, false);
+            navigationPage.BarBackgroundColor = Colors.Transparent;
+            navigationPage.BarTextColor = Colors.Transparent;
+
+            MainPage = navigationPage;
+
+            return new Window(MainPage);
+        }
+
+        private ContentPage DetermineInitialPage()
+        {
+            try
+            {
+                // Synchronously check for existing character (blocking call is acceptable here since it's startup)
+                var existingChar = Database.GetCharAsync().GetAwaiter().GetResult();
+
+                if (existingChar != null && !string.IsNullOrWhiteSpace(existingChar.name))
+                {
+                    // Character exists - check for avatar set
+                    var existingAvatarSets = Database.GetAllAvatarSetsAsync().GetAwaiter().GetResult();
+
+                    if (existingAvatarSets != null && existingAvatarSets.Count > 0)
+                    {
+                        // Everything is set up - go directly to IndexPage
+                        CharacterHelper.CurrentName = existingChar.name;
+                        CharacterHelper.CurrentStars = existingChar.stars;
+                        CharacterHelper.CurrentAvatar = existingChar.currentavatar;
+                        AvatarCustomizationHelper.SelectedAvatarSetId = existingAvatarSets[0].avatarid;
+
+                        return new IndexPage();
+                    }
+                    else
+                    {
+                        // Character exists but no avatar set - go to AvatarSelectionPage
+                        CharacterHelper.CurrentName = existingChar.name;
+                        CharacterHelper.CurrentStars = existingChar.stars;
+
+                        return new AvatarSelectionPage();
+                    }
+                }
+
+                // No character exists, show MainPage
+                return new MainPage();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"DetermineInitialPage failed: {ex}");
+                // Stay on MainPage if anything goes wrong
+                return new MainPage();
+            }
         }
     }
 }

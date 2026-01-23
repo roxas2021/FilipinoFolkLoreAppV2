@@ -21,6 +21,7 @@ namespace FilipinoFolkloreApp.Services
             _database.CreateTableAsync<StoryMonitored>().Wait();
             _database.CreateTableAsync<AvatarCostumeSet>().Wait();
             _database.CreateTableAsync<Medals>().Wait();
+            _database.CreateTableAsync<BugtongMonitored>().Wait(); // Add this line
         }
 
         public Task<Character> GetCharAsync()
@@ -548,6 +549,69 @@ namespace FilipinoFolkloreApp.Services
                 
                 // Initialize battery refresh timer
                 AlamatContent.InitializeNarratorBatteryTimer();
+            }
+        }
+
+        /// <summary>
+        /// Load bugtongs from database and sync with in-memory collection
+        /// </summary>
+        public async Task<List<Bugtong>> LoadBugtongsAsync()
+        {
+            var dbBugtongs = await _database.Table<BugtongMonitored>().ToListAsync();
+
+            foreach (var bugtong in BugtongService.Bugtongs)
+            {
+                var dbEntry = dbBugtongs.FirstOrDefault(b => b.BugtongId == bugtong.Id);
+                if (dbEntry == null)
+                {
+                    // Insert default if not found
+                    await _database.InsertAsync(new BugtongMonitored
+                    {
+                        BugtongId = bugtong.Id,
+                        IsCompleted = false,
+                        IsRewardClaimed = false
+                    });
+                }
+            }
+
+            return BugtongService.Bugtongs;
+        }
+
+        /// <summary>
+        /// Check if a bugtong is completed
+        /// </summary>
+        public async Task<bool> IsBugtongCompletedAsync(string bugtongId)
+        {
+            var bugtong = await _database.Table<BugtongMonitored>()
+                                 .Where(b => b.BugtongId == bugtongId)
+                                 .FirstOrDefaultAsync();
+            return bugtong?.IsCompleted ?? false;
+        }
+
+        /// <summary>
+        /// Mark a bugtong as completed
+        /// </summary>
+        public async Task SetBugtongCompletedAsync(string bugtongId)
+        {
+            var bugtong = await _database.Table<BugtongMonitored>()
+                                 .Where(b => b.BugtongId == bugtongId)
+                                 .FirstOrDefaultAsync();
+    
+            if (bugtong != null)
+            {
+                bugtong.IsCompleted = true;
+                bugtong.CompletedDate = DateTime.Now;
+                await _database.UpdateAsync(bugtong);
+            }
+            else
+            {
+                await _database.InsertAsync(new BugtongMonitored
+                {
+                    BugtongId = bugtongId,
+                    IsCompleted = true,
+                    IsRewardClaimed = true,
+                    CompletedDate = DateTime.Now
+                });
             }
         }
     }

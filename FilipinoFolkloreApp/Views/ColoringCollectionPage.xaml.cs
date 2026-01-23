@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FilipinoFolkloreApp.Services;
+using FilipinoFolkloreApp.Views.Home;
 
 namespace FilipinoFolkloreApp.Views;
 
@@ -12,11 +13,12 @@ public partial class ColoringCollectionPage : ContentPage
 {
     private const int StarsPerImage = 15;
     private List<ColoredImageInfo> _coloredImages = new();
+    private TaskCompletionSource<bool>? _alertTcs;
 
     public ColoringCollectionPage()
     {
         InitializeComponent();
-
+        NavigationPage.SetHasNavigationBar(this, false);
         LoadHUD();
         _ = LoadColoredImagesAsync();
     }
@@ -88,7 +90,7 @@ public partial class ColoringCollectionPage : ContentPage
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error loading colored images: {ex}");
-            await DisplayAlert("Error", "Hindi ma-load ang mga larawan", "OK");
+            await ShowGameAlertAsync("Hindi ma-load ang mga larawan", false);
         }
     }
 
@@ -215,11 +217,9 @@ public partial class ColoringCollectionPage : ContentPage
 
     private async Task OnSellImageClicked(ColoredImageInfo imageInfo, Frame cardFrame)
     {
-        bool confirm = await DisplayAlert(
-            "Ibenta ang Larawan",
+        bool confirm = await ShowGameAlertAsync(
             $"Ibenta ang larawan para sa {StarsPerImage} stars?",
-            "Oo",
-            "Hindi"
+            true
         );
 
         if (!confirm) return;
@@ -251,12 +251,12 @@ public partial class ColoringCollectionPage : ContentPage
                 ShowEmptyState();
             }
 
-            await DisplayAlert("Tagumpay!", $"Nakakuha ka ng {StarsPerImage} stars!", "OK");
+            await ShowGameAlertAsync($"Nakakuha ka ng {StarsPerImage} stars!", false);
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error selling image: {ex}");
-            await DisplayAlert("Error", "Hindi ma-ibenta ang larawan", "OK");
+            await ShowGameAlertAsync("Hindi ma-ibenta ang larawan", false);
         }
     }
 
@@ -266,6 +266,124 @@ public partial class ColoringCollectionPage : ContentPage
         EmptyStateContainer.IsVisible = true;
     }
 
+    // Custom Game Alert with Yes/No or OK buttons
+    private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
+    {
+        if (GameAlertOverlay.IsVisible && _alertTcs != null)
+            return _alertTcs.Task;
+
+        _alertTcs = new TaskCompletionSource<bool>();
+
+        // Set message
+        AlertMessageLabel.Text = message;
+
+        // Clear existing buttons
+        AlertButtonsPanel.Children.Clear();
+
+        if (showYesNo)
+        {
+            // Add Yes button
+            var yesButton = new Button
+            {
+                Text = "Oo",
+                FontAttributes = FontAttributes.Bold,
+                CornerRadius = 18,
+                HeightRequest = 44,
+                WidthRequest = 100,
+                BackgroundColor = Color.FromArgb("#00A6FF"),
+                TextColor = Colors.White
+            };
+            yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
+            AlertButtonsPanel.Children.Add(yesButton);
+
+            // Add No button
+            var noButton = new Button
+            {
+                Text = "Hindi",
+                FontAttributes = FontAttributes.Bold,
+                CornerRadius = 18,
+                HeightRequest = 44,
+                WidthRequest = 100,
+                BackgroundColor = Color.FromArgb("#FF6B6B"),
+                TextColor = Colors.White
+            };
+            noButton.Clicked += (s, e) => OnAlertNoClicked(s, e);
+            AlertButtonsPanel.Children.Add(noButton);
+        }
+        else
+        {
+            // Add OK button
+            var okButton = new Button
+            {
+                Text = "OK",
+                FontAttributes = FontAttributes.Bold,
+                CornerRadius = 18,
+                HeightRequest = 44,
+                WidthRequest = 120,
+                BackgroundColor = Color.FromArgb("#00A6FF"),
+                TextColor = Colors.White
+            };
+            okButton.Clicked += (s, e) => OnAlertOkClicked(s, e);
+            AlertButtonsPanel.Children.Add(okButton);
+        }
+
+        GameAlertOverlay.IsVisible = true;
+        GameAlertOverlay.Opacity = 0;
+        GameAlertCard.Scale = 0.96;
+
+        _ = AnimateShowOverlayAsync();
+
+        return _alertTcs.Task;
+    }
+
+    private async Task AnimateShowOverlayAsync()
+    {
+        try
+        {
+            await GameAlertOverlay.FadeTo(1, 180, Easing.CubicIn);
+            await GameAlertCard.ScaleTo(1.06, 220, Easing.CubicOut);
+            await GameAlertCard.ScaleTo(1.0, 120, Easing.CubicIn);
+        }
+        catch { }
+    }
+
+    private async Task HideGameAlertAsync(bool result)
+    {
+        if (!GameAlertOverlay.IsVisible) return;
+
+        try
+        {
+            await GameAlertCard.ScaleTo(0.96, 120, Easing.CubicIn);
+            await GameAlertOverlay.FadeTo(0, 140, Easing.CubicOut);
+        }
+        catch { }
+
+        GameAlertOverlay.IsVisible = false;
+
+        _alertTcs?.TrySetResult(result);
+        _alertTcs = null;
+    }
+
+    private async void OnAlertOkClicked(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(true);
+    }
+
+    private async void OnAlertYesClicked(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(true);
+    }
+
+    private async void OnAlertNoClicked(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(false);
+    }
+
+    private async void OnAlertBackgroundTapped(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(false);
+    }
+
     private async void OnBackTapped(object? sender, TappedEventArgs e)
     {
         await Navigation.PopAsync();
@@ -273,7 +391,32 @@ public partial class ColoringCollectionPage : ContentPage
 
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
-        await NavigationHelper.NavigateToIndexPage(Navigation);
+        var pages = Navigation.NavigationStack.ToList();
+        foreach (var page in pages)
+        {
+            if (page is ColoringSelectionPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is ColoringCollectionPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is ColoringPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is MgaLaroPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+        }
+
+        await Navigation.PushAsync(new IndexPage());
     }
 
     private class ColoredImageInfo

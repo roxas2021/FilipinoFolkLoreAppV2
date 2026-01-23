@@ -4,304 +4,354 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              BackgroundImageSource="homepage_bg.jpg"
              Shell.NavBarIsVisible="False">
-    <Grid RowDefinitions="Auto,*"
-          ColumnDefinitions="*"
-          Padding="16">
+    <Grid>
+        <Grid RowDefinitions="Auto,*"
+      ColumnDefinitions="*"
+      Padding="16">
 
-        <!-- Header -->
-        <Grid Grid.Row="0"
-              ColumnDefinitions="Auto,*,Auto"
-              VerticalOptions="Start">
+            <!-- Header -->
+            <Grid Grid.Row="0"
+          ColumnDefinitions="Auto,*,Auto"
+          VerticalOptions="Start">
 
-            <!-- LEFT: Avatar + Name/Stars + Hearts -->
-            <Grid Grid.Column="0"
-                  RowDefinitions="Auto, Auto"
-                  ColumnDefinitions="Auto, Auto, *, Auto" 
-                  RowSpacing="4">
+                <!-- LEFT: Avatar + Name/Stars + Hearts -->
+                <Grid Grid.Column="0"
+              RowDefinitions="Auto, Auto"
+              ColumnDefinitions="Auto, Auto, *, Auto" 
+              RowSpacing="4">
 
-                <!-- Avatar -->
-                <Frame Grid.RowSpan="2"
-                       Grid.Column="0"
-                       WidthRequest="80" 
-                       HeightRequest="90"
-                       CornerRadius="10" 
-                       Padding="0"
-                       HasShadow="True" 
-                       BackgroundColor="White">
-                    <Image x:Name="HudAvatar" Aspect="AspectFill" />
-                </Frame>
+                    <!-- Avatar -->
+                    <Frame Grid.RowSpan="2"
+                   Grid.Column="0"
+                   WidthRequest="80" 
+                   HeightRequest="90"
+                   CornerRadius="10" 
+                   Padding="0"
+                   HasShadow="True" 
+                   BackgroundColor="White">
+                        <Image x:Name="HudAvatar" Aspect="AspectFill" />
+                    </Frame>
 
-                <!-- Name + Stars pill -->
-                <Frame Margin="10,0,0,0"
-                       Grid.Row="0" 
-                       Grid.Column="1" 
-                       BackgroundColor="#5ce1e6"
-                       BorderColor="#FF66CC"
-                       CornerRadius="10" 
-                       Padding="8,4"
-                       HorizontalOptions="Start" 
-                       VerticalOptions="Center">
-                    <Grid ColumnDefinitions="Auto,*,Auto" 
-                          ColumnSpacing="8" 
-                          VerticalOptions="Center">
-                        <Label x:Name="PlayerNameLabel"
-                               Grid.Column="0" 
-                               Text="Player"
-                               FontAttributes="Bold" 
-                               FontSize="18" 
-                               TextColor="#FF66CC"
+                    <!-- Name + Stars pill -->
+                    <Frame Margin="10,0,0,0"
+                   Grid.Row="0" 
+                   Grid.Column="1" 
+                   BackgroundColor="#5ce1e6"
+                   BorderColor="#FF66CC"
+                   CornerRadius="10" 
+                   Padding="8,4"
+                   HorizontalOptions="Start" 
+                   VerticalOptions="Center">
+                        <Grid ColumnDefinitions="Auto,*,Auto" 
+                      ColumnSpacing="8" 
+                      VerticalOptions="Center">
+                            <Label x:Name="PlayerNameLabel"
+                           Grid.Column="0" 
+                           Text="Player"
+                           FontAttributes="Bold" 
+                           FontSize="18" 
+                           TextColor="#FF66CC"
+                           VerticalOptions="Center"/>
+                            <BoxView Grid.Column="1"/>
+                            <Frame Grid.Column="2" 
+                           Padding="10,4" 
+                           BackgroundColor="#5ce1e6"
+                           BorderColor="#FF66CC"
+                           CornerRadius="12" 
+                           HasShadow="False"
+                           VerticalOptions="Center" 
+                           Margin="10,0,0,0">
+                                <Frame.Shadow>
+                                    <Shadow Brush="Black" Offset="-4,4" Radius="8" Opacity="0.5"/>
+                                </Frame.Shadow>
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label x:Name="StarsLabel" 
+                                   Text="0" 
+                                   VerticalOptions="Center"
+                                   FontAttributes="Bold" 
+                                   FontSize="20" 
+                                   TextColor="#FFCC00"/>
+                                    <Image Source="icon_star_yellow.png" 
+                                   WidthRequest="35" 
+                                   HeightRequest="35"/>
+                                </HorizontalStackLayout>
+                            </Frame>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Hearts row -->
+                    <Frame Grid.Row="1" 
+                   Grid.Column="1" 
+                   Grid.ColumnSpan="3"
+                   CornerRadius="12" 
+                   Padding="6,2" 
+                   Margin="10,0,0,0"
+                   BackgroundColor="White" 
+                   HorizontalOptions="Start">
+                        <HorizontalStackLayout x:Name="HeartsPanel" Spacing="8"/>
+                    </Frame>
+                </Grid>
+
+                <!-- RIGHT: Back + Home -->
+                <StackLayout Grid.Column="2"
+                     Spacing="8"
+                     VerticalOptions="Start"
+                     Orientation="Horizontal">
+                    <Image Source="prev.png"
+                   WidthRequest="48" 
+                   HeightRequest="48"
+                   Aspect="AspectFit">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackTapped"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image Source="icon_home.png"
+                   WidthRequest="48" 
+                   HeightRequest="48"
+                   Aspect="AspectFit">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+            </Grid>
+            <Grid Grid.Row="2" Padding="16,0,16,0">
+                <VerticalStackLayout Grid.Row="1"
+                Spacing="10"
+                HorizontalOptions="Center"
+                VerticalOptions="Start">
+
+                    <!-- Narrator with Battery -->
+                    <Border BackgroundColor="#B3FFFFFF"
+        StrokeThickness="0"
+        HorizontalOptions="Center"
+        VerticalOptions="Center"
+        Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+
+                        <Grid WidthRequest="100"
+          HeightRequest="100">
+
+                            <!-- Narrator Image -->
+                            <Image x:Name="NarratorImage"
+               Aspect="AspectFit"
+               WidthRequest="100"
+               HeightRequest="100"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"/>
+
+                            <!-- Battery Image - Upper Right Corner -->
+                            <Image x:Name="BatteryImage"
+               WidthRequest="30"
+               HeightRequest="30"
+               HorizontalOptions="End"
+               VerticalOptions="Start"
+               Margin="0,0,5,0"/>
+                        </Grid>
+
+                    </Border>
+
+                    <!-- Food Items - Horizontal Row -->
+                    <CollectionView x:Name="FoodItemsView"
+                SelectionMode="None"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Margin="0,0,0,0">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="16"/>
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="8"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center">
+
+                                    <Border BackgroundColor="#B3FFFFFF"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="16"/>
+                                        </Border.StrokeShape>
+
+                                        <VerticalStackLayout Padding="12"
+                                         Spacing="6"
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="Center">
+
+                                            <!-- Food Image -->
+                                            <Image Source="{Binding Image}"
+                               WidthRequest="50"
+                               HeightRequest="50"
+                               Aspect="AspectFit"
+                               HorizontalOptions="Center"
                                VerticalOptions="Center"/>
-                        <BoxView Grid.Column="1"/>
-                        <Frame Grid.Column="2" 
-                               Padding="10,4" 
-                               BackgroundColor="#5ce1e6"
-                               BorderColor="#FF66CC"
-                               CornerRadius="12" 
-                               HasShadow="False"
-                               VerticalOptions="Center" 
-                               Margin="10,0,0,0">
-                            <Frame.Shadow>
-                                <Shadow Brush="Black" Offset="-4,4" Radius="8" Opacity="0.5"/>
-                            </Frame.Shadow>
-                            <HorizontalStackLayout Spacing="4">
-                                <Label x:Name="StarsLabel" 
-                                       Text="0" 
-                                       VerticalOptions="Center"
-                                       FontAttributes="Bold" 
-                                       FontSize="20" 
-                                       TextColor="#FFCC00"/>
-                                <Image Source="icon_star_yellow.png" 
-                                       WidthRequest="35" 
-                                       HeightRequest="35"/>
-                            </HorizontalStackLayout>
-                        </Frame>
-                    </Grid>
-                </Frame>
 
-                <!-- Hearts row -->
-                <Frame Grid.Row="1" 
-                       Grid.Column="1" 
-                       Grid.ColumnSpan="3"
-                       CornerRadius="12" 
-                       Padding="6,2" 
-                       Margin="10,0,0,0"
-                       BackgroundColor="White" 
-                       HorizontalOptions="Start">
-                    <HorizontalStackLayout x:Name="HeartsPanel" Spacing="8"/>
-                </Frame>
+
+                                            <!-- Price Badge -->
+                                            <Grid Padding="0,4,0,0"
+                              HeightRequest="28"
+                              HorizontalOptions="Center"
+                              VerticalOptions="Center">
+
+                                                <Border BackgroundColor="#FF69B4" 
+                                    Padding="8,4"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="12"/>
+                                                    </Border.StrokeShape>
+                                                    <HorizontalStackLayout Spacing="4">
+                                                        <Label Text="{Binding Price}" 
+                                           FontSize="10" 
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           VerticalOptions="Center"/>
+                                                        <Image Source="icon_star_yellow.png"
+                                           WidthRequest="13"
+                                           HeightRequest="13"
+                                           VerticalOptions="Center"/>
+                                                    </HorizontalStackLayout>
+                                                </Border>
+
+                                            </Grid>
+
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <!-- Tap gesture -->
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnFoodTapped"/>
+                                    </Grid.GestureRecognizers>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </VerticalStackLayout>
             </Grid>
 
-            <!-- RIGHT: Back + Home -->
-            <StackLayout Grid.Column="2"
-                         Spacing="8"
-                         VerticalOptions="Start"
-                         Orientation="Horizontal">
-                <Image Source="prev.png"
-                       WidthRequest="48" 
-                       HeightRequest="48"
-                       Aspect="AspectFit">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnBackTapped"/>
-                    </Image.GestureRecognizers>
-                </Image>
+            <!-- Narrator Background Overlay -->
+            <Grid x:Name="NarratorOverlay"
+          Grid.RowSpan="2"
+          IsVisible="False"
+          BackgroundColor="Transparent"
+          Padding="20">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnOverlayBackgroundTapped"/>
+                </Grid.GestureRecognizers>
 
-                <Image Source="icon_home.png"
-                       WidthRequest="48" 
-                       HeightRequest="48"
-                       Aspect="AspectFit">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnHomeTapped"/>
-                    </Image.GestureRecognizers>
-                </Image>
-            </StackLayout>
-        </Grid>
-        <Grid Grid.Row="2" Padding="16,0,16,0">
-            <VerticalStackLayout Grid.Row="1"
-                    Spacing="10"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Start">
-
-                <!-- Narrator with Battery -->
-                <Border BackgroundColor="#B3FFFFFF"
-            StrokeThickness="0"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            Padding="16">
+                <Border BackgroundColor="#ADD8E6"
+                Padding="20"
+                MaximumWidthRequest="800"
+                MaximumHeightRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="16"/>
+                        <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>
 
-                    <Grid WidthRequest="100"
-              HeightRequest="100">
+                    <Grid RowDefinitions="Auto,*"
+                  ColumnDefinitions="*">
 
-                        <!-- Narrator Image -->
-                        <Image x:Name="NarratorImage"
-                   Aspect="AspectFit"
-                   WidthRequest="100"
-                   HeightRequest="100"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
+                        <!-- Close Button -->
+                        <ImageButton Grid.Row="0"
+                             Source="close.png"
+                             WidthRequest="40"
+                             HeightRequest="40"
+                             HorizontalOptions="End"
+                             VerticalOptions="Start"
+                             BackgroundColor="Transparent"
+                             Clicked="OnCloseOverlayClicked"/>
 
-                        <!-- Battery Image - Upper Right Corner -->
-                        <Image x:Name="BatteryImage"
-                   WidthRequest="30"
-                   HeightRequest="30"
-                   HorizontalOptions="End"
-                   VerticalOptions="Start"
-                   Margin="0,0,5,0"/>
+                        <!-- Content -->
+                        <Grid Grid.Row="1"
+                      ColumnDefinitions="Auto,*"
+                      ColumnSpacing="20"
+                      Padding="0,10,0,0">
+
+                            <!-- Left: Narrator Image -->
+                            <Border Grid.Column="0"
+                            BackgroundColor="White"
+                            Padding="10"
+                            WidthRequest="200"
+                            HeightRequest="200"
+                            VerticalOptions="Start">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="15"/>
+                                </Border.StrokeShape>
+
+                                <Image x:Name="OverlayNarratorImage"
+                               Aspect="AspectFit"/>
+                            </Border>
+
+                            <!-- Right: Narrator Background Text -->
+                            <ScrollView Grid.Column="1">
+                                <Label x:Name="NarratorBackgroundLabel"
+                               TextColor="white"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               LineBreakMode="WordWrap"
+                               VerticalOptions="Start"/>
+                            </ScrollView>
+
+                        </Grid>
                     </Grid>
-
                 </Border>
+            </Grid>
 
-                <!-- Food Items - Horizontal Row -->
-                <CollectionView x:Name="FoodItemsView"
-                    SelectionMode="None"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    Margin="0,0,0,0">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="16"/>
-                    </CollectionView.ItemsLayout>
+            <!-- GAME ALERT OVERLAY -->
+            
 
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Padding="8"
-                      HorizontalOptions="Center"
-                      VerticalOptions="Center">
-
-                                <Border BackgroundColor="#B3FFFFFF"
-                            StrokeThickness="0"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="16"/>
-                                    </Border.StrokeShape>
-
-                                    <VerticalStackLayout Padding="12"
-                                             Spacing="6"
-                                             HorizontalOptions="Center"
-                                             VerticalOptions="Center">
-
-                                        <!-- Food Image -->
-                                        <Image Source="{Binding Image}"
-                                   WidthRequest="50"
-                                   HeightRequest="50"
-                                   Aspect="AspectFit"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
-
-
-                                        <!-- Price Badge -->
-                                        <Grid Padding="0,4,0,0"
-                                  HeightRequest="28"
-                                  HorizontalOptions="Center"
-                                  VerticalOptions="Center">
-
-                                            <Border BackgroundColor="#FF69B4" 
-                                        Padding="8,4"
-                                        HorizontalOptions="Center"
-                                        VerticalOptions="Center">
-                                                <Border.StrokeShape>
-                                                    <RoundRectangle CornerRadius="12"/>
-                                                </Border.StrokeShape>
-                                                <HorizontalStackLayout Spacing="4">
-                                                    <Label Text="{Binding Price}" 
-                                               FontSize="10" 
-                                               FontAttributes="Bold"
-                                               TextColor="White"
-                                               VerticalOptions="Center"/>
-                                                    <Image Source="icon_star_yellow.png"
-                                               WidthRequest="13"
-                                               HeightRequest="13"
-                                               VerticalOptions="Center"/>
-                                                </HorizontalStackLayout>
-                                            </Border>
-
-                                        </Grid>
-
-                                    </VerticalStackLayout>
-                                </Border>
-
-                                <!-- Tap gesture -->
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnFoodTapped"/>
-                                </Grid.GestureRecognizers>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
-            </VerticalStackLayout>
         </Grid>
+        <Grid x:Name="GameAlertOverlay"
+Grid.RowSpan="2"
+IsVisible="False"
+Opacity="0"
+BackgroundColor="#40000000"
+HorizontalOptions="Fill"
+VerticalOptions="Fill">
 
-        <!-- Narrator Background Overlay -->
-        <Grid x:Name="NarratorOverlay"
-              Grid.RowSpan="2"
-              IsVisible="False"
-              BackgroundColor="Transparent"
-              Padding="20">
             <Grid.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnOverlayBackgroundTapped"/>
+                <TapGestureRecognizer Tapped="OnAlertBackgroundTapped" />
             </Grid.GestureRecognizers>
 
-            <Border BackgroundColor="#ADD8E6"
-                    Padding="20"
-                    MaximumWidthRequest="800"
-                    MaximumHeightRequest="500"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20"/>
-                </Border.StrokeShape>
+            <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                <Frame x:Name="GameAlertCard"
+         CornerRadius="20"
+         Padding="20"
+         HasShadow="True"
+         BorderColor="Transparent"
+         BackgroundColor="#B3FFFFFF"
+         WidthRequest="360"
+         HorizontalOptions="Center"
+         VerticalOptions="Center"
+         Scale="0.96">
 
-                <Grid RowDefinitions="Auto,*"
-                      ColumnDefinitions="*">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="16">
 
-                    <!-- Close Button -->
-                    <ImageButton Grid.Row="0"
-                                 Source="close.png"
-                                 WidthRequest="40"
-                                 HeightRequest="40"
-                                 HorizontalOptions="End"
-                                 VerticalOptions="Start"
-                                 BackgroundColor="Transparent"
-                                 Clicked="OnCloseOverlayClicked"/>
+                        <Label x:Name="AlertMessageLabel"
+                 Text="Message"
+                 FontSize="18"
+                 FontAttributes="Bold"
+                 HorizontalOptions="Center"
+                 HorizontalTextAlignment="Center"
+                 TextColor="#333333"
+                 Margin="6,0,6,0" />
 
-                    <!-- Content -->
-                    <Grid Grid.Row="1"
-                          ColumnDefinitions="Auto,*"
-                          ColumnSpacing="20"
-                          Padding="0,10,0,0">
-
-                        <!-- Left: Narrator Image -->
-                        <Border Grid.Column="0"
-                                BackgroundColor="White"
-                                Padding="10"
-                                WidthRequest="200"
-                                HeightRequest="200"
-                                VerticalOptions="Start">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="15"/>
-                            </Border.StrokeShape>
-
-                            <Image x:Name="OverlayNarratorImage"
-                                   Aspect="AspectFit"/>
-                        </Border>
-
-                        <!-- Right: Narrator Background Text -->
-                        <ScrollView Grid.Column="1">
-                            <Label x:Name="NarratorBackgroundLabel"
-                                   TextColor="white"
-                                   FontSize="16"
-                                   FontAttributes="Bold"
-                                   LineBreakMode="WordWrap"
-                                   VerticalOptions="Start"/>
-                        </ScrollView>
-
-                    </Grid>
-                </Grid>
-            </Border>
+                        <HorizontalStackLayout x:Name="AlertButtonsPanel"
+                                 Spacing="12"
+                                 HorizontalOptions="Center">
+                            <!-- Yes/No buttons or OK button will be added dynamically -->
+                        </HorizontalStackLayout>
+                    </StackLayout>
+                </Frame>
+            </Grid>
         </Grid>
-
     </Grid>
+    
 </ContentPage>

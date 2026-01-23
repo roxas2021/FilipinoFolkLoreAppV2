@@ -2,6 +2,7 @@ using Microsoft.Maui.Controls;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FilipinoFolkloreApp.Services;
 
 namespace FilipinoFolkloreApp.Views;
@@ -9,6 +10,7 @@ namespace FilipinoFolkloreApp.Views;
 public partial class NarratorDetailPage : ContentPage
 {
     private readonly string _narratorId;
+    private TaskCompletionSource<bool>? _alertTcs;
 
     class FoodItem
     {
@@ -30,6 +32,7 @@ public partial class NarratorDetailPage : ContentPage
     public NarratorDetailPage(string narratorId)
     {
         InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false);
         _narratorId = narratorId;
         LoadPage();
     }
@@ -122,23 +125,27 @@ public partial class NarratorDetailPage : ContentPage
         // Check if battery is already full
         if (AlamatContent.NarratorBattery >= 3)
         {
-            await DisplayAlert("Battery Full", "Ang narrator battery ay puno na!", "OK");
+            await ShowGameAlertAsync(
+                "Ang narrator battery ay puno na!",
+                false
+            );
             return;
         }
 
         // Check if player has enough stars
         if (CharacterHelper.CurrentStars < food.Price)
         {
-            await DisplayAlert("Kulang ang Stars", $"Kailangan mo ng {food.Price} stars para bumili ng {food.Name}.", "OK");
+            await ShowGameAlertAsync(
+                $"Kailangan mo ng {food.Price} stars para bumili ng {food.Name}.",
+                false
+            );
             return;
         }
 
         // Confirm purchase
-        bool confirm = await DisplayAlert(
-            "Confirm Purchase",
+        bool confirm = await ShowGameAlertAsync(
             $"Bumili ng {food.Name} para sa {food.Price} stars?\nMagdadagdag ng {food.BatteryRestore} battery.",
-            "Yes",
-            "No"
+            true
         );
 
         if (!confirm)
@@ -148,7 +155,7 @@ public partial class NarratorDetailPage : ContentPage
         {
             // Track previous battery level
             int previousBattery = AlamatContent.NarratorBattery;
-            
+
             // Deduct stars
             CharacterHelper.CurrentStars -= food.Price;
             await App.Database.SetStarsAsync(CharacterHelper.CurrentStars);
@@ -162,14 +169,20 @@ public partial class NarratorDetailPage : ContentPage
             LoadHUD();
             UpdateBatteryDisplay();
 
-            await DisplayAlert("Success", $"Nabili ang {food.Name}! Battery restored by {food.BatteryRestore}.", "OK");
+            await ShowGameAlertAsync(
+                $"Nabili ang {food.Name}! Battery restored by {food.BatteryRestore}.",
+                false
+            );
 
             // Check for achievements
             await CheckAndAwardAchievements(previousBattery);
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", $"Hindi nai-save ang pagbili: {ex.Message}", "OK");
+            await ShowGameAlertAsync(
+                $"Hindi nai-save ang pagbili: {ex.Message}",
+                false
+            );
         }
     }
 
@@ -181,7 +194,7 @@ public partial class NarratorDetailPage : ContentPage
             // Check if this is the first time reaching full battery
             string firstFullBatteryKey = $"Narrator_{_narratorId}_FirstFullBattery";
             bool firstFullBattery = Preferences.Get(firstFullBatteryKey, false);
-            
+
             if (!firstFullBattery)
             {
                 // Show reward page using ColoringRewardPage
@@ -196,6 +209,124 @@ public partial class NarratorDetailPage : ContentPage
                 return;
             }
         }
+    }
+
+    // Custom Game Alert with Yes/No or OK buttons
+    private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
+    {
+        if (GameAlertOverlay.IsVisible && _alertTcs != null)
+            return _alertTcs.Task;
+
+        _alertTcs = new TaskCompletionSource<bool>();
+
+        // Set message
+        AlertMessageLabel.Text = message;
+
+        // Clear existing buttons
+        AlertButtonsPanel.Children.Clear();
+
+        if (showYesNo)
+        {
+            // Add Yes button
+            var yesButton = new Button
+            {
+                Text = "Oo",
+                FontAttributes = FontAttributes.Bold,
+                CornerRadius = 18,
+                HeightRequest = 44,
+                WidthRequest = 100,
+                BackgroundColor = Color.FromArgb("#00A6FF"),
+                TextColor = Colors.White
+            };
+            yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
+            AlertButtonsPanel.Children.Add(yesButton);
+
+            // Add No button
+            var noButton = new Button
+            {
+                Text = "Hindi",
+                FontAttributes = FontAttributes.Bold,
+                CornerRadius = 18,
+                HeightRequest = 44,
+                WidthRequest = 100,
+                BackgroundColor = Color.FromArgb("#FF6B6B"),
+                TextColor = Colors.White
+            };
+            noButton.Clicked += (s, e) => OnAlertNoClicked(s, e);
+            AlertButtonsPanel.Children.Add(noButton);
+        }
+        else
+        {
+            // Add OK button
+            var okButton = new Button
+            {
+                Text = "OK",
+                FontAttributes = FontAttributes.Bold,
+                CornerRadius = 18,
+                HeightRequest = 44,
+                WidthRequest = 120,
+                BackgroundColor = Color.FromArgb("#00A6FF"),
+                TextColor = Colors.White
+            };
+            okButton.Clicked += (s, e) => OnAlertOkClicked(s, e);
+            AlertButtonsPanel.Children.Add(okButton);
+        }
+
+        GameAlertOverlay.IsVisible = true;
+        GameAlertOverlay.Opacity = 0;
+        GameAlertCard.Scale = 0.96;
+
+        _ = AnimateShowOverlayAsync();
+
+        return _alertTcs.Task;
+    }
+
+    private async Task AnimateShowOverlayAsync()
+    {
+        try
+        {
+            await GameAlertOverlay.FadeTo(1, 180, Easing.CubicIn);
+            await GameAlertCard.ScaleTo(1.06, 220, Easing.CubicOut);
+            await GameAlertCard.ScaleTo(1.0, 120, Easing.CubicIn);
+        }
+        catch { }
+    }
+
+    private async Task HideGameAlertAsync(bool result)
+    {
+        if (!GameAlertOverlay.IsVisible) return;
+
+        try
+        {
+            await GameAlertCard.ScaleTo(0.96, 120, Easing.CubicIn);
+            await GameAlertOverlay.FadeTo(0, 140, Easing.CubicOut);
+        }
+        catch { }
+
+        GameAlertOverlay.IsVisible = false;
+
+        _alertTcs?.TrySetResult(result);
+        _alertTcs = null;
+    }
+
+    private async void OnAlertOkClicked(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(true);
+    }
+
+    private async void OnAlertYesClicked(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(true);
+    }
+
+    private async void OnAlertNoClicked(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(false);
+    }
+
+    private async void OnAlertBackgroundTapped(object? sender, EventArgs e)
+    {
+        await HideGameAlertAsync(false);
     }
 
     private async void OnBackTapped(object? sender, TappedEventArgs e)

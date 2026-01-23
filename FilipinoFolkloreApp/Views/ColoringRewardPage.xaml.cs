@@ -1,6 +1,8 @@
 using Microsoft.Maui.Controls;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FilipinoFolkloreApp.Services;
 
 namespace FilipinoFolkloreApp.Views;
@@ -125,6 +127,11 @@ public partial class ColoringRewardPage : ContentPage
                 {
                     await Navigation.PushAsync(new NarratorDetailPage(narratorId));
                 }
+                break;
+            
+            case "BugtongList":
+                Navigation.RemovePage(this);
+                await Navigation.PushAsync(new BugtongListPage());
                 break;
             
             default:

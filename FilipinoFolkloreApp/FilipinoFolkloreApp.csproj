@@ -307,6 +307,12 @@
 	  <MauiXaml Update="Views\AvatarSelectionPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\BugtongListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\BugtongQuizPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\CharacterCostume.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

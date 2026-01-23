@@ -3,7 +3,7 @@ using FilipinoFolkloreApp.Services;
 using FilipinoFolkloreApp.Views.Home;
 using Microsoft.Maui.Controls;
 using System.Collections.ObjectModel;
-using System.IO;                // for Path.GetFileNameWithoutExtension
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,43 +23,19 @@ namespace FilipinoFolkloreApp.Views
         {
             InitializeComponent();
             AvatarGrid.ItemsSource = Avatars;
-            
         }
 
-        // Called when the page appears - we check if there's already a saved AvatarCostumeSet
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-            
-            // If a saved AvatarCostumeSet exists, skip this page and go to IndexPage
-            var existing = await App.Database.GetAllAvatarSetsAsync();
-            if (existing != null && existing.Count > 0)
-            {
-                AvatarCustomizationHelper.SelectedAvatarSetId =existing[0].avatarid;
-                var existingChar = await App.Database.GetCharAsync();
-                if (existingChar != null)
-                {
-                    CharacterHelper.CurrentName = existingChar.name;
-                    CharacterHelper.CurrentStars = existingChar.stars;
-                    CharacterHelper.CurrentAvatar = existingChar.currentavatar;
-                }
-                // Replace this page with IndexPage (prevents stacking this selection page)
-                await Navigation.PushAsync(new IndexPage());
-                Navigation.RemovePage(this);
-                return;
-            }
-        }
+        // Removed OnAppearing navigation logic - now handled in App.xaml.cs
 
         async void AvatarGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // guard
             if (e.CurrentSelection.FirstOrDefault() is not Avatar selected)
             {
                 AvatarGrid.SelectedItem = null;
                 return;
             }
 
-            // animation (kept from your original)
+            // Animation
             PointsOverlay.Scale = 0.9;
             PointsOverlay.Opacity = 0;
             PointsOverlay.IsVisible = true;
@@ -71,7 +47,7 @@ namespace FilipinoFolkloreApp.Views
 
             await Task.Delay(2500);
 
-            // update existing character points (kept from your original)
+            // Update character points
             var existingChar = await App.Database.GetCharAsync();
             if (existingChar != null)
             {
@@ -79,36 +55,29 @@ namespace FilipinoFolkloreApp.Views
                 await App.Database.UpdateCharAsync(existingChar);
             }
 
-            // Only save an AvatarCostumeSet if there isn't already one saved
-            var existingSets = await App.Database.GetAllAvatarSetsAsync();
-            if (existingSets == null || existingSets.Count == 0)
+            // Save avatar set
+            var fileName = Path.GetFileNameWithoutExtension(selected.ImageSource ?? "");
+            var avatarId = string.IsNullOrWhiteSpace(fileName) ? "avatar1" : fileName;
+
+            var set = new AvatarCostumeSet
             {
-                // derive avatar id from image path, e.g. "avatar/avatar1.png" -> "avatar1"
-                var fileName = Path.GetFileNameWithoutExtension(selected.ImageSource ?? "");
-                var avatarId = string.IsNullOrWhiteSpace(fileName) ? "avatar1" : fileName;
+                avatarid = avatarId,
+                avatarblueunlocked = false,
+                avatarblueredunlocked = false,
+                avatargreenunlocked = false,
+                avatarpinkunlocked = false,
+                avatarredunlocked = false,
+            };
 
-                var set = new AvatarCostumeSet
-                {
-                    avatarid = avatarId,
-                    avatarblueunlocked = false,
-                    avatarblueredunlocked = false,
-                    avatargreenunlocked = false,
-                    avatarpinkunlocked = false,
-                    avatarredunlocked = false,
-                };
+            await App.Database.SaveAvatarSetAsync(set);
+            AvatarCustomizationHelper.SelectedAvatarSetId = set.avatarid;
+            CharacterHelper.CurrentAvatar = AvatarCustomizationHelper.GetFirstCostumePathOrDefault(set.avatarid);
+            await App.Database.UpdateCurrentAvatarAsync(CharacterHelper.CurrentAvatar);
 
-                await App.Database.SaveAvatarSetAsync(set);
-                AvatarCustomizationHelper.SelectedAvatarSetId = set.avatarid;
-                CharacterHelper.CurrentAvatar = AvatarCustomizationHelper.GetFirstCostumePathOrDefault(set.avatarid);
-                await App.Database.UpdateCurrentAvatarAsync(CharacterHelper.CurrentAvatar);
-
-            }
-            
-            // Navigate to IndexPage and remove this page from stack so user can't go back to selection
+            // Navigate to IndexPage
             await Navigation.PushAsync(new IndexPage());
             Navigation.RemovePage(this);
 
-            // reset selection in case the user returns here (defensive)
             AvatarGrid.SelectedItem = null;
         }
     }

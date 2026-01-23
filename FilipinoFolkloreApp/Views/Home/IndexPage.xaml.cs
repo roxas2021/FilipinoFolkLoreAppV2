@@ -10,7 +10,7 @@ public partial class IndexPage : ContentPage
     public IndexPage()
     {
         InitializeComponent();
-
+        NavigationPage.SetHasNavigationBar(this, false);
         loadhud();
         var data = App.Database.GetCharAsync();
         LoadSettings();
