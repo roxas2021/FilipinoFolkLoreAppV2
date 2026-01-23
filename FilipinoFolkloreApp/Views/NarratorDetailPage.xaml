@@ -7,7 +7,7 @@
     <Grid>
         <Grid RowDefinitions="Auto,*"
       ColumnDefinitions="*"
-      Padding="16">
+      Padding="20">
 
             <!-- Header -->
             <Grid Grid.Row="0"

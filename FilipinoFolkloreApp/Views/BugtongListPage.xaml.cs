@@ -101,11 +101,23 @@ public partial class BugtongListPage : ContentPage
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {
+            if (page is BugtongQuizPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
             if (page is BugtongListPage)
             {
+                // Remove QuizPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is MgaLaroPage)
+            {
+                // Remove QuizPage from the stack
                 Navigation.RemovePage(page);
             }
         }
+
         await Navigation.PushAsync(new IndexPage());
     }
 }

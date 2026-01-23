@@ -8,7 +8,7 @@
     <!-- Outer Grid with NO padding to allow full-screen overlay -->
     <Grid>
         <!-- Main content grid WITH padding -->
-        <Grid Padding="16"
+        <Grid Padding="20"
               RowDefinitions="Auto,Auto,*"
               RowSpacing="16">
 

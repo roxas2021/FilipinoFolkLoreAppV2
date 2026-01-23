@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FilipinoFolkloreApp.Services;
+using FilipinoFolkloreApp.Views.Home;
 
 namespace FilipinoFolkloreApp.Views;
 
@@ -336,6 +337,26 @@ public partial class NarratorDetailPage : ContentPage
 
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
-        await NavigationHelper.NavigateToIndexPage(Navigation);
+        var pages = Navigation.NavigationStack.ToList();
+        foreach (var page in pages)
+        {
+            if (page is NarratorManagementPage)
+            {
+                // Remove RewardPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is NarratorDetailPage)
+            {
+                // Remove QuizPage from the stack
+                Navigation.RemovePage(page);
+            }
+            if (page is MgaLaroPage)
+            {
+                // Remove QuizPage from the stack
+                Navigation.RemovePage(page);
+            }
+        }
+
+        await Navigation.PushAsync(new IndexPage());
     }
 }

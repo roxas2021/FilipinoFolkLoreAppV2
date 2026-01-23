@@ -4,239 +4,241 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     BackgroundImageSource="homepage_bg.jpg"
     Shell.NavBarIsVisible="False">
+    <Grid>
+        <Grid RowDefinitions="Auto, Auto, *"
+     ColumnDefinitions="*" 
+     Padding="20">
 
-    <Grid RowDefinitions="Auto, Auto, *"
-        ColumnDefinitions="*"
-        Padding="20">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" VerticalOptions="Start">
+                <Grid
+ Grid.Column="0"
+ RowDefinitions="Auto, Auto"
+ ColumnDefinitions="Auto, Auto, *, Auto" RowSpacing="4">
 
-        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" VerticalOptions="Start">
-            <Grid
-    Grid.Column="0"
-    RowDefinitions="Auto, Auto"
-    ColumnDefinitions="Auto, Auto, *, Auto">
+                    <!-- Avatar -->
+                    <Frame Grid.RowSpan="2"
+        Grid.Column="0"
+        WidthRequest="80"
+        HeightRequest="90"
+        CornerRadius="10"
+        Padding="0"
+        HasShadow="True"
+        BackgroundColor="White">
+                        <Frame.GestureRecognizers>
+                            <!-- Add a TapGestureRecognizer to handle tap events -->
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"/>
+                        </Frame.GestureRecognizers>
+                        <Image Source="avatar1.png" x:Name="HudAvatar"
+          Aspect="AspectFill"/>
+                    </Frame>
 
-                <!-- Avatar -->
-                <Frame Grid.RowSpan="2"
-           Grid.Column="0"
-           WidthRequest="80"
-           HeightRequest="90"
-           CornerRadius="10"
-           Padding="0"
-           HasShadow="True"
-           BackgroundColor="White">
+                    <!-- Name + Stars pill -->
+                    <Frame Margin="10,0,0,0"
+Grid.Row="0" Grid.Column="1"
+        BackgroundColor="#5ce1e6"
+                    BorderColor="#FF66CC"
+CornerRadius="10" Padding="8,4"
+HorizontalOptions="Start" VerticalOptions="Center">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+                            <Label x:Name="PlayerNameLabel"
+    Grid.Column="0" Text="NICHOL"
+    FontAttributes="Bold" FontSize="18" TextColor="#FF66CC"
+    VerticalOptions="Center"/>
+                            <BoxView Grid.Column="1"/>
+                            <Frame Grid.Column="2" Padding="10,4"
+    BackgroundColor="#5ce1e6" BorderColor="#FF66CC"
+    CornerRadius="12" HasShadow="False"
+    VerticalOptions="Center" Margin="10,0,0,0">
+                                <Frame.Shadow>
+                                    <Shadow Brush="Black" Offset="-4,4" Radius="8" Opacity="0.5"/>
+                                </Frame.Shadow>
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label x:Name="StarsLabel" Text="50" VerticalOptions="Center"
+        FontAttributes="Bold" FontSize="20" TextColor="#FFCC00"/>
+                                    <Image Source="icon_star_yellow.png" WidthRequest="35" HeightRequest="35"/>
+                                </HorizontalStackLayout>
+                            </Frame>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Hearts row -->
+                    <Frame Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+CornerRadius="12" Padding="6,2" Margin="10,0,0,0"
+BackgroundColor="White" HorizontalOptions="Start">
+                        <HorizontalStackLayout x:Name="HeartsPanel" Spacing="8"/>
+                    </Frame>
+                </Grid>
+                <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalOptions="Start">
+
+                    <ImageButton Source="trophy.png"
+                  Clicked="OnMedalyaClicked"
+                  WidthRequest="32"
+                  HeightRequest="32"
+                  BackgroundColor="Transparent"/>
+                    <ImageButton Source="icon_home.png"
+                  WidthRequest="32"
+                  HeightRequest="32"
+                  BackgroundColor="Transparent"/>
+                    <ImageButton Source="icon_settings.png"
+                  WidthRequest="32"
+                          Clicked="OnSettingsClicked"
+                  HeightRequest="32"
+                  BackgroundColor="Transparent"/>
+                </StackLayout>
+            </Grid>
+
+            <!--<BoxView Grid.Row="1" HeightRequest="1" Color="#66FFFFFF" Margin="0,10"/>-->
+
+            <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*"
+       RowDefinitions="Auto"
+       ColumnSpacing="20"
+       HorizontalOptions="Center"
+       VerticalOptions="Center">
+
+                <Button Grid.Column="0" Text="ALAMAT"
+           BackgroundColor="#CC3333"
+           TextColor="White"
+           FontAttributes="Bold"
+           CornerRadius="40"
+           WidthRequest="130"
+           Clicked="OnAlamatClicked"
+           HeightRequest="40"/>
+
+                <Button Grid.Column="1" Text="EPIKO"
+           BackgroundColor="#CC6699"
+           TextColor="White"
+           FontAttributes="Bold"
+           CornerRadius="40"
+                 Clicked="OnEpikoClicked"
+           WidthRequest="130"
+           HeightRequest="40"/>
+
+                <Button Grid.Column="2" Text="PABULA"
+           BackgroundColor="#99CC33"
+           TextColor="White"
+           FontAttributes="Bold"
+                 Clicked="OnPabulaClicked"
+           CornerRadius="40"
+           WidthRequest="130"
+                 
+           HeightRequest="40"/>
+
+                <Button Grid.Column="3" Text="MGA LARO"
+           BackgroundColor="#3399CC"
+           TextColor="White"
+           FontAttributes="Bold"
+           WidthRequest="130"
+                 Clicked="OnMgaLaroClicked"
+           CornerRadius="40"
+           HeightRequest="40"/>
+            </Grid>
+
+            <!-- Settings Modal Overlay -->
+            <Grid x:Name="SettingsModalOverlay"
+           Grid.RowSpan="3"
+           IsVisible="False"
+           BackgroundColor="Transparent"
+           InputTransparent="False">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCloseSettingsModal"/>
+                </Grid.GestureRecognizers>
+
+                <!-- Settings Modal Content - Expanded for Volume Slider -->
+                <Frame WidthRequest="400"
+                HeightRequest="260"
+                CornerRadius="20"
+                BackgroundColor="#E6FFFFFF"
+                Padding="25"
+                HasShadow="True"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+                    <Frame.Shadow>
+                        <Shadow Brush="Black" Offset="0,4" Radius="20" Opacity="0.3"/>
+                    </Frame.Shadow>
                     <Frame.GestureRecognizers>
-                        <!-- Add a TapGestureRecognizer to handle tap events -->
-                        <TapGestureRecognizer Tapped="OnAvatarTapped"/>
+                        <TapGestureRecognizer/>
                     </Frame.GestureRecognizers>
-                    <Image Source="avatar1.png" x:Name="HudAvatar"
-             Aspect="AspectFill"/>
-                </Frame>
 
-                <!-- Name + Stars pill -->
-                <Frame Margin="10,0,0,0"
-   Grid.Row="0" Grid.Column="1"
-           BackgroundColor="#5ce1e6"
-                       BorderColor="#FF66CC"
-   CornerRadius="10" Padding="8,4"
-   HorizontalOptions="Start" VerticalOptions="Center">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
-                        <Label x:Name="PlayerNameLabel"
-       Grid.Column="0" Text="NICHOL"
-       FontAttributes="Bold" FontSize="18" TextColor="#FF66CC"
-       VerticalOptions="Center"/>
-                        <BoxView Grid.Column="1"/>
-                        <Frame Grid.Column="2" Padding="10,4"
-       BackgroundColor="#5ce1e6" BorderColor="#FF66CC"
-       CornerRadius="12" HasShadow="False"
-       VerticalOptions="Center" Margin="10,0,0,0">
-                            <Frame.Shadow>
-                                <Shadow Brush="Black" Offset="-4,4" Radius="8" Opacity="0.5"/>
-                            </Frame.Shadow>
-                            <HorizontalStackLayout Spacing="4">
-                                <Label x:Name="StarsLabel" Text="50" VerticalOptions="Center"
-           FontAttributes="Bold" FontSize="20" TextColor="#FFCC00"/>
-                                <Image Source="icon_star_yellow.png" WidthRequest="35" HeightRequest="35"/>
-                            </HorizontalStackLayout>
-                        </Frame>
+                    <Grid RowDefinitions="Auto,*">
+                        <!-- Header -->
+                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                            <Label Text="SETTINGS"
+                            FontSize="24"
+                            FontAttributes="Bold"
+                            TextColor="#CC3333"
+                            VerticalOptions="Center"/>
+                            <ImageButton Grid.Column="1"
+                                  Source="icon_settings.png"
+                                  Clicked="OnCloseSettingsModal"
+                                  WidthRequest="28"
+                                  HeightRequest="28"
+                                  BackgroundColor="Transparent"/>
+                        </Grid>
+
+                        <!-- Settings Content -->
+                        <ScrollView Grid.Row="1">
+                            <VerticalStackLayout Spacing="18">
+
+                                <!-- Background Music Volume Slider -->
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <Label Text="Background Music Volume"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    TextColor="#333"
+                    VerticalOptions="Center"/>
+                                        <Label x:Name="BackgroundVolumeLabel"
+                    Grid.Column="1"
+                    Text="30%"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    TextColor="#CC3333"
+                    VerticalOptions="Center"/>
+                                    </Grid>
+
+                                    <Slider x:Name="BackgroundVolumeSlider"
+                 Minimum="0"
+                 Maximum="100"
+                 Value="30"
+                 MinimumTrackColor="#CC3333"
+                 MaximumTrackColor="#CCCCCC"
+                 ThumbColor="#CC3333"
+                 ValueChanged="OnBackgroundVolumeChanged"/>
+                                </VerticalStackLayout>
+
+                                <!-- Narrator Voice Volume Slider -->
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <Label Text="Narrator Voice Volume"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    TextColor="#333"
+                    VerticalOptions="Center"/>
+                                        <Label x:Name="NarratorVolumeLabel"
+                    Grid.Column="1"
+                    Text="100%"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    TextColor="#CC3333"
+                    VerticalOptions="Center"/>
+                                    </Grid>
+
+                                    <Slider x:Name="NarratorVolumeSlider"
+                 Minimum="0"
+                 Maximum="100"
+                 Value="100"
+                 MinimumTrackColor="Green"
+                 MaximumTrackColor="#CCCCCC"
+                 ThumbColor="Green"
+                 ValueChanged="OnNarratorVolumeChanged"/>
+                                </VerticalStackLayout>
+
+                            </VerticalStackLayout>
+                        </ScrollView>
                     </Grid>
-                </Frame>
-
-                <!-- Hearts row -->
-                <Frame Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
-   CornerRadius="12" Padding="6,2" Margin="10,0,0,0"
-   BackgroundColor="White" HorizontalOptions="Start">
-                    <HorizontalStackLayout x:Name="HeartsPanel" Spacing="8"/>
                 </Frame>
             </Grid>
-            <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalOptions="Start">
-                
-                <ImageButton Source="trophy.png"
-                     Clicked="OnMedalyaClicked"
-                     WidthRequest="32"
-                     HeightRequest="32"
-                     BackgroundColor="Transparent"/>
-                <ImageButton Source="icon_home.png"
-                     WidthRequest="32"
-                     HeightRequest="32"
-                     BackgroundColor="Transparent"/>
-                <ImageButton Source="icon_settings.png"
-                     WidthRequest="32"
-                             Clicked="OnSettingsClicked"
-                     HeightRequest="32"
-                     BackgroundColor="Transparent"/>
-            </StackLayout>
-        </Grid>
-
-        <!--<BoxView Grid.Row="1" HeightRequest="1" Color="#66FFFFFF" Margin="0,10"/>-->
-
-        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*"
-          RowDefinitions="Auto"
-          ColumnSpacing="20"
-          HorizontalOptions="Center"
-          VerticalOptions="Center">
-
-            <Button Grid.Column="0" Text="ALAMAT"
-              BackgroundColor="#CC3333"
-              TextColor="White"
-              FontAttributes="Bold"
-              CornerRadius="40"
-              WidthRequest="130"
-              Clicked="OnAlamatClicked"
-              HeightRequest="40"/>
-
-            <Button Grid.Column="1" Text="EPIKO"
-              BackgroundColor="#CC6699"
-              TextColor="White"
-              FontAttributes="Bold"
-              CornerRadius="40"
-                    Clicked="OnEpikoClicked"
-              WidthRequest="130"
-              HeightRequest="40"/>
-
-            <Button Grid.Column="2" Text="PABULA"
-              BackgroundColor="#99CC33"
-              TextColor="White"
-              FontAttributes="Bold"
-                    Clicked="OnPabulaClicked"
-              CornerRadius="40"
-              WidthRequest="130"
-                    
-              HeightRequest="40"/>
-
-            <Button Grid.Column="3" Text="MGA LARO"
-              BackgroundColor="#3399CC"
-              TextColor="White"
-              FontAttributes="Bold"
-              WidthRequest="130"
-                    Clicked="OnMgaLaroClicked"
-              CornerRadius="40"
-              HeightRequest="40"/>
-        </Grid>
-        
-        <!-- Settings Modal Overlay -->
-        <Grid x:Name="SettingsModalOverlay"
-              Grid.RowSpan="3"
-              IsVisible="False"
-              BackgroundColor="Transparent"
-              InputTransparent="False">
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnCloseSettingsModal"/>
-            </Grid.GestureRecognizers>
-
-            <!-- Settings Modal Content - Expanded for Volume Slider -->
-            <Frame WidthRequest="400"
-                   HeightRequest="260"
-                   CornerRadius="20"
-                   BackgroundColor="#E6FFFFFF"
-                   Padding="25"
-                   HasShadow="True"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center">
-                <Frame.Shadow>
-                    <Shadow Brush="Black" Offset="0,4" Radius="20" Opacity="0.3"/>
-                </Frame.Shadow>
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer/>
-                </Frame.GestureRecognizers>
-
-                <Grid RowDefinitions="Auto,*">
-                    <!-- Header -->
-                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
-                        <Label Text="SETTINGS"
-                               FontSize="24"
-                               FontAttributes="Bold"
-                               TextColor="#CC3333"
-                               VerticalOptions="Center"/>
-                        <ImageButton Grid.Column="1"
-                                     Source="icon_settings.png"
-                                     Clicked="OnCloseSettingsModal"
-                                     WidthRequest="28"
-                                     HeightRequest="28"
-                                     BackgroundColor="Transparent"/>
-                    </Grid>
-
-                    <!-- Settings Content -->
-                    <ScrollView Grid.Row="1">
-                        <VerticalStackLayout Spacing="18">
-
-                            <!-- Background Music Volume Slider -->
-                            <VerticalStackLayout Spacing="8">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                    <Label Text="Background Music Volume"
-                       FontSize="16"
-                       FontAttributes="Bold"
-                       TextColor="#333"
-                       VerticalOptions="Center"/>
-                                    <Label x:Name="BackgroundVolumeLabel"
-                       Grid.Column="1"
-                       Text="30%"
-                       FontSize="14"
-                       FontAttributes="Bold"
-                       TextColor="#CC3333"
-                       VerticalOptions="Center"/>
-                                </Grid>
-
-                                <Slider x:Name="BackgroundVolumeSlider"
-                    Minimum="0"
-                    Maximum="100"
-                    Value="30"
-                    MinimumTrackColor="#CC3333"
-                    MaximumTrackColor="#CCCCCC"
-                    ThumbColor="#CC3333"
-                    ValueChanged="OnBackgroundVolumeChanged"/>
-                            </VerticalStackLayout>
-
-                            <!-- Narrator Voice Volume Slider -->
-                            <VerticalStackLayout Spacing="8">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                    <Label Text="Narrator Voice Volume"
-                       FontSize="16"
-                       FontAttributes="Bold"
-                       TextColor="#333"
-                       VerticalOptions="Center"/>
-                                    <Label x:Name="NarratorVolumeLabel"
-                       Grid.Column="1"
-                       Text="100%"
-                       FontSize="14"
-                       FontAttributes="Bold"
-                       TextColor="#CC3333"
-                       VerticalOptions="Center"/>
-                                </Grid>
-
-                                <Slider x:Name="NarratorVolumeSlider"
-                    Minimum="0"
-                    Maximum="100"
-                    Value="100"
-                    MinimumTrackColor="Green"
-                    MaximumTrackColor="#CCCCCC"
-                    ThumbColor="Green"
-                    ValueChanged="OnNarratorVolumeChanged"/>
-                            </VerticalStackLayout>
-
-                        </VerticalStackLayout>
-                    </ScrollView>
-                </Grid>
-            </Frame>
         </Grid>
     </Grid>
+    
 </ContentPage>

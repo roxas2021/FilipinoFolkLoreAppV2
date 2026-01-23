@@ -22,6 +22,7 @@ namespace FilipinoFolkloreApp.Views
         public AvatarSelectionPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
             AvatarGrid.ItemsSource = Avatars;
         }
 

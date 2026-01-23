@@ -8,7 +8,7 @@
     <Grid>
         <Grid RowDefinitions="Auto, Auto, *"
             ColumnDefinitions="*"
-            Padding="16">
+            Padding="20">
 
             <!-- ===== HUD row 0 (8-pt spacing, kid-friendly) ===== -->
             <Grid Grid.Row="0"

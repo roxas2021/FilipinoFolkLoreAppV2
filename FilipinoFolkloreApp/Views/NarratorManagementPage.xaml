@@ -7,7 +7,7 @@
     <Grid>
         <Grid RowDefinitions="Auto, Auto, *"
       ColumnDefinitions="*"
-      Padding="16">
+      Padding="20">
 
             <!-- ===== HUD Header (Row 0) ===== -->
             <Grid Grid.Row="0"
@@ -107,7 +107,15 @@
                             <TapGestureRecognizer Tapped="OnBackTapped"/>
                         </Image.GestureRecognizers>
                     </Image>
-
+                    <Image Source="icon_home.png"
+                       WidthRequest="48"
+                       HeightRequest="48"
+                       Aspect="AspectFit"
+                       Margin="0">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                        </Image.GestureRecognizers>
+                    </Image>
 
 
                 </StackLayout>
