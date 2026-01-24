@@ -517,7 +517,7 @@ public partial class ColoringPage : ContentPage
                 await ShowGameAlertAsync($"Tagumpay na na-save ang larawan", false);
 
                 // Navigate to ColoringRewardPage
-                await Navigation.PushAsync(new ColoringRewardPage(20, 16));
+                await Navigation.PushAsync(new ColoringRewardPage(20, 21));
             }
             else
             {

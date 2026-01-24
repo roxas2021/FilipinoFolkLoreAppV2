@@ -11,28 +11,33 @@ public partial class MedalPage : ContentPage
     private HeartService HeartService =>
     Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
     public ObservableCollection<Medals> Medals { get; set; } = new();
+    private bool _medalsLoaded = false;
 
     public MedalPage()
 	{
 		InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
-        BindingContext =this;
-
+        BindingContext = this;
+        
+        // Set ItemsSource once during initialization
+        MedalsView.ItemsSource = Medals;
 	}
+    
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        // Load/sync story monitored data from DB into AlamatContent.Stories
-        //try
-        //{
-        //    await App.Database.LoadStoriesAsync();
-        //}
-
-        // refresh UI after DB sync
+        
+        // refresh UI
         LoadHud();
-        await LoadMedals();
+        
+        // Only load medals once (unless explicitly requested to refresh)
+        if (!_medalsLoaded)
+        {
+            await LoadMedals();
+            _medalsLoaded = true;
+        }
     }
+    
     public async Task LoadMedals()
     {
         Medals.Clear();
@@ -57,10 +62,7 @@ public partial class MedalPage : ContentPage
                 isUnlocked = false
             });
         }
-
-        MedalsView.ItemsSource = Medals;
     }
-
 
     async void OnMedalTapped(object? sender, TappedEventArgs e)
     {
@@ -70,6 +72,7 @@ public partial class MedalPage : ContentPage
         // Navigate to medal detail page
         await Navigation.PushAsync(new MedalDetailPage(medal));
     }
+    
     public ICommand MedalTappedCommand => new Command<Medals>(async (medal) =>
     {
         if (medal.isUnlocked)
@@ -92,6 +95,7 @@ public partial class MedalPage : ContentPage
             });
         }
     }
+    
     void LoadHud()
     {
         HudAvatar.Source = CharacterHelper.CurrentAvatar;
@@ -99,6 +103,7 @@ public partial class MedalPage : ContentPage
         StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
         RefreshHearts();
     }
+    
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
         await Navigation.PopAsync();

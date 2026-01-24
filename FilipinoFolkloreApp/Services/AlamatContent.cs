@@ -702,7 +702,11 @@ namespace FilipinoFolkloreApp.Services
             {
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing1.png",
-                    Subtitle = "Sina Pagong at Matsing ay matalik na magkaibigan. Mabait at matulungin si Pagong, subalit si Matsing ay tuso at palabiro. Isang araw sila ay binigyan ni Aling Muning ng isang supot ng pansit. “Halika Matsing, kainin natin ang pansit”, nag-aayang sabi ni Pagong.\n“Naku baka panis na yan” sabi ni Matsing.\n“Ang mabuti pa, hayaan mo muna akong kumain n’yan para masiguro natin na walang lason ang pagkain,” dagdag pa nito.\n“Hindi naman amoy panis Matsing at saka hindi naman magbibigay ng panis na pagkain si Aling Muning,” sabi ni Pagong.\n“Kahit na, ako muna ang kakain,” pagmamatigas ni Matsing.\nWalang nagawa ang kawawang Pagong kundi pagbigyan ang makulit na kaibigan. Naubos ni Matsing ang pansit at walang natira para kay Pagong.\n“Pasensya ka na kaibigan, napasarap ang kain ko ng pansit kaya wala ng natira. Sa susunod ka na lang kumain,” paliwanag ng tusong matsing."
+                    Subtitle = "Sina Pagong at Matsing ay matalik na magkaibigan. Mabait at matulungin si Pagong, subalit si Matsing ay tuso at palabiro. Isang araw sila ay binigyan ni Aling Muning ng isang supot ng pansit. “Halika Matsing, kainin natin ang pansit”, nag-aayang sabi ni Pagong.\n“Naku baka panis na yan” sabi ni Matsing.\n“Ang mabuti pa, hayaan mo muna akong kumain n’yan para masiguro natin na walang lason ang pagkain,” dagdag pa nito."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing1.png",
+                    Subtitle = "“Hindi naman amoy panis Matsing at saka hindi naman magbibigay ng panis na pagkain si Aling Muning,” sabi ni Pagong.\n“Kahit na, ako muna ang kakain,” pagmamatigas ni Matsing.\nWalang nagawa ang kawawang Pagong kundi pagbigyan ang makulit na kaibigan. Naubos ni Matsing ang pansit at walang natira para kay Pagong.\n“Pasensya ka na kaibigan, napasarap ang kain ko ng pansit kaya wala ng natira. Sa susunod ka na lang kumain,” paliwanag ng tusong matsing."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing2.png",
@@ -710,7 +714,11 @@ namespace FilipinoFolkloreApp.Services
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing3.png",
-                    Subtitle = "Sa kanilang paglilibot sa kagubatan, nakakita si Pagong ng isang puno ng saging.\n“Matsing! Matsing! tignan mo ang puno ng saging na ito. Maganda ang pagkakatubo. Gusto ko itong itanim sa aking bakuran para pag nagkabunga ay makakain natin ito,” masayang sabi ni Pagong.\n“Gusto ko rin ng saging na ‘yan Pagong, ibigay mo na lang sa akin,” sabi ni Matsing.\n“Pasensya ka na, gusto ko rin kasi nito. Kung gusto mo hatiin na lang natin.”\n“Hahatiin? O sige pero sa akin ang itaas na bahagi. Ung parte na may mga dahon ha?” nakangising sabi ni Matsing.\n“Ha? sa akin ang ibabang bahagi?” tanong ni Pagong.\n“Oo, wala akong panahon para magpatubo pa ng dahon ng saging kaya sa akin na lang ang itaas na parte,” sabi ni Matsing."
+                    Subtitle = "Sa kanilang paglilibot sa kagubatan, nakakita si Pagong ng isang puno ng saging.\n“Matsing! Matsing! tignan mo ang puno ng saging na ito. Maganda ang pagkakatubo. Gusto ko itong itanim sa aking bakuran para pag nagkabunga ay makakain natin ito,” masayang sabi ni Pagong.\n“Gusto ko rin ng saging na ‘yan Pagong, ibigay mo na lang sa akin,” sabi ni Matsing."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing3.png",
+                    Subtitle = "“Pasensya ka na, gusto ko rin kasi nito. Kung gusto mo hatiin na lang natin.”\n“Hahatiin? O sige pero sa akin ang itaas na bahagi. Ung parte na may mga dahon ha?” nakangising sabi ni Matsing.\n“Ha? sa akin ang ibabang bahagi?” tanong ni Pagong.\n“Oo, wala akong panahon para magpatubo pa ng dahon ng saging kaya sa akin na lang ang itaas na parte,” sabi ni Matsing."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing4.png",
@@ -722,7 +730,11 @@ namespace FilipinoFolkloreApp.Services
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing6.png",
-                    Subtitle = "Nainggit si Matsing nang makita ang bunga ng saging sa halaman ni Pagong.\n“Aba, nagkabunga ang tanim mo. Paano nangyari iyon? Ang aking tanim ay nalanta at natuyo,” sabi ni Matsing.\n“Inalagaan ko kasi ito ng mabuti. Sabi ni Mang Islaw Kalabaw, malaki ang pag-asang tutubo ang bahagi ng halaman na pinutol kung ito ay may ugat,” paliwanag ni Pagong.\n“Hmp! Kaya pala nalanta ang aking tanim,” nanggigil na sambit ni Matsing.\n“Mukhang hinog na ang mga bunga nito. Halika, kunin natin,” anyaya nito.\n“Gusto ko sana kaya lang masyadong mataas ang mga bunga. Hindi ko kayang akyatin,” sabi ni Pagong.\n“Kung gusto mo, ako na lang ang aakyat, ibibigay ko sa iyo ang lahat ng mga bunga. Basta’t bigyan mo lang ako ng konti para sa aking miryenda,” sabi ni Matsing."
+                    Subtitle = "Nainggit si Matsing nang makita ang bunga ng saging sa halaman ni Pagong.\n“Aba, nagkabunga ang tanim mo. Paano nangyari iyon? Ang aking tanim ay nalanta at natuyo,” sabi ni Matsing.\n“Inalagaan ko kasi ito ng mabuti. Sabi ni Mang Islaw Kalabaw, malaki ang pag-asang tutubo ang bahagi ng halaman na pinutol kung ito ay may ugat,” paliwanag ni Pagong."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing6.png",
+                    Subtitle = "“Hmp! Kaya pala nalanta ang aking tanim,” nanggigil na sambit ni Matsing.\n“Mukhang hinog na ang mga bunga nito. Halika, kunin natin,” anyaya nito.\n“Gusto ko sana kaya lang masyadong mataas ang mga bunga. Hindi ko kayang akyatin,” sabi ni Pagong.\n“Kung gusto mo, ako na lang ang aakyat, ibibigay ko sa iyo ang lahat ng mga bunga. Basta’t bigyan mo lang ako ng konti para sa aking miryenda,” sabi ni Matsing."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing7.png",
@@ -742,7 +754,11 @@ namespace FilipinoFolkloreApp.Services
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing11.png",
-                    Subtitle = "Kinabukasan, kahit mahapdi pa rin ang mga sugat ni Matsing ay hinanap niya si Pagong. Nakita niya itong naglalakad sa may kakahuyan.\n“Hoy Pagong humanda ka ngayon!” galit na sabi ni Matsing sabay huli sa pagong.\n“Anong gagawin mo sa akin?” takot na tanong ni Pagong\n“Tatadtarin kita ng pinong pino,” sabi ni Matsing.\nNag-isip ng paraan si Pagong para maisahan ang tusong matsing.\n“Oo sige tadtarin mo ako ng pinong-pino at pagputul-putullin nang sa gayon ako ay dadami at susugurin ka namin ng mga parte ng katawan kong pinutol mo hahaha,” sabi ni Pagong."
+                    Subtitle = "Kinabukasan, kahit mahapdi pa rin ang mga sugat ni Matsing ay hinanap niya si Pagong. Nakita niya itong naglalakad sa may kakahuyan.\n“Hoy Pagong humanda ka ngayon!” galit na sabi ni Matsing sabay huli sa pagong.\n“Anong gagawin mo sa akin?” takot na tanong ni Pagong"
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing11.png",
+                    Subtitle = "“Tatadtarin kita ng pinong pino,” sabi ni Matsing.\nNag-isip ng paraan si Pagong para maisahan ang tusong matsing.\n“Oo sige tadtarin mo ako ng pinong-pino at pagputul-putullin nang sa gayon ako ay dadami at susugurin ka namin ng mga parte ng katawan kong pinutol mo hahaha,” sabi ni Pagong."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing12.png",
@@ -758,7 +774,11 @@ namespace FilipinoFolkloreApp.Services
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing15.png",
-                    Subtitle = "Tuwang-tuwa si Matsing sa pag-aakalang magagantihan na niya si Pagong. Todo lakas niya itong itinapon sa dalampasigan. Nagulat ito nang makitang marunong lumangoy si Pagong. Ang bilis-bilis ng pagkilos ni Pagong sa tubig. Kung mabagal ito sa lupa ay parang ang gaan ng katawan nito sa tubig.\n“Hahaha. Naisahan din kita Matsing. Hindi mo ba alam na gustong-gusto ko ang lumagoy sa dalampasigan at magbabad sa tubig? Salamat kaibigan!!!” natutuwang sabi ni Pagong.\nMalungkot na umuwi si Matsing. Naisip niya na napakasakit pala na maisahan ng isang kaibigan. Naramdaman niya kung paano masaktan kapag naloloko ng isang kaibigan."
+                    Subtitle = "Tuwang-tuwa si Matsing sa pag-aakalang magagantihan na niya si Pagong. Todo lakas niya itong itinapon sa dalampasigan. Nagulat ito nang makitang marunong lumangoy si Pagong. Ang bilis-bilis ng pagkilos ni Pagong sa tubig. Kung mabagal ito sa lupa ay parang ang gaan ng katawan nito sa tubig."
+                },
+                new Slide{
+                    Background = "storiespabula/pagongatmatsing/pagong_at_matsing15.png",
+                    Subtitle = "“Hahaha. Naisahan din kita Matsing. Hindi mo ba alam na gustong-gusto ko ang lumagoy sa dalampasigan at magbabad sa tubig? Salamat kaibigan!!!” natutuwang sabi ni Pagong.\nMalungkot na umuwi si Matsing. Naisip niya na napakasakit pala na maisahan ng isang kaibigan. Naramdaman niya kung paano masaktan kapag naloloko ng isang kaibigan."
                 },
                 new Slide{
                     Background = "storiespabula/pagongatmatsing/pagong_at_matsing16.png",

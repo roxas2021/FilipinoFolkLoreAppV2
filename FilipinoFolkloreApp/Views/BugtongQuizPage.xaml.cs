@@ -101,14 +101,14 @@ namespace FilipinoFolkloreApp.Views
                     StrokeThickness = 3,
                     Padding = new Thickness(12, 8),
                     Margin = new Thickness(4, 2),
-                    WidthRequest = letter == ' ' ? 20 : 45, // Smaller box for spaces
+                    WidthRequest = letter == ' ' ? 20 : 45, 
                     HeightRequest = 50,
                     StrokeShape = new RoundRectangle { CornerRadius = 8 }
                 };
 
                 var letterLabel = new Label
                 {
-                    Text = "", // Initially empty
+                    Text = "",
                     FontSize = 24,
                     FontAttributes = FontAttributes.Bold,
                     TextColor = Color.FromArgb("#FF66CC"),

@@ -199,10 +199,10 @@ public partial class NarratorDetailPage : ContentPage
             if (!firstFullBattery)
             {
                 // Show reward page using ColoringRewardPage
-                // Medal ID 17 for narrator first full battery achievement
+                // Medal ID for narrator first full battery achievement
                 await Navigation.PushAsync(new ColoringRewardPage(
                     stars: 50,
-                    medalId: 17,
+                    medalId: 22,
                     rewardKey: firstFullBatteryKey,
                     returnPageType: "NarratorDetail",
                     returnPageParameter: _narratorId

@@ -9,16 +9,14 @@ namespace FilipinoFolkloreApp.Views
 {
     public partial class CharacterCostume : ContentPage
     {
-        // user's balance
         private int PilonStarNicholAmountValue = 300;
         private List<bool> purchasedCostumes;
         private List<int> costumePrices;
         private int selectedCostumeId = 0;
 
-        // awaitable alert TCS 
         TaskCompletionSource<bool> _alertTcs;
         private AvatarCustomizationHelper.AvatarSet currentAvatarSet = AvatarCustomizationHelper.CurrentAvatarSet(AvatarCustomizationHelper.SelectedAvatarSetId);
-        // expose the username so it can be changed programmatically or bound from VM         
+          
         public string CurrentUserName { get; set; } = "Nichol";
 
         public List<TapisItem> TapisItems { get; set; }
@@ -26,9 +24,9 @@ namespace FilipinoFolkloreApp.Views
         public CharacterCostume()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
             CurrentUserName = CharacterHelper.CurrentName;
             PilonStarNicholAmountValue = CharacterHelper.CurrentStars;
-            // set binding context so XAML bindings work
             BindingContext = this;
 
 
@@ -40,23 +38,18 @@ namespace FilipinoFolkloreApp.Views
             costumePrices = new List<int> { 100, 150, 180, 200, 250 };
 
             await LoadTapisItemsAsync();
-            // update balance label
             PilonStarNicholLabel.Text = CharacterHelper.CurrentStars.ToString();
 
-            // also ensure alert message uses current user name by default
             AlertMessageLabel.Text = $"You don't have enough {CurrentUserName}!";
 
         }
-        // put near other private helpers
         private async Task LoadTapisItemsAsync()
         {
-            // ensure purchasedCostumes is up to date (AvatarCustomizationHelper.LoadPurchasedCostume is async in your code)
+            
 
             await AvatarCustomizationHelper.LoadPurchasedCostume();
 
             purchasedCostumes = AvatarCustomizationHelper.purchasedCostumes;
-
-            // (re)create your tapis list from currentAvatarSet and the latest purchasedCostumes
             var items = new List<TapisItem>
                 {
                     new() { TapisImageSource = currentAvatarSet.TapisPaths[0], AvatarImageSource = currentAvatarSet.CostumePaths[1], IsPurchased = purchasedCostumes[0], Price = 100, TapisId = 1 },
@@ -70,7 +63,6 @@ namespace FilipinoFolkloreApp.Views
             TapisCollectionView.ItemsSource = TapisItems;
 
 
-            // optional: restore selection to the item you were on (if still valid)
             if (selectedCostumeId > 0 && selectedCostumeId <= TapisItems.Count)
                 TapisCollectionView.SelectedItem = TapisItems[selectedCostumeId - 1];
 
@@ -85,10 +77,8 @@ namespace FilipinoFolkloreApp.Views
         {
             if (string.IsNullOrWhiteSpace(src)) return string.Empty;
 
-            // normalize slashes + lower
             src = src.Replace("\\", "/").Trim().ToLowerInvariant();
 
-            // compare by file name (robust even if one string has folders)
             var lastSlash = src.LastIndexOf('/');
             return lastSlash >= 0 ? src[(lastSlash + 1)..] : src;
         }
@@ -111,7 +101,6 @@ namespace FilipinoFolkloreApp.Views
 
         private void UpdateBuyButtonState(TapisItem selected)
         {
-            // If purchased AND currently equipped -> show EQUIPPED
             if (selected.IsPurchased && IsEquipped(selected))
             {
                 BuyButton.Text = "EQUIPPED";
@@ -128,7 +117,6 @@ namespace FilipinoFolkloreApp.Views
                 return;
             }
 
-            // NOT purchased
             BuyButton.Text = $"{selected.Price} BUY";
             BuyButton.BackgroundColor = Colors.DeepPink;
             BuyButton.IsEnabled = PilonStarNicholAmountValue >= selected.Price;
@@ -139,41 +127,32 @@ namespace FilipinoFolkloreApp.Views
         {
             try
             {
-                // quick fade out (makes swap look smooth)
                 await CharacterImage.FadeTo(0.25, 120, Easing.CubicIn);
 
-                // swap image source
                 CharacterImage.Source = $"{newAvatarSource}";
 
-                // prepare for pop/rotate: ensure base transforms are reset
                 CharacterImage.Rotation = 0;
                 CharacterImage.TranslationY = 0;
 
-                // do pop + rotate in parallel
                 var pop = CharacterImage.ScaleTo(1.18, 180, Easing.CubicOut);
                 var rot = CharacterImage.RotateTo(6, 140, Easing.CubicOut);
                 await Task.WhenAll(pop, rot);
 
-                // bounce back to normal scale and rotate back to 0
                 var settleScale = CharacterImage.ScaleTo(1.0, 220, Easing.BounceOut);
                 var settleRot = CharacterImage.RotateTo(0, 140, Easing.SpringOut);
-                // small upward bounce
                 var translateUp = CharacterImage.TranslateTo(0, -8, 100, Easing.CubicOut);
                 await Task.WhenAll(settleScale, settleRot, translateUp);
 
-                // fall back into place
                 await CharacterImage.TranslateTo(0, 0, 160, Easing.BounceOut);
 
-                // final fade in to fully visible
                 await CharacterImage.FadeTo(1.0, 150, Easing.CubicIn);
 
-                // tiny pulse on the buy/select button to show action affordance
                 await BuyButton.ScaleTo(1.06, 110, Easing.CubicOut);
                 await BuyButton.ScaleTo(1.0, 120, Easing.BounceOut);
             }
             catch
             {
-                // swallow animation errors so nothing breaks if the platform can't animate
+                
             }
         }
 
@@ -185,7 +164,6 @@ namespace FilipinoFolkloreApp.Views
             var selected = TapisItems[selectedCostumeId - 1];
             int itemCost = selected.Price;
 
-            // SELECT (already owned)
             if (selected.IsPurchased)
             {
                 CharacterHelper.CurrentAvatar = selected.AvatarImageSource;
@@ -202,14 +180,12 @@ namespace FilipinoFolkloreApp.Views
                 return;
             }
 
-            // BUY
             if (PilonStarNicholAmountValue < itemCost)
             {
                 await ShowGameAlertAsync(PilonStarNicholAmountValue, null, "emoji_sad.png");
                 return;
             }
 
-            // PURCHASE SUCCESS
             PilonStarNicholAmountValue -= itemCost;
             CharacterHelper.CurrentStars = PilonStarNicholAmountValue;
             PilonStarNicholLabel.Text = PilonStarNicholAmountValue.ToString();
@@ -253,7 +229,6 @@ namespace FilipinoFolkloreApp.Views
             Navigation.PopAsync();
         }
 
-        // awaitable overlay — message is optional; default uses CurrentUserName
         public Task ShowGameAlertAsync(int amount, string message = null, string emojiSource = "emoji_sad.png")
         {
             if (GameAlertOverlay.IsVisible && _alertTcs != null)
@@ -261,12 +236,9 @@ namespace FilipinoFolkloreApp.Views
 
             _alertTcs = new TaskCompletionSource<bool>();
 
-            // set the emoji image (use provided source)
             AlertEmoji.Source = emojiSource;
 
-            // show current balance in the pill
             AlertAmountLabel.Text = PilonStarNicholAmountValue.ToString();
-            // default message uses the CurrentUserName if not supplied
             if (string.IsNullOrWhiteSpace(message))
                 message = $"You don't have enough pilon star!";
 
@@ -328,8 +300,6 @@ namespace FilipinoFolkloreApp.Views
         public bool IsPurchased { get; set; }
         public int Price { get; set; }
         public int TapisId { get; set; }
-
-        // UI states
         public bool IsSelected { get; set; }
     }
 }

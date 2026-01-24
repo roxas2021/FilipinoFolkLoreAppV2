@@ -25,7 +25,7 @@ namespace FilipinoFolkloreApp.Services
                     Answer = "ITLOG",
                     Choices = new List<string> { "ITLOG", "BAHAY", "PINTO" },
                     RewardStars = 10,
-                    MedalId = 1
+                    MedalId = 16
                 },
                 new Bugtong
                 {
@@ -35,7 +35,7 @@ namespace FilipinoFolkloreApp.Services
                     Answer = "ILAW",
                     Choices = new List<string> { "ILAW", "PALAY", "KANDILA" },
                     RewardStars = 10,
-                    MedalId = 2
+                    MedalId = 17
                 },
                 new Bugtong
                 {
@@ -45,7 +45,7 @@ namespace FilipinoFolkloreApp.Services
                     Answer = "MATA",
                     Choices = new List<string> { "MATA", "BALON", "ILONG" },
                     RewardStars = 10,
-                    MedalId = 17 // First bugtong medal
+                    MedalId = 18 // First bugtong medal
                 },
                 new Bugtong
                 {
@@ -55,7 +55,7 @@ namespace FilipinoFolkloreApp.Services
                     Answer = "GULONG",
                     Choices = new List<string> { "GULONG", "KOTSE", "BISIKLETA" },
                     RewardStars = 15,
-                    MedalId = 5
+                    MedalId = 19
                 },
                 new Bugtong
                 {
@@ -65,28 +65,8 @@ namespace FilipinoFolkloreApp.Services
                     Answer = "KAMAY",
                     Choices = new List<string> { "KAMAY", "NIYOG", "DALIRI" },
                     RewardStars = 15,
-                    MedalId = 10 // Second bugtong medal
+                    MedalId = 20 // Second bugtong medal
                 },
-                new Bugtong
-                {
-                    Id = "bugtong_6",
-                    Name = "Heto na si Kaka",
-                    Prompt = "Heto na si Kaka, bubuka-bukaka.",
-                    Answer = "GUNTING",
-                    Choices = new List<string> { "GUNTING", "KUTSILYO", "ESPADA" },
-                    RewardStars = 15,
-                    MedalId = 3
-                },
-                new Bugtong
-                {
-                    Id = "bugtong_7",
-                    Name = "Mataas kung Nakaupo",
-                    Prompt = "Mataas kung nakaupo, mababa kung nakatayo.",
-                    Answer = "ASO",
-                    Choices = new List<string> { "ASO", "PUSA", "KABAYO" },
-                    RewardStars = 20,
-                    MedalId = 17 // Third bugtong medal
-                }
             };
         }
 

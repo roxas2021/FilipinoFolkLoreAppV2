@@ -26,7 +26,6 @@ namespace FilipinoFolkloreApp.Views
             AvatarGrid.ItemsSource = Avatars;
         }
 
-        // Removed OnAppearing navigation logic - now handled in App.xaml.cs
 
         async void AvatarGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

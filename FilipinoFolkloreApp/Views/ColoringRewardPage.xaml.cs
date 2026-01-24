@@ -14,6 +14,7 @@ public partial class ColoringRewardPage : ContentPage
     private readonly string _rewardKey;
     private readonly string _returnPageType;
     private readonly object? _returnPageParameter;
+    private bool _isLoading = true;
 
     public ColoringRewardPage(
         int stars = 20, 
@@ -29,25 +30,49 @@ public partial class ColoringRewardPage : ContentPage
         _rewardKey = rewardKey ?? "FirstColoredImageRewardClaimed";
         _returnPageType = returnPageType;
         _returnPageParameter = returnPageParameter;
-        RewardText.Text = $"+{_stars} ?";
+        
+        // Don't set text yet - wait for OnAppearing
+        RewardText.Text = "";
+        OkButton.IsEnabled = false; // Disable until loading completes
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        // Load medals to get the medal image
+        
+        if (!_isLoading)
+            return;
+        string medalImagePath = DatabaseService.GetMedalImagePath(_medalId);
         try
         {
-            await App.Database.LoadMedalsAsync();
+            
+            // Now get the medal image path
+            
+            // Fallback to default if path is empty
+            if (string.IsNullOrEmpty(medalImagePath))
+            {
+                System.Diagnostics.Debug.WriteLine($"Warning: Medal image path is empty for medal ID {_medalId}");
+                medalImagePath = "medal_empty.png";
+            }
+            
+            System.Diagnostics.Debug.WriteLine($"Setting medal image: {medalImagePath}");
+            
+            // Set the image source - use MainThread to ensure UI update
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                MedalImage.Source = ImageSource.FromFile(medalImagePath);
+            });
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"LoadMedalsAsync failed in ColoringRewardPage.OnAppearing: {ex}");
+            
+            // Set fallback image on error
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                MedalImage.Source = ImageSource.FromFile("medal_empty.png");
+            });
         }
-
-        // Set the medal image
-        MedalImage.Source = DatabaseService.GetMedalImagePath(_medalId);
 
         // Check if reward was already claimed
         bool alreadyClaimed = Preferences.Get(_rewardKey, false);
@@ -56,14 +81,16 @@ public partial class ColoringRewardPage : ContentPage
         {
             RewardText.Text = "Reward already claimed";
             OkButton.Text = "Close";
-            OkButton.IsEnabled = true;
-            return;
         }
-
-        // Show normal reward text
-        RewardText.Text = $"+{_stars} ?";
-        OkButton.Text = "OK";
+        else
+        {
+            // Show normal reward text
+            RewardText.Text = $"+{_stars} ?";
+            OkButton.Text = "OK";
+        }
+        
         OkButton.IsEnabled = true;
+        _isLoading = false;
     }
 
     private async void OnRewardOk(object? sender, EventArgs e)
@@ -111,6 +138,14 @@ public partial class ColoringRewardPage : ContentPage
         {
             if (page is ColoringRewardPage)
             {
+                Navigation.RemovePage(page);
+            }
+            if (page is ColoringPage)
+            {
+                Navigation.RemovePage(page);
+            }
+            if (page is BugtongQuizPage)
+            { 
                 Navigation.RemovePage(page);
             }
         }

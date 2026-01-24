@@ -132,7 +132,43 @@ namespace FilipinoFolkloreApp
 
             MainPage = navigationPage;
 
-            return new Window(MainPage);
+            var window = new Window(MainPage);
+            
+            // Subscribe to window lifecycle events
+            window.Activated += OnAppActivated;
+            window.Deactivated += OnAppDeactivated;
+            window.Stopped += OnAppStopped;
+            window.Resumed += OnAppResumed;
+
+            return window;
+        }
+
+        private void OnAppActivated(object? sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("App Activated");
+            // Resume music when app comes to foreground
+            ResumeBackgroundMusic();
+        }
+
+        private void OnAppDeactivated(object? sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("App Deactivated");
+            // Pause music when app goes to background
+            PauseBackgroundMusic();
+        }
+
+        private void OnAppStopped(object? sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("App Stopped");
+            // Pause music when app is stopped
+            PauseBackgroundMusic();
+        }
+
+        private void OnAppResumed(object? sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("App Resumed");
+            // Resume music when app is resumed
+            ResumeBackgroundMusic();
         }
 
         private ContentPage DetermineInitialPage()

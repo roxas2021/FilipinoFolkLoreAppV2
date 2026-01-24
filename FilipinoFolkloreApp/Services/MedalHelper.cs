@@ -78,7 +78,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 9,
                 MedalName = "Cultural Guardian",
-                MedalImagePath = "medals/lakbaykwento.png",
+                MedalImagePath = "medals/lipad.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 9."
             },
@@ -94,7 +94,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 11,
                 MedalName = "Legend Scholar",
-                MedalImagePath = "medals/lipad.png",
+                MedalImagePath = "medals/medal1.jpg",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 11."
             },
@@ -126,7 +126,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 15,
                 MedalName = "Folklore Legend",
-                MedalImagePath = "medals/mapanlikha.png",
+                MedalImagePath = "medals/mutyangkarunungan.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 15."
             },
@@ -134,7 +134,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 16,
                 MedalName = "First Artist",
-                MedalImagePath = "medals/likhakulay.png",
+                MedalImagePath = "medals/pagpapala.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for coloring your first image."
             },
@@ -142,7 +142,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 17,
                 MedalName = "Caring Companion",
-                MedalImagePath = "medals/kasangga.png",
+                MedalImagePath = "medals/sandigan.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for fully charging narrator battery for the first time."
             },
@@ -150,7 +150,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 18,
                 MedalName = "Narrator Caretaker",
-                MedalImagePath = "medals/kaibigankwento.png",
+                MedalImagePath = "medals/siglakain.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for feeding narrator 5 times."
             },
@@ -158,10 +158,34 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 19,
                 MedalName = "Dedicated Guardian",
-                MedalImagePath = "medals/lakambantay.png",
+                MedalImagePath = "medals/sipagaral.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for feeding narrator 10 times."
-            }
+            },
+            new Medals
+            {
+                MedalId = 20,
+                MedalName = "Dedicated Guardian",
+                MedalImagePath = "medals/tagapagkwento.png",
+                isUnlocked = false,
+                MedalDescription = "Awarded for feeding narrator 10 times."
+            },
+            new Medals
+            {
+                MedalId = 21,
+                MedalName = "Dedicated Guardian",
+                MedalImagePath = "medals/tagumpaybasa.png",
+                isUnlocked = false,
+                MedalDescription = "Awarded for feeding narrator 10 times."
+            },
+            new Medals
+            {
+                MedalId = 22,
+                MedalName = "Dedicated Guardian",
+                MedalImagePath = "medals/tanglaw.png",
+                isUnlocked = false,
+                MedalDescription = "Awarded for feeding narrator 10 times."
+            },
         };
     }
 }

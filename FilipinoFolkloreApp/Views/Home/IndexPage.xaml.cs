@@ -103,15 +103,12 @@ public partial class IndexPage : ContentPage
     }
     private void OnBackgroundVolumeChanged(object sender, ValueChangedEventArgs e)
     {
-        // Update the volume label
         int volumePercent = (int)e.NewValue;
         BackgroundVolumeLabel.Text = $"{volumePercent}%";
 
-        // Save to preferences (0.0 to 1.0 range)
         double volumeValue = e.NewValue / 100.0;
         Preferences.Set("BackgroundMusicVolume", volumeValue);
 
-        // Update the background music player volume in real-time
         if (Application.Current is App app)
         {
             app.SetBackgroundMusicVolume(volumeValue);
@@ -145,16 +142,13 @@ public partial class IndexPage : ContentPage
     }
     private void LoadSettings()
     {
-        // Load background music setting (removed switch, now only volume)
-
-        // Load background music volume
+        
         double savedBackgroundVolume = Preferences.Get("BackgroundMusicVolume", 0.3);
         BackgroundVolumeSlider.ValueChanged -= OnBackgroundVolumeChanged;
         BackgroundVolumeSlider.Value = savedBackgroundVolume * 100;
         BackgroundVolumeLabel.Text = $"{(int)(savedBackgroundVolume * 100)}%";
         BackgroundVolumeSlider.ValueChanged += OnBackgroundVolumeChanged;
 
-        // Load narrator volume setting
         double savedNarratorVolume = Preferences.Get("NarratorVolume", 1.0);
         AlamatContent.NarratorVolume = savedNarratorVolume;
 

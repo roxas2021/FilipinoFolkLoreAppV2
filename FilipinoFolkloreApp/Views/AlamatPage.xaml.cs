@@ -35,24 +35,20 @@ public partial class AlamatPage : ContentPage
         AlamatContent.category = category;
 
         LoadHud();
-        //LoadStories();
     }
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        // Load/sync story monitored data from DB into AlamatContent.Stories
         try
         {
             await App.Database.LoadStoriesAsync();
         }
         catch (Exception ex)
         {
-            // optional: log or show an error - don't block UI
             System.Diagnostics.Debug.WriteLine($"LoadStoriesAsync failed: {ex}");
         }
 
-        // refresh UI after DB sync
         LoadHud();
         LoadStories();
     }
@@ -102,14 +98,10 @@ public partial class AlamatPage : ContentPage
                         Id = s.Id,
                         Title = s.Title,
                         Thumb = s.Thumb,
-                        // Persisted flags
                         IsPurchased = s.IsPurchased,
                         IsRewardClaimed = s.IsRewardClaimed,
 
-                        // Price and display text
                         Price = s.PriceStars,
-
-                        // Locked = NOT (free OR purchased OR globally unlocked via set)
                         IsLocked = !(s.PriceStars == 0 || s.IsPurchased || AlamatContent.UnlockedStories.Contains(s.Id))
                     }).ToList();
     }
@@ -117,10 +109,8 @@ public partial class AlamatPage : ContentPage
     {
         if (sender is not Grid g || g.BindingContext is not StoryCard card) return;
 
-        // Get the actual Story object (static)
         var story = AlamatContent.GetStory(card.Id);
 
-        // If story is not unlocked/purchased yet, attempt purchase
         if (!AlamatContent.IsStoryUnlocked(card.Id))
         {
             // Try to spend stars (updates in-memory AlamatContent.Stars)
