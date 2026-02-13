@@ -14,6 +14,7 @@ public partial class QuizPage : ContentPage
     private readonly string _storyId;
     int _correctIndex = 0;
     int _quizIndex = 0;
+    int _totalQuizStarsEarned = 0;
 
     CancellationTokenSource? _cts;
     private HeartService HeartService =>
@@ -60,9 +61,10 @@ public partial class QuizPage : ContentPage
             QuizPrompt.Text = q.Prompt;
             _correctIndex = q.CorrectIndex;
 
-            Choice0.Source = q.ChoiceImages.ElementAtOrDefault(0);
-            Choice1.Source = q.ChoiceImages.ElementAtOrDefault(1);
-            Choice2.Source = q.ChoiceImages.ElementAtOrDefault(2);
+            // Set text answers instead of images
+            Choice0Text.Text = q.ChoiceTexts.ElementAtOrDefault(0) ?? "";
+            Choice1Text.Text = q.ChoiceTexts.ElementAtOrDefault(1) ?? "";
+            Choice2Text.Text = q.ChoiceTexts.ElementAtOrDefault(2) ?? "";
         });
         _cts?.Cancel();
         _cts = new CancellationTokenSource();
@@ -123,9 +125,24 @@ public partial class QuizPage : ContentPage
     {
         _cts?.Cancel();
 
-        _quizIndex++;
-
         var story = AlamatContent.GetStory(_storyId);
+        var currentQuestion = story.Quiz[_quizIndex];
+
+        // Check if this is the first time answering this question correctly
+        bool isFirstTime = await App.Database.SetQuizQuestionAnsweredAsync(_storyId, _quizIndex);
+        
+        if (isFirstTime)
+        {
+            // Award stars for first correct answer
+            int starsToAward = currentQuestion.RewardStars;
+            _totalQuizStarsEarned += starsToAward;
+            
+            await App.Database.SetStarsAsync(CharacterHelper.CurrentStars + starsToAward);
+            CharacterHelper.CurrentStars += starsToAward;
+            RefreshStars();
+        }
+
+        _quizIndex++;
 
         // More quizzes left → load next quiz
         if (_quizIndex < story.Quiz.Count)
@@ -134,7 +151,7 @@ public partial class QuizPage : ContentPage
             return;
         }
 
-        // No more quizzes → reward player
+        // No more quizzes → reward player with story completion stars
         var reward = story.RewardStars;
         var isClaimed = story.IsRewardClaimed;
 
@@ -147,26 +164,6 @@ public partial class QuizPage : ContentPage
 
         await Navigation.PushAsync(new RewardPage(reward, _storyId));
     }
-
-
-    //async Task HandleCorrectAsync()
-    //{
-    //    _cts?.Cancel();
-
-    //    var reward = AlamatContent.GetStory(_storyId).RewardStars;
-    //    //AlamatContent.Stars += reward;
-    //    var getStory = AlamatContent.GetStory(_storyId).IsRewardClaimed;
-
-    //    if (!getStory)
-    //    {
-    //        await App.Database.SetStarsAsync(CharacterHelper.CurrentStars + reward);
-    //        CharacterHelper.CurrentStars += reward; // keep in sync
-    //        RefreshStars(); // reflect new stars in header
-    //    }
-
-
-    //    await Navigation.PushAsync(new RewardPage(reward, _storyId));
-    //}
 
     async Task HandleWrongAsync()
     {
@@ -210,7 +207,7 @@ public partial class QuizPage : ContentPage
     async Task HideWrongModalAsync()
     {
         await Task.WhenAll(
-    GameAlertOverlay.FadeTo(0, 80, Easing.CubicIn), // Reduced animation time
+    GameAlertOverlay.FadeTo(0, 80, Easing.CubicIn),
     GameAlertCard.ScaleTo(0.96, 80, Easing.CubicIn)
 );
         GameAlertOverlay.IsVisible = false;
@@ -238,17 +235,14 @@ public partial class QuizPage : ContentPage
         {
             if (page is RewardPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is QuizPage)
             {
-                // Remove QuizPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is StoryPage)
             {
-                // Remove StoryPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is NarratorPage)
@@ -278,7 +272,7 @@ public partial class QuizPage : ContentPage
     {
         HudAvatar.Source = CharacterHelper.CurrentAvatar;
         NarratorAvatar.Source = AlamatContent.CurrentNarrator.Avatar;
-        PlayerNameLabel.Text = CharacterHelper.CurrentName; // replace if you have a real player name
+        PlayerNameLabel.Text = CharacterHelper.CurrentName;
         RefreshStars();
         RefreshHearts();
     }
@@ -312,17 +306,14 @@ public partial class QuizPage : ContentPage
         {
             if (page is RewardPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is QuizPage)
             {
-                // Remove QuizPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is StoryPage)
             {
-                // Remove StoryPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is NarratorPage)

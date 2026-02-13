@@ -21,7 +21,8 @@ namespace FilipinoFolkloreApp.Services
             _database.CreateTableAsync<StoryMonitored>().Wait();
             _database.CreateTableAsync<AvatarCostumeSet>().Wait();
             _database.CreateTableAsync<Medals>().Wait();
-            _database.CreateTableAsync<BugtongMonitored>().Wait(); // Add this line
+            _database.CreateTableAsync<BugtongMonitored>().Wait();
+            _database.CreateTableAsync<QuizMonitored>().Wait(); // Add quiz tracking table
         }
 
         public Task<Character> GetCharAsync()
@@ -312,7 +313,7 @@ namespace FilipinoFolkloreApp.Services
 
             return AlamatContent.Stories;
         }
-        // Update a story’s monitored data
+        // Update a story's monitored data
         public async Task UpdateStoryAsync(AlamatContent.Story story)
         {
             var dbStory = await _database.FindAsync<StoryMonitored>(story.StoryIndex);
@@ -612,6 +613,53 @@ namespace FilipinoFolkloreApp.Services
                     IsRewardClaimed = true,
                     CompletedDate = DateTime.Now
                 });
+            }
+        }
+
+        /// <summary>
+        /// Check if a quiz question was already answered correctly
+        /// </summary>
+        public async Task<bool> IsQuizQuestionAnsweredAsync(string storyId, int questionIndex)
+        {
+            var quiz = await _database.Table<QuizMonitored>()
+                                 .Where(q => q.StoryId == storyId && q.QuestionIndex == questionIndex)
+                                 .FirstOrDefaultAsync();
+            return quiz?.IsAnsweredCorrectly ?? false;
+        }
+
+        /// <summary>
+        /// Mark a quiz question as correctly answered for the first time
+        /// Returns true if this is the first time answering correctly (award stars)
+        /// </summary>
+        public async Task<bool> SetQuizQuestionAnsweredAsync(string storyId, int questionIndex)
+        {
+            var quiz = await _database.Table<QuizMonitored>()
+                                 .Where(q => q.StoryId == storyId && q.QuestionIndex == questionIndex)
+                                 .FirstOrDefaultAsync();
+    
+            if (quiz != null)
+            {
+                // Already answered correctly before
+                if (quiz.IsAnsweredCorrectly)
+                    return false;
+                
+                // First time answering correctly
+                quiz.IsAnsweredCorrectly = true;
+                quiz.AnsweredDate = DateTime.Now;
+                await _database.UpdateAsync(quiz);
+                return true;
+            }
+            else
+            {
+                // First time answering this question correctly
+                await _database.InsertAsync(new QuizMonitored
+                {
+                    StoryId = storyId,
+                    QuestionIndex = questionIndex,
+                    IsAnsweredCorrectly = true,
+                    AnsweredDate = DateTime.Now
+                });
+                return true;
             }
         }
     }

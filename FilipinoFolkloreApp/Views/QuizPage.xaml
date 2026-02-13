@@ -130,77 +130,89 @@
                     </Border>
                 </Grid>
 
-                <!-- ===== Choices ===== -->
+                <!-- ===== Choices with Text ===== -->
                 <Grid Grid.Row="1"
-                      ColumnDefinitions="Auto,Auto,Auto"
-                      ColumnSpacing="8"
+                      ColumnDefinitions="*,*,*"
+                      ColumnSpacing="12"
                       Padding="8,0"
                       HorizontalOptions="Center"
                       VerticalOptions="Center">
 
-                    <!-- Choice 0: transparent white -->
-                    <Border BackgroundColor="#80FFFFFF"
-                            StrokeThickness="0"
-                            Padding="8"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center">
+                    <!-- Choice 0: White background -->
+                    <Border BackgroundColor="#E6FFFFFF"
+                            StrokeThickness="3"
+                            Stroke="#FFFFFF"
+                            Padding="16,12"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Center"
+                            MinimumWidthRequest="120"
+                            MinimumHeightRequest="80">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="16"/>
                         </Border.StrokeShape>
-                        <Image x:Name="Choice0"
-                               Aspect="AspectFit"
-                               HeightRequest="88"
-                               WidthRequest="120"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnPick0"/>
-                            </Image.GestureRecognizers>
-                        </Image>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPick0"/>
+                        </Border.GestureRecognizers>
+                        <Label x:Name="Choice0Text"
+                               Text="Choice 1"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#333333"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center"
+                               LineBreakMode="WordWrap"/>
                     </Border>
 
-                    <!-- Choice 1: transparent red -->
+                    <!-- Choice 1: Red background -->
                     <Border Grid.Column="1"
-                            BackgroundColor="#66FF0000"
-                            StrokeThickness="0"
-                            Padding="8"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center">
+                            BackgroundColor="#E6FF6B6B"
+                            StrokeThickness="3"
+                            Stroke="#FF4444"
+                            Padding="16,12"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Center"
+                            MinimumWidthRequest="120"
+                            MinimumHeightRequest="80">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="16"/>
                         </Border.StrokeShape>
-                        <Image x:Name="Choice1"
-                               Aspect="AspectFit"
-                               HeightRequest="88"
-                               WidthRequest="120"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnPick1"/>
-                            </Image.GestureRecognizers>
-                        </Image>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPick1"/>
+                        </Border.GestureRecognizers>
+                        <Label x:Name="Choice1Text"
+                               Text="Choice 2"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#FFFFFF"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center"
+                               LineBreakMode="WordWrap"/>
                     </Border>
 
-                    <!-- Choice 2: transparent yellow -->
+                    <!-- Choice 2: Yellow background -->
                     <Border Grid.Column="2"
-                            BackgroundColor="#66FFFF00"
-                            StrokeThickness="0"
-                            Padding="8"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center">
+                            BackgroundColor="#E6FFE066"
+                            StrokeThickness="3"
+                            Stroke="#FFCC00"
+                            Padding="16,12"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Center"
+                            MinimumWidthRequest="120"
+                            MinimumHeightRequest="80">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="16"/>
                         </Border.StrokeShape>
-                        <Image x:Name="Choice2"
-                               Aspect="AspectFit"
-                               HeightRequest="88"
-                               WidthRequest="120"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnPick2"/>
-                            </Image.GestureRecognizers>
-                        </Image>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPick2"/>
+                        </Border.GestureRecognizers>
+                        <Label x:Name="Choice2Text"
+                               Text="Choice 3"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#333333"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center"
+                               LineBreakMode="WordWrap"/>
                     </Border>
 
                 </Grid>
