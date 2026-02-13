@@ -37,6 +37,10 @@ public partial class ColoringPage : ContentPage
     // Track if this is the first image saved
     private const string FIRST_IMAGE_SAVED_KEY = "FirstColoredImageSaved";
 
+    // Flood fill safety limits
+    private const int MAX_PIXELS_TO_FILL = 500000; // Maximum pixels per flood fill operation
+    private const int COLOR_MATCH_THRESHOLD = 15; // Reduced from 30 for tighter edge detection
+
     // Filipino color palette
     private readonly List<ColorInfo> _colors = new()
     {
@@ -275,8 +279,8 @@ public partial class ColoringPage : ContentPage
                     System.Diagnostics.Debug.WriteLine($"Touch at screen ({e.Location.X}, {e.Location.Y}) -> bitmap ({x}, {y})");
                     System.Diagnostics.Debug.WriteLine($"Selected color: {_selectedColor}");
 
-                    // Perform flood fill
-                    FloodFill(x, y, _selectedColor);
+                    // Perform flood fill asynchronously to prevent UI blocking
+                    _ = FloodFillAsync(x, y, _selectedColor);
                 }
 
                 _touchPoints.Remove(e.Id);
@@ -384,7 +388,7 @@ public partial class ColoringPage : ContentPage
         _previousPinchDistance = currentDistance;
     }
 
-    private void FloodFill(int x, int y, SKColor fillColor)
+    private async Task FloodFillAsync(int x, int y, SKColor fillColor)
     {
         if (_coloringBitmap == null) return;
 
@@ -393,6 +397,20 @@ public partial class ColoringPage : ContentPage
             System.Diagnostics.Debug.WriteLine($"FloodFill: Out of bounds ({x}, {y})");
             return;
         }
+
+        // Run flood fill on background thread to prevent UI freezing
+        await Task.Run(() => FloodFill(x, y, fillColor));
+
+        // Update UI on main thread
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            ColoringCanvas.InvalidateSurface();
+        });
+    }
+
+    private void FloodFill(int x, int y, SKColor fillColor)
+    {
+        if (_coloringBitmap == null) return;
 
         SKColor targetColor = _coloringBitmap.GetPixel(x, y);
 
@@ -405,41 +423,65 @@ public partial class ColoringPage : ContentPage
             return;
         }
 
-        if (targetColor == fillColor)
+        if (ColorsAreIdentical(targetColor, fillColor))
         {
             System.Diagnostics.Debug.WriteLine("Already same color, skipping fill");
             return;
         }
 
         int pixelsFilled = 0;
+        int width = _coloringBitmap.Width;
+        int height = _coloringBitmap.Height;
 
-        // Use stack-based flood fill for better performance
-        Stack<SKPointI> pixels = new Stack<SKPointI>();
-        pixels.Push(new SKPointI(x, y));
+        // Use HashSet to track visited pixels and prevent reprocessing
+        HashSet<int> visited = new HashSet<int>();
 
-        while (pixels.Count > 0)
+        // Use Queue instead of Stack for better memory management (BFS instead of DFS)
+        Queue<SKPointI> pixels = new Queue<SKPointI>();
+        pixels.Enqueue(new SKPointI(x, y));
+
+        // Helper function to convert point to unique int
+        int PointToKey(int px, int py) => py * width + px;
+
+        while (pixels.Count > 0 && pixelsFilled < MAX_PIXELS_TO_FILL)
         {
-            var point = pixels.Pop();
+            var point = pixels.Dequeue();
 
-            if (point.X < 0 || point.X >= _coloringBitmap.Width ||
-                point.Y < 0 || point.Y >= _coloringBitmap.Height)
+            // Check bounds
+            if (point.X < 0 || point.X >= width || point.Y < 0 || point.Y >= height)
                 continue;
+
+            // Check if already visited
+            int key = PointToKey(point.X, point.Y);
+            if (visited.Contains(key))
+                continue;
+
+            visited.Add(key);
 
             SKColor currentColor = _coloringBitmap.GetPixel(point.X, point.Y);
 
+            // Check if pixel should be filled
             if (ColorsMatch(currentColor, targetColor) && !IsBlackOutline(currentColor))
             {
                 _coloringBitmap.SetPixel(point.X, point.Y, fillColor);
                 pixelsFilled++;
 
-                pixels.Push(new SKPointI(point.X + 1, point.Y));
-                pixels.Push(new SKPointI(point.X - 1, point.Y));
-                pixels.Push(new SKPointI(point.X, point.Y + 1));
-                pixels.Push(new SKPointI(point.X, point.Y - 1));
+                // Add neighboring pixels
+                pixels.Enqueue(new SKPointI(point.X + 1, point.Y));
+                pixels.Enqueue(new SKPointI(point.X - 1, point.Y));
+                pixels.Enqueue(new SKPointI(point.X, point.Y + 1));
+                pixels.Enqueue(new SKPointI(point.X, point.Y - 1));
             }
         }
 
-        System.Diagnostics.Debug.WriteLine($"FloodFill completed: {pixelsFilled} pixels filled with {fillColor}");
+        if (pixelsFilled >= MAX_PIXELS_TO_FILL)
+        {
+            System.Diagnostics.Debug.WriteLine($"FloodFill reached maximum pixel limit: {MAX_PIXELS_TO_FILL}");
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine($"FloodFill completed: {pixelsFilled} pixels filled with {fillColor}");
+        }
     }
 
     private bool IsBlackOutline(SKColor color)
@@ -450,11 +492,19 @@ public partial class ColoringPage : ContentPage
 
     private bool ColorsMatch(SKColor color1, SKColor color2)
     {
-        // Allow slight color variance for anti-aliased edges
-        int threshold = 30;
-        return Math.Abs(color1.Red - color2.Red) < threshold &&
-               Math.Abs(color1.Green - color2.Green) < threshold &&
-               Math.Abs(color1.Blue - color2.Blue) < threshold;
+        // Reduced threshold for tighter edge detection (prevent bleeding)
+        return Math.Abs(color1.Red - color2.Red) < COLOR_MATCH_THRESHOLD &&
+               Math.Abs(color1.Green - color2.Green) < COLOR_MATCH_THRESHOLD &&
+               Math.Abs(color1.Blue - color2.Blue) < COLOR_MATCH_THRESHOLD;
+    }
+
+    private bool ColorsAreIdentical(SKColor color1, SKColor color2)
+    {
+        // Check if colors are exactly the same
+        return color1.Red == color2.Red &&
+               color1.Green == color2.Green &&
+               color1.Blue == color2.Blue &&
+               color1.Alpha == color2.Alpha;
     }
 
     private void OnColorSelected(SKColor color, Frame selectedFrame)

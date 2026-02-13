@@ -20,18 +20,104 @@ public partial class ColoringSelectionPage : ContentPage
         },
         new ColoringTemplate
         {
-            Id = "ski2",
-            Title = "Ski Template2",
-            ThumbnailPath = "coloringthumbnail1.png",
-            TemplatePath = "coloring/templates/coloringtemplate1.png"
+            Id = "ski",
+            Title = "Magkulay 1",
+            ThumbnailPath = "emptysketchsketch1.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht1.png"
         },
         new ColoringTemplate
         {
-            Id = "ski3",
-            Title = "Ski Template3",
-            ThumbnailPath = "coloringthumbnail1.png",
-            TemplatePath = "coloring/templates/coloringtemplate1.png"
+            Id = "magkulay2",
+            Title = "Magkulay 2",
+            ThumbnailPath = "emptysketchsketch2.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht2.png"
         },
+        new ColoringTemplate
+        {
+            Id = "magkulay3",
+            Title = "Magkulay 3",
+            ThumbnailPath = "emptysketchsketch3.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht3.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay4",
+            Title = "Magkulay 4",
+            ThumbnailPath = "emptysketchsketch4.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht4.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay5",
+            Title = "Magkulay 5",
+            ThumbnailPath = "emptysketchsketch5.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht5.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay6",
+            Title = "Magkulay 6",
+            ThumbnailPath = "emptysketchsketch6.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht6.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay7",
+            Title = "Magkulay 7",
+            ThumbnailPath = "emptysketchsketch7.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht7.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay8",
+            Title = "Magkulay 8",
+            ThumbnailPath = "emptysketchsketch8.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht8.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay9",
+            Title = "Magkulay 9",
+            ThumbnailPath = "emptysketchsketch9.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht9.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay10",
+            Title = "Magkulay 10",
+            ThumbnailPath = "emptysketchsketch10.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht10.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay11",
+            Title = "Magkulay 11",
+            ThumbnailPath = "emptysketchsketch11.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht11.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay12",
+            Title = "Magkulay 12",
+            ThumbnailPath = "emptysketchsketch12.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht12.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay13",
+            Title = "Magkulay 13",
+            ThumbnailPath = "emptysketchsketch13.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht13.png"
+        },
+        new ColoringTemplate
+        {
+            Id = "magkulay14",
+            Title = "Magkulay 14",
+            ThumbnailPath = "emptysketchsketch14.png",
+            TemplatePath = "coloring/templates/emptysketchsketcht14.png"
+        }
+
+
     };
 
     public ColoringSelectionPage()

@@ -103,7 +103,7 @@ namespace FilipinoFolkloreApp.Views
         {
             if (selected.IsPurchased && IsEquipped(selected))
             {
-                BuyButton.Text = "EQUIPPED";
+                BuyButton.Text = "NAKA-SUOT";
                 BuyButton.BackgroundColor = Colors.SeaGreen;
                 BuyButton.IsEnabled = false;
                 return;
@@ -111,13 +111,13 @@ namespace FilipinoFolkloreApp.Views
 
             if (selected.IsPurchased)
             {
-                BuyButton.Text = "SELECT";
+                BuyButton.Text = "PILIIN";
                 BuyButton.BackgroundColor = Colors.SeaGreen;
                 BuyButton.IsEnabled = true;
                 return;
             }
 
-            BuyButton.Text = $"{selected.Price} BUY";
+            BuyButton.Text = $"BILHIN {selected.Price}";
             BuyButton.BackgroundColor = Colors.DeepPink;
             BuyButton.IsEnabled = PilonStarNicholAmountValue >= selected.Price;
         }
@@ -171,11 +171,11 @@ namespace FilipinoFolkloreApp.Views
 
                 await ShowGameAlertAsync(
                     PilonStarNicholAmountValue,
-                    "Costume equipped!",
+                    "Naka-suot na ang tapis!",
                     "emoji_happy.png"
                 );
 
-                BuyButton.Text = "EQUIPPED";
+                BuyButton.Text = "NAKA-SUOT";
                 BuyButton.IsEnabled = false;
                 return;
             }
@@ -213,7 +213,7 @@ namespace FilipinoFolkloreApp.Views
 
             await ShowGameAlertAsync(
                 PilonStarNicholAmountValue,
-                "Unlocked!",
+                "Nabili!",
                 "emoji_happy.png"
             );
 
@@ -240,7 +240,7 @@ namespace FilipinoFolkloreApp.Views
 
             AlertAmountLabel.Text = PilonStarNicholAmountValue.ToString();
             if (string.IsNullOrWhiteSpace(message))
-                message = $"You don't have enough pilon star!";
+                message = $"Kulang ang iyong Pilon Star!";
 
             AlertMessageLabel.Text = message;
 

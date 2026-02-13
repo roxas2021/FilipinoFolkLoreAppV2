@@ -100,7 +100,7 @@
 
                 <Button Grid.Row="1"
                         x:Name="BuyButton"
-                        Text="EQUIPPED"
+                        Text="NAKA-SUOT"
                         FontSize="Large"
                         FontAttributes="Bold"
                         HorizontalOptions="Center"
@@ -232,7 +232,7 @@
 
                                             <!-- OWNED (shown when purchased) -->
                                             <Label x:Name="OwnedBadge"
-                                                   Text="OWNED"
+                                                   Text="NABILI"
                                                    FontSize="11"
                                                    TextColor="White"
                                                    FontAttributes="Bold"
@@ -331,7 +331,7 @@
                         </Grid>
 
                         <Label x:Name="AlertMessageLabel"
-                               Text="You don't have enough Pilon Star!"
+                               Text="Kulang ang iyong Pilon Star!"
                                FontSize="16"
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"
