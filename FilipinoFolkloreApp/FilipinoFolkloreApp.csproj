@@ -758,13 +758,4 @@
     <MauiImage Include="Resources\Images\storiesalamat\kungbakitmayulan\kungbakitmayulan9.png" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <MauiAsset Update="Resources\Raw\storiesalamat\juantamad\audio\juantamad_tarsier2.mp3">
-	    <CopyToOutputDirectory></CopyToOutputDirectory>
-	  </MauiAsset>
-	  <MauiAsset Update="Resources\Raw\storiesalamat\juantamad\audio\juantamad_tarsier1.mp3">
-	    <CopyToOutputDirectory></CopyToOutputDirectory>
-	  </MauiAsset>
-	</ItemGroup>
-
 </Project>
