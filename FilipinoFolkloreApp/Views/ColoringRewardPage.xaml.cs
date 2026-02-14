@@ -16,6 +16,9 @@ public partial class ColoringRewardPage : ContentPage
     private readonly object? _returnPageParameter;
     private bool _isLoading = true;
 
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
     public ColoringRewardPage(
         int stars = 20, 
         int medalId = 16, 
@@ -32,7 +35,8 @@ public partial class ColoringRewardPage : ContentPage
         _returnPageParameter = returnPageParameter;
         
         // Don't set text yet - wait for OnAppearing
-        RewardText.Text = "";
+        RewardLabel.Text = "";
+        RewardStarIcon.IsVisible = false;
         OkButton.IsEnabled = false; // Disable until loading completes
     }
 
@@ -79,13 +83,15 @@ public partial class ColoringRewardPage : ContentPage
 
         if (alreadyClaimed)
         {
-            RewardText.Text = "Reward already claimed";
+            RewardLabel.Text = "Reward already claimed";
+            RewardStarIcon.IsVisible = false;
             OkButton.Text = "Close";
         }
         else
         {
             // Show normal reward text
-            RewardText.Text = $"+{_stars} ?";
+            RewardLabel.Text = $"{_stars}";
+            RewardStarIcon.IsVisible = true;
             OkButton.Text = "OK";
         }
         
@@ -95,6 +101,8 @@ public partial class ColoringRewardPage : ContentPage
 
     private async void OnRewardOk(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         // Check if already claimed (double-check to prevent race conditions)
         bool alreadyClaimed = Preferences.Get(_rewardKey, false);
 

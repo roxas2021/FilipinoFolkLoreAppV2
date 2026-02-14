@@ -15,6 +15,9 @@ public partial class NarratorPage : ContentPage
     private HeartService HeartService =>
     Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
 
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
     class Card
     {
         public string Id { get; set; } = "";
@@ -82,6 +85,8 @@ public partial class NarratorPage : ContentPage
 
     async void OnNarratorTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         if (sender is not Grid g || g.BindingContext is not Card c) return;
 
         // Check narrator battery before proceeding
@@ -294,16 +299,19 @@ public partial class NarratorPage : ContentPage
 
     private async void OnAlertOkClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertYesClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertNoClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(false);
     }
 
@@ -314,12 +322,14 @@ public partial class NarratorPage : ContentPage
 
     async void OnBackTapped(object? s, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         if (Navigation.NavigationStack.Count > 1)
             await Navigation.PopAsync();
     }
 
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await NavigationHelper.NavigateToIndexPage(Navigation);
     }
 }

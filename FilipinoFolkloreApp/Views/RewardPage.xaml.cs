@@ -10,13 +10,17 @@ public partial class RewardPage : ContentPage
     private readonly int _stars;
     private readonly string? _storyId;
 
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
     public RewardPage(int stars, string? storyId = null)
     {
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
         _stars = stars;
         _storyId = storyId;
-        RewardText.Text = $"+{_stars} ⭐";
+        RewardLabel.Text = $"{_stars}";
+        RewardStarIcon.IsVisible = true;
         // Default text (will be updated in OnAppearing after DB sync)
     }
 
@@ -43,7 +47,8 @@ public partial class RewardPage : ContentPage
 
             if (story != null && story.IsRewardClaimed)
             {
-                RewardText.Text = "Reward already claimed";
+                RewardLabel.Text = "Reward already claimed";
+                RewardStarIcon.IsVisible = false;
                 OkButton.Text = "Close";
                 
                 // keep the button enabled so user can dismiss, but prevent awarding again
@@ -54,13 +59,16 @@ public partial class RewardPage : ContentPage
 
         // otherwise show the normal reward text
         
-        RewardText.Text = $"+{_stars} ⭐";
+        RewardLabel.Text = $"{_stars}";
+        RewardStarIcon.IsVisible = true;
         OkButton.Text = "OK";
         OkButton.IsEnabled = true;
     }
 
     async void OnRewardOk(object? s, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         // Ensure latest DB-state (again) to avoid race conditions
         try
         {
@@ -100,7 +108,7 @@ public partial class RewardPage : ContentPage
 
             if (story == null)
             {
-                AlamatContent.Stars += _stars;
+                AlamatContent.Stars = _stars;
                 rewardGiven = true;
             }
             else

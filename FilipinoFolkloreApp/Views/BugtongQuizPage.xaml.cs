@@ -20,6 +20,9 @@ namespace FilipinoFolkloreApp.Views
         private HeartService HeartService =>
             Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
 
+        private SoundService SoundService =>
+            Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
         public BugtongQuizPage(string bugtongId)
         {
             InitializeComponent();
@@ -139,6 +142,8 @@ namespace FilipinoFolkloreApp.Views
 
         private async Task HandlePickAsync(int idx)
         {
+            await SoundService.PlayButtonClickAsync();
+            
             if (_currentBugtong == null) return;
 
             // Check heart availability
@@ -290,6 +295,7 @@ namespace FilipinoFolkloreApp.Views
 
         private async void OnAlertRetryTapped(object? sender, TappedEventArgs e)
         {
+            await SoundService.PlayButtonClickAsync();
             await HideWrongModalAsync();
 
             // Clear answer boxes
@@ -310,6 +316,7 @@ namespace FilipinoFolkloreApp.Views
 
         private async void OnAlertCloseTapped(object? sender, TappedEventArgs e)
         {
+            await SoundService.PlayButtonClickAsync();
             await HideWrongModalAsync();
             await NavigateToBugtongList();
         }
@@ -324,28 +331,28 @@ namespace FilipinoFolkloreApp.Views
 
         private async void OnBackTapped(object? sender, TappedEventArgs e)
         {
+            await SoundService.PlayButtonClickAsync();
             await Navigation.PopAsync();
         }
 
         private async void OnHomeTapped(object? sender, TappedEventArgs e)
         {
+            await SoundService.PlayButtonClickAsync();
+            
             // Use NavigationHelper for safer navigation
             var pages = Navigation.NavigationStack.ToList();
             foreach (var page in pages)
             {
                 if (page is BugtongQuizPage)
                 {
-                    // Remove RewardPage from the stack
                     Navigation.RemovePage(page);
                 }
                 if (page is BugtongListPage)
                 {
-                    // Remove QuizPage from the stack
                     Navigation.RemovePage(page);
                 }
                 if (page is MgaLaroPage)
                 {
-                    // Remove QuizPage from the stack
                     Navigation.RemovePage(page);
                 }
             }

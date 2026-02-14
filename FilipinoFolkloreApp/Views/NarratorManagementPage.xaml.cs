@@ -11,6 +11,9 @@ public partial class NarratorManagementPage : ContentPage
 {
     private TaskCompletionSource<bool>? _alertTcs;
 
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
     class NarratorCard
     {
         public string Id { get; set; } = "";
@@ -86,6 +89,8 @@ public partial class NarratorManagementPage : ContentPage
 
     private async void OnNarratorTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         if (sender is Grid grid && grid.BindingContext is NarratorCard card)
         {
             if (!card.IsLocked)
@@ -272,16 +277,19 @@ public partial class NarratorManagementPage : ContentPage
 
     private async void OnAlertOkClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertYesClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertNoClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(false);
     }
 
@@ -292,26 +300,27 @@ public partial class NarratorManagementPage : ContentPage
 
     private async void OnBackTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PopAsync();
     }
+    
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {
             if (page is NarratorManagementPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is NarratorDetailPage)
             {
-                // Remove QuizPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is MgaLaroPage)
             {
-                // Remove QuizPage from the stack
                 Navigation.RemovePage(page);
             }
         }

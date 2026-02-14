@@ -8,16 +8,12 @@ namespace FilipinoFolkloreApp.Views;
 
 public partial class ColoringSelectionPage : ContentPage
 {
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
     // Hardcoded list of coloring templates
     private readonly List<ColoringTemplate> _coloringTemplates = new()
     {
-        new ColoringTemplate
-        {
-            Id = "ski",
-            Title = "Ski Template",
-            ThumbnailPath = "coloringthumbnail1.png",
-            TemplatePath = "coloring/templates/coloringtemplate1.png"
-        },
         new ColoringTemplate
         {
             Id = "ski",
@@ -116,8 +112,6 @@ public partial class ColoringSelectionPage : ContentPage
             ThumbnailPath = "emptysketchsketch14.png",
             TemplatePath = "coloring/templates/emptysketchsketcht14.png"
         }
-
-
     };
 
     public ColoringSelectionPage()
@@ -267,42 +261,43 @@ public partial class ColoringSelectionPage : ContentPage
 
     private async void OnColoringTemplateTapped(ColoringTemplate template)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new ColoringPage(template.TemplatePath));
     }
 
     private async void OnCollectionTapped(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new ColoringCollectionPage());
     }
 
     private async void OnBackTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PopAsync();
     }
 
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {
             if (page is ColoringSelectionPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is ColoringCollectionPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is ColoringPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is MgaLaroPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
         }

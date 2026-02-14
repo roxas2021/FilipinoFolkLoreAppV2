@@ -7,6 +7,9 @@ public partial class IndexPage : ContentPage
     private HeartService HeartService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
     
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+    
     public IndexPage()
     {
         InitializeComponent();
@@ -57,40 +60,49 @@ public partial class IndexPage : ContentPage
     
     private async void OnAvatarTapped(object sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new CharacterCostume());
     }
     
     private async void OnAlamatClicked(object sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new AlamatPage("alamat"));
     }
     
     private async void OnEpikoClicked(object sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new AlamatPage("epiko"));
     }
     
     private async void OnPabulaClicked(object sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new AlamatPage("pabula"));
     }
     
     private async void OnMedalyaClicked(object sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new MedalPage());
     }
+    
     private async void OnMgaLaroClicked(object sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new MgaLaroPage());
     }
 
-    private void OnSettingsClicked(object sender, EventArgs e)
+    private async void OnSettingsClicked(object sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         SettingsModalOverlay.IsVisible = true;
     }
     
-    private void OnCloseSettingsModal(object sender, EventArgs e)
+    private async void OnCloseSettingsModal(object sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         SettingsModalOverlay.IsVisible = false;
     }
     
@@ -101,6 +113,7 @@ public partial class IndexPage : ContentPage
             app.UpdateBackgroundMusic(e.Value);
         }
     }
+    
     private void OnBackgroundVolumeChanged(object sender, ValueChangedEventArgs e)
     {
         int volumePercent = (int)e.NewValue;
@@ -114,14 +127,18 @@ public partial class IndexPage : ContentPage
             app.SetBackgroundMusicVolume(volumeValue);
         }
     }
+    
     private async void OnKreditsClicked(object sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         // Close the settings modal first
         SettingsModalOverlay.IsVisible = false;
 
         // Navigate to Credits page
         await Navigation.PushAsync(new CreditsPage());
     }
+    
     private void OnVolumeChanged(object sender, ValueChangedEventArgs e)
     {
         // Update the volume label
@@ -135,6 +152,7 @@ public partial class IndexPage : ContentPage
         // Store in AlamatContent for easy access
         AlamatContent.NarratorVolume = volumeValue;
     }
+    
     private void OnNarratorVolumeChanged(object sender, ValueChangedEventArgs e)
     {
         // Update the volume label
@@ -148,9 +166,9 @@ public partial class IndexPage : ContentPage
         // Store in AlamatContent for easy access
         AlamatContent.NarratorVolume = volumeValue;
     }
+    
     private void LoadSettings()
     {
-        
         double savedBackgroundVolume = Preferences.Get("BackgroundMusicVolume", 0.3);
         BackgroundVolumeSlider.ValueChanged -= OnBackgroundVolumeChanged;
         BackgroundVolumeSlider.Value = savedBackgroundVolume * 100;

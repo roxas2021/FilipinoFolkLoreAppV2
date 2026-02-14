@@ -15,6 +15,9 @@ public partial class ColoringCollectionPage : ContentPage
     private List<ColoredImageInfo> _coloredImages = new();
     private TaskCompletionSource<bool>? _alertTcs;
 
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
     public ColoringCollectionPage()
     {
         InitializeComponent();
@@ -210,8 +213,9 @@ public partial class ColoringCollectionPage : ContentPage
         ImagePreviewOverlay.IsVisible = true;
     }
 
-    private void OnClosePreview(object? sender, EventArgs e)
+    private async void OnClosePreview(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         ImagePreviewOverlay.IsVisible = false;
     }
 
@@ -366,16 +370,19 @@ public partial class ColoringCollectionPage : ContentPage
 
     private async void OnAlertOkClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertYesClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertNoClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(false);
     }
 
@@ -386,11 +393,14 @@ public partial class ColoringCollectionPage : ContentPage
 
     private async void OnBackTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PopAsync();
     }
 
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {

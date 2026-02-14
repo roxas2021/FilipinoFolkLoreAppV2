@@ -6,6 +6,9 @@ namespace FilipinoFolkloreApp.Views;
 
 public partial class MgaLaroPage : ContentPage
 {
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
     public MgaLaroPage()
     {
         InitializeComponent();
@@ -46,28 +49,32 @@ public partial class MgaLaroPage : ContentPage
 
     private async void OnNarratorTreeTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new NarratorManagementPage());
     }
 
     private async void OnBugtongTapped(object? sender, EventArgs e)
     {
-         await Navigation.PushAsync(new BugtongListPage());
-        //await DisplayAlert("Bugtong", "Ang Bugtong page ay wala pa. Gagawin pa ito!", "OK");
+        await SoundService.PlayButtonClickAsync();
+        await Navigation.PushAsync(new BugtongListPage());
     }
 
     private async void OnMagpintaTapped(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         // Navigate to Coloring Selection page
         await Navigation.PushAsync(new ColoringSelectionPage());
     }
 
     private async void OnBackTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PopAsync();
     }
 
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await NavigationHelper.NavigateToIndexPage(Navigation);
     }
 }

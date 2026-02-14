@@ -14,6 +14,9 @@ public partial class BugtongListPage : ContentPage
     private HeartService HeartService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
 
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
     public BugtongListPage()
     {
         InitializeComponent();
@@ -86,34 +89,37 @@ public partial class BugtongListPage : ContentPage
 
     private async void OnBugtongTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         if (e.Parameter is string bugtongId)
         {
             await Navigation.PushAsync(new BugtongQuizPage(bugtongId));
         }
     }
+    
     private async void OnBackTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PopAsync();
     }
 
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {
             if (page is BugtongQuizPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is BugtongListPage)
             {
-                // Remove QuizPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is MgaLaroPage)
             {
-                // Remove QuizPage from the stack
                 Navigation.RemovePage(page);
             }
         }

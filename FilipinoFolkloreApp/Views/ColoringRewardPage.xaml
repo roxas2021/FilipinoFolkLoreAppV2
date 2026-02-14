@@ -14,13 +14,20 @@
                 <Image x:Name="MedalImage" 
                        Source="ui/badge.png" 
                        HeightRequest="150"/>
-                <Label x:Name="RewardText" 
-                       Text="+20 ⭐" 
-                       FontAttributes="Bold" 
-                       FontSize="28" 
-                       TextColor="White" 
-                       HorizontalTextAlignment="Center"/>
-                
+                <HorizontalStackLayout x:Name="RewardText" HorizontalOptions="Center" Spacing="8">
+                    <Label x:Name="RewardLabel" 
+                           Text="20" 
+                           FontAttributes="Bold" 
+                           FontSize="28" 
+                           TextColor="White" 
+                           VerticalOptions="Center"/>
+                    <Image x:Name="RewardStarIcon" 
+                           Source="icon_star_yellow.png" 
+                           HeightRequest="28" 
+                           WidthRequest="28" 
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
                 <Button x:Name="OkButton" 
                         Text="OK" 
                         Clicked="OnRewardOk"/>

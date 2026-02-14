@@ -23,6 +23,7 @@ namespace FilipinoFolkloreApp
 
             builder.Services.AddSingleton(AudioManager.Current);
             builder.Services.AddSingleton<HeartService>();
+            builder.Services.AddSingleton<SoundService>();
             // other configuration (services, handlers) here
 
             return builder.Build();

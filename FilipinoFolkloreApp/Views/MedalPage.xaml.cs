@@ -10,6 +10,10 @@ public partial class MedalPage : ContentPage
 {
     private HeartService HeartService =>
     Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
+
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
     public ObservableCollection<Medals> Medals { get; set; } = new();
     private bool _medalsLoaded = false;
 
@@ -69,6 +73,8 @@ public partial class MedalPage : ContentPage
         if (sender is not Grid g || g.BindingContext is not Medals medal) return;
         if (medal.isUnlocked == false) return;
 
+        await SoundService.PlayButtonClickAsync();
+
         // Navigate to medal detail page
         await Navigation.PushAsync(new MedalDetailPage(medal));
     }
@@ -77,6 +83,7 @@ public partial class MedalPage : ContentPage
     {
         if (medal.isUnlocked)
         {
+            await SoundService.PlayButtonClickAsync();
             await Navigation.PushAsync(new MedalDetailPage(medal));
         }
     });
@@ -106,6 +113,7 @@ public partial class MedalPage : ContentPage
     
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PopAsync();
     }
 }

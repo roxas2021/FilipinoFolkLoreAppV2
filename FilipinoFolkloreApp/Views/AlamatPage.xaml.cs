@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,6 +12,10 @@ public partial class AlamatPage : ContentPage
 {
     private HeartService HeartService =>
     Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
+    
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+    
     private TaskCompletionSource<bool>? _alertTcs;
 
     public class StoryCard
@@ -75,16 +78,15 @@ public partial class AlamatPage : ContentPage
     }
     async void OnBackTapped(object? s, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         if (Navigation.NavigationStack.Count > 1)
-            await Navigation.PopAsync(); ;
+            await Navigation.PopAsync();
     }
 
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
-
-
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PushAsync(new IndexPage());
-
     }
 
     void LoadStories()
@@ -107,6 +109,8 @@ public partial class AlamatPage : ContentPage
     }
     async void OnStoryTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         if (sender is not Grid g || g.BindingContext is not StoryCard card) return;
 
         var story = AlamatContent.GetStory(card.Id);
@@ -260,16 +264,19 @@ public partial class AlamatPage : ContentPage
 
     private async void OnAlertOkClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertYesClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertNoClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(false);
     }
 

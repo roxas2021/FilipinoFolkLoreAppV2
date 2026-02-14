@@ -40,7 +40,10 @@ public partial class ColoringPage : ContentPage
     // Flood fill safety limits
     private const int MAX_PIXELS_TO_FILL = 500000; // Maximum pixels per flood fill operation
     private const int COLOR_MATCH_THRESHOLD = 15; // Reduced from 30 for tighter edge detection
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
+    private record ColorInfo(string Name, SKColor SkColor);
     // Filipino color palette
     private readonly List<ColorInfo> _colors = new()
     {
@@ -530,6 +533,8 @@ public partial class ColoringPage : ContentPage
 
     private async void OnSaveClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+
         if (_coloringBitmap == null)
         {
             await ShowGameAlertAsync("Walang larawan na i-save", false);
@@ -687,16 +692,19 @@ public partial class ColoringPage : ContentPage
 
     private async void OnAlertOkClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertYesClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(true);
     }
 
     private async void OnAlertNoClicked(object? sender, EventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideGameAlertAsync(false);
     }
 
@@ -707,11 +715,14 @@ public partial class ColoringPage : ContentPage
 
     private async void OnBackTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await Navigation.PopAsync();
     }
 
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {
@@ -741,5 +752,5 @@ public partial class ColoringPage : ContentPage
         await Navigation.PushAsync(new IndexPage());
     }
 
-    private record ColorInfo(string Name, SKColor SkColor);
+    
 }

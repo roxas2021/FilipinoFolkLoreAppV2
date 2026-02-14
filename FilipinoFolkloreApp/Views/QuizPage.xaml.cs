@@ -20,6 +20,9 @@ public partial class QuizPage : ContentPage
     private HeartService HeartService =>
     Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
 
+    private SoundService SoundService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
 
     public QuizPage(string storyId)
     {
@@ -104,6 +107,8 @@ public partial class QuizPage : ContentPage
 
     async Task HandlePickAsync(int idx)
     {
+        await SoundService.PlayButtonClickAsync();
+        
         // ?? Guard: no hearts left
         if (HeartService.GetHearts() <= 0)
         {
@@ -223,12 +228,14 @@ public partial class QuizPage : ContentPage
 
     async void OnAlertReplayTapped(object? s, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         await HideWrongModalAsync();
         await Navigation.PushAsync(new StoryPage(_storyId));
     }
 
     async void OnAlertCloseTapped(object? s, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         _cts?.Cancel();
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
@@ -300,6 +307,7 @@ public partial class QuizPage : ContentPage
     // ---------- Header actions ----------
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
+        await SoundService.PlayButtonClickAsync();
         _cts?.Cancel();
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)

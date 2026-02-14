@@ -21,6 +21,9 @@ namespace FilipinoFolkloreApp.Views
 
         public List<TapisItem> TapisItems { get; set; }
 
+        private SoundService SoundService =>
+            Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
         public CharacterCostume()
         {
             InitializeComponent();
@@ -85,6 +88,8 @@ namespace FilipinoFolkloreApp.Views
 
         private async void OnTapisSelected(object sender, SelectionChangedEventArgs e)
         {
+            await SoundService.PlayButtonClickAsync();
+            
             var selected = e.CurrentSelection.FirstOrDefault() as TapisItem;
             if (selected == null) return;
 
@@ -159,6 +164,8 @@ namespace FilipinoFolkloreApp.Views
 
         private async void OnBuyButtonClicked(object sender, EventArgs e)
         {
+            await SoundService.PlayButtonClickAsync();
+            
             if (selectedCostumeId == 0) return;
 
             var selected = TapisItems[selectedCostumeId - 1];
@@ -224,9 +231,10 @@ namespace FilipinoFolkloreApp.Views
 
 
 
-        private void OnHomeButtonClicked(object sender, EventArgs e)
+        private async void OnHomeButtonClicked(object sender, EventArgs e)
         {
-            Navigation.PopAsync();
+            await SoundService.PlayButtonClickAsync();
+            await Navigation.PopAsync();
         }
 
         public Task ShowGameAlertAsync(int amount, string message = null, string emojiSource = "emoji_sad.png")
@@ -284,6 +292,7 @@ namespace FilipinoFolkloreApp.Views
 
         private async void OnAlertOkClicked(object sender, EventArgs e)
         {
+            await SoundService.PlayButtonClickAsync();
             await HideGameAlertAsync(true);
         }
 
