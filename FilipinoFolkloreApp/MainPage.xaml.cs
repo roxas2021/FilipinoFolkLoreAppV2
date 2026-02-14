@@ -57,9 +57,13 @@ namespace FilipinoFolkloreApp
                         Navigation.RemovePage(this);
                     }
                 }
+                else if (letter == "erase")
+                {
+                    OutputEntry.Text = string.Empty;
+                }
                 else
                 {
-                    OutputEntry.Text += letter;
+                    OutputEntry.Text += letter.ToUpper();
                 }
             }
         }

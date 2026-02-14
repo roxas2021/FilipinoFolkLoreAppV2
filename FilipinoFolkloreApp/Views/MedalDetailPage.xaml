@@ -104,7 +104,7 @@
             <Grid RowDefinitions="Auto,*">
                 <!-- Header -->
                 <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                    <Label Text="Medal Details"
+                    <Label Text="Detalye ng Medalya"
                            FontSize="24"
                            FontAttributes="Bold"
                            TextColor="#333"

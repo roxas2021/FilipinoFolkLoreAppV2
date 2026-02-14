@@ -114,6 +114,14 @@ public partial class IndexPage : ContentPage
             app.SetBackgroundMusicVolume(volumeValue);
         }
     }
+    private async void OnKreditsClicked(object sender, EventArgs e)
+    {
+        // Close the settings modal first
+        SettingsModalOverlay.IsVisible = false;
+
+        // Navigate to Credits page
+        await Navigation.PushAsync(new CreditsPage());
+    }
     private void OnVolumeChanged(object sender, ValueChangedEventArgs e)
     {
         // Update the volume label

@@ -156,6 +156,7 @@
 	  <None Remove="Resources\Images\elements\pause.png" />
 	  <None Remove="Resources\Images\elements\play.png" />
 	  <None Remove="Resources\Images\elements\prev.png" />
+	  <None Remove="Resources\Images\keys\erase.png" />
 	  <None Remove="Resources\Images\medals\basa.png" />
 	  <None Remove="Resources\Images\medals\harireyna.png" />
 	  <None Remove="Resources\Images\medals\kaibigankwento.png" />
@@ -419,6 +420,9 @@
 	  <MauiXaml Update="Views\ColoringSelectionPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\CreditsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Home\IndexPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -534,6 +538,7 @@
 	  <MauiImage Include="Resources\Images\keys\c.png" />
 	  <MauiImage Include="Resources\Images\keys\d.png" />
 	  <MauiImage Include="Resources\Images\keys\e.png" />
+	  <MauiImage Include="Resources\Images\keys\erase.png" />
 	  <MauiImage Include="Resources\Images\keys\f.png" />
 	  <MauiImage Include="Resources\Images\keys\g.png" />
 	  <MauiImage Include="Resources\Images\keys\h.png" />
