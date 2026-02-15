@@ -11,7 +11,6 @@ namespace FilipinoFolkloreApp.Models
         public string Answer { get; set; } = string.Empty;
         public List<string> Choices { get; set; } = new();
         public int RewardStars { get; set; } = 10;
-        public int? MedalId { get; set; } // Nullable - only some bugtongs have medals
         public bool IsAvailable { get; set; } = true;
     }
 
@@ -27,5 +26,16 @@ namespace FilipinoFolkloreApp.Models
         public bool IsCompleted { get; set; } = false;
         public bool IsRewardClaimed { get; set; } = false;
         public DateTime? CompletedDate { get; set; }
+    }
+
+    /// <summary>
+    /// Milestone rewards for bugtong achievements
+    /// </summary>
+    public class BugtongMilestone
+    {
+        public int RequiredCorrect { get; set; }
+        public int RewardStars { get; set; }
+        public int MedalId { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 }

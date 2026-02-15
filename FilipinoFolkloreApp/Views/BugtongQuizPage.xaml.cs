@@ -16,6 +16,7 @@ namespace FilipinoFolkloreApp.Views
         private Bugtong? _currentBugtong;
         private int _correctIndex = 0;
         private List<string> _shuffledChoices = new();
+        private BugtongMilestone? _pendingMilestone = null;
 
         private HeartService HeartService =>
             Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
@@ -216,30 +217,103 @@ namespace FilipinoFolkloreApp.Views
             var reward = _currentBugtong.RewardStars;
             var isCompleted = await App.Database.IsBugtongCompletedAsync(_bugtongId);
 
+            BugtongMilestone? milestone = null;
+            bool hasMilestone = false;
+
             if (!isCompleted)
             {
                 await App.Database.SetBugtongCompletedAsync(_bugtongId);
                 await App.Database.SetStarsAsync(CharacterHelper.CurrentStars + reward);
                 CharacterHelper.CurrentStars += reward;
                 RefreshStars();
+
+                // Check for milestone achievements
+                var totalCompleted = await GetTotalCompletedBugtongsAsync();
+                milestone = BugtongService.GetAchievedMilestone(totalCompleted);
+
+                if (milestone != null)
+                {
+                    // Check if milestone reward was already claimed
+                    string milestoneKey = $"Bugtong_Milestone_{milestone.RequiredCorrect}";
+                    bool alreadyClaimed = Preferences.Get(milestoneKey, false);
+
+                    if (!alreadyClaimed)
+                    {
+                        // DON'T mark as claimed here - let ColoringRewardPage handle it
+                        // DON'T award milestone stars here - let ColoringRewardPage handle it
+                        // Preferences.Set(milestoneKey, true); // REMOVE THIS
+                        // await App.Database.SetStarsAsync(...); // REMOVE THIS
+                        // CharacterHelper.CurrentStars += milestone.RewardStars; // REMOVE THIS
+
+                        // Unlock milestone medal (this is fine to do here)
+                        await App.Database.UnlockMedalAsync(milestone.MedalId);
+
+                        hasMilestone = true;
+                        _pendingMilestone = milestone;
+                    }
+                }
             }
 
-            // Check if bugtong has a medal
-            if (_currentBugtong.MedalId.HasValue)
+            // Show success overlay (will handle milestone navigation when dismissed)
+            await ShowSuccessOverlayAsync(reward);
+        }
+
+        private async Task<int> GetTotalCompletedBugtongsAsync()
+        {
+            int count = 0;
+            foreach (var bugtong in BugtongService.Bugtongs)
             {
-                await Navigation.PushAsync(new ColoringRewardPage(
-                    stars: reward,
-                    medalId: _currentBugtong.MedalId.Value,
-                    rewardKey: $"Bugtong_{_bugtongId}_RewardClaimed",
-                    returnPageType: "BugtongList",
-                    returnPageParameter: null
-                ));
+                if (await App.Database.IsBugtongCompletedAsync(bugtong.Id))
+                {
+                    count++;
+                }
             }
-            else
+            return count;
+        }
+
+        private async Task ShowSuccessOverlayAsync(int stars)
+        {
+            // Reuse the existing GameAlertOverlay for success message
+            AlertNarrator.Source = AlamatContent.CurrentNarrator.Avatar;
+            
+            // Hide title and retry button, show OK button
+            AlertTitleLabel.IsVisible = false;
+            AlertRetryButton.IsVisible = false;
+            AlertOkButton.IsVisible = true;
+            
+            // Clear the hearts panel and show success message
+            AlertHeartsPanel.Children.Clear();
+            
+            var successLabel = new Label
             {
-                await DisplayAlert("Tama!", $"Nakakuha ka ng {reward} ⭐", "OK");
-                await NavigateToBugtongList();
-            }
+                Text = $"Tama ang sagot +{stars}",
+                FontSize = 24,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Color.FromArgb("#0000FF"),
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center
+            };
+            AlertHeartsPanel.Children.Add(successLabel);
+
+            GameAlertOverlay.IsVisible = true;
+            GameAlertOverlay.InputTransparent = false;
+            GameAlertOverlay.Opacity = 0;
+            GameAlertCard.Scale = 0.96;
+
+            await Task.WhenAll(
+                GameAlertOverlay.FadeTo(1, 180, Easing.CubicOut),
+                GameAlertCard.ScaleTo(1.0, 180, Easing.CubicOut)
+            );
+        }
+
+        private async Task HideSuccessOverlayAsync()
+        {
+            await Task.WhenAll(
+                GameAlertOverlay.FadeTo(0, 80, Easing.CubicIn),
+                GameAlertCard.ScaleTo(0.96, 80, Easing.CubicIn)
+            );
+            GameAlertOverlay.IsVisible = false;
+            GameAlertOverlay.InputTransparent = true;
         }
 
         private async Task HandleWrongAsync()
@@ -253,6 +327,11 @@ namespace FilipinoFolkloreApp.Views
         private async Task ShowWrongModalAsync()
         {
             AlertNarrator.Source = AlamatContent.CurrentNarrator.Avatar;
+
+            // Show title and retry button, hide OK button
+            AlertTitleLabel.IsVisible = true;
+            AlertRetryButton.IsVisible = true;
+            AlertOkButton.IsVisible = false;
 
             AlertHeartsPanel.Children.Clear();
             for (int i = 0; i < AlamatContent.Hearts; i++)
@@ -314,11 +393,52 @@ namespace FilipinoFolkloreApp.Views
             }
         }
 
+        private async void OnAlertOkTapped(object? sender, TappedEventArgs e)
+        {
+            await OnAlertOkTappedAsync();
+        }
+
+        private async Task OnAlertOkTappedAsync()
+        {
+            await SoundService.PlayButtonClickAsync();
+            await HideSuccessOverlayAsync();
+
+            // Check if there's a pending milestone to show
+            if (_pendingMilestone != null)
+            {
+                var milestone = _pendingMilestone;
+                _pendingMilestone = null;
+
+                string milestoneKey = $"Bugtong_Milestone_{milestone.RequiredCorrect}";
+                await Navigation.PushAsync(new ColoringRewardPage(
+                    stars: milestone.RewardStars,
+                    medalId: milestone.MedalId,
+                    rewardKey: milestoneKey,
+                    returnPageType: "BugtongList",
+                    returnPageParameter: null
+                ));
+            }
+            else
+            {
+                // No milestone, just go back to list
+                await NavigateToBugtongList();
+            }
+        }
+
         private async void OnAlertCloseTapped(object? sender, TappedEventArgs e)
         {
             await SoundService.PlayButtonClickAsync();
-            await HideWrongModalAsync();
-            await NavigateToBugtongList();
+
+            // Check which overlay is showing
+            if (AlertOkButton.IsVisible) // Success overlay
+            {
+                await OnAlertOkTappedAsync();
+            }
+            else // Wrong answer overlay
+            {
+                await HideWrongModalAsync();
+                await NavigateToBugtongList();
+            }
         }
 
         private async Task NavigateToBugtongList()

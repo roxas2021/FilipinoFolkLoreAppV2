@@ -34,16 +34,18 @@ public partial class ColoringPage : ContentPage
     private float _previousPinchDistance = 0f;
     private SKPoint _pinchCenter = SKPoint.Empty;
 
-    // Track if this is the first image saved
-    private const string FIRST_IMAGE_SAVED_KEY = "FirstColoredImageSaved";
+    // Track coloring completions
+    private const string COLORING_COUNT_KEY = "ColoringCompletedCount";
 
     // Flood fill safety limits
-    private const int MAX_PIXELS_TO_FILL = 500000; // Maximum pixels per flood fill operation
-    private const int COLOR_MATCH_THRESHOLD = 15; // Reduced from 30 for tighter edge detection
+    private const int MAX_PIXELS_TO_FILL = 500000;
+    private const int COLOR_MATCH_THRESHOLD = 15;
+    
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
     private record ColorInfo(string Name, SKColor SkColor);
+    
     // Filipino color palette
     private readonly List<ColorInfo> _colors = new()
     {
@@ -62,6 +64,40 @@ public partial class ColoringPage : ContentPage
         new ColorInfo("Abo", SKColors.Gray),
         new ColorInfo("Tsokolate", new SKColor(101, 67, 33)),
         new ColorInfo("Luntiang-Dahon", new SKColor(34, 139, 34))
+    };
+
+    // Coloring milestones
+    private class ColoringMilestone
+    {
+        public int RequiredCount { get; set; }
+        public int RewardStars { get; set; }
+        public int MedalId { get; set; }
+        public string Description { get; set; } = string.Empty;
+    }
+
+    private readonly List<ColoringMilestone> _milestones = new()
+    {
+        new ColoringMilestone
+        {
+            RequiredCount = 5,
+            RewardStars = 50,
+            MedalId = 20,
+            Description = "Nakumpleto ang 5 coloring activity!"
+        },
+        new ColoringMilestone
+        {
+            RequiredCount = 10,
+            RewardStars = 75,
+            MedalId = 21,
+            Description = "Nakumpleto ang 10 coloring activity!"
+        },
+        new ColoringMilestone
+        {
+            RequiredCount = 15,
+            RewardStars = 100,
+            MedalId = 22,
+            Description = "Nakumpleto ang lahat ng coloring activity!"
+        }
     };
 
     public ColoringPage(string templateImagePath)
@@ -167,7 +203,7 @@ public partial class ColoringPage : ContentPage
 
             using (var canvas = new SKCanvas(_coloringBitmap))
             {
-                canvas.Clear(SKColors.White); // Ensure white background
+                canvas.Clear(SKColors.White);
                 canvas.DrawBitmap(originalBitmap, 0, 0);
             }
 
@@ -208,7 +244,7 @@ public partial class ColoringPage : ContentPage
             {
                 float scaleX = (float)info.Width / _coloringBitmap.Width;
                 float scaleY = (float)info.Height / _coloringBitmap.Height;
-                _baseScale = Math.Min(scaleX, scaleY) * 0.9f; // 90% to add padding
+                _baseScale = Math.Min(scaleX, scaleY) * 0.9f;
                 _currentScale = _baseScale;
             }
 
@@ -240,7 +276,6 @@ public partial class ColoringPage : ContentPage
             case SKTouchAction.Pressed:
                 _touchPoints[e.Id] = e.Location;
 
-                // Single touch - potential tap for coloring
                 if (_touchPoints.Count == 1)
                 {
                     _lastPanPoint = e.Location;
@@ -248,11 +283,10 @@ public partial class ColoringPage : ContentPage
                 }
                 else if (_touchPoints.Count == 2)
                 {
-                    // Initialize pinch gesture
                     var points = new List<SKPoint>(_touchPoints.Values);
                     _previousPinchDistance = SKPoint.Distance(points[0], points[1]);
                     _pinchCenter = new SKPoint((points[0].X + points[1].X) / 2, (points[0].Y + points[1].Y) / 2);
-                    _isPanning = true; // Prevent tap action during pinch
+                    _isPanning = true;
                 }
                 break;
 
@@ -261,28 +295,23 @@ public partial class ColoringPage : ContentPage
 
                 if (_touchPoints.Count == 1)
                 {
-                    // Single finger pan
                     HandlePan(e.Location);
                 }
                 else if (_touchPoints.Count == 2)
                 {
-                    // Two finger pinch zoom
                     HandlePinchZoom();
                 }
                 break;
 
             case SKTouchAction.Released:
-                // Check if it was a tap (not a pan) and single touch
                 if (!_isPanning && _touchPoints.Count == 1 && _coloringBitmap != null)
                 {
-                    // Convert screen coordinates to bitmap coordinates
                     int x = (int)((e.Location.X - _offset.X) / _currentScale);
                     int y = (int)((e.Location.Y - _offset.Y) / _currentScale);
 
                     System.Diagnostics.Debug.WriteLine($"Touch at screen ({e.Location.X}, {e.Location.Y}) -> bitmap ({x}, {y})");
                     System.Diagnostics.Debug.WriteLine($"Selected color: {_selectedColor}");
 
-                    // Perform flood fill asynchronously to prevent UI blocking
                     _ = FloodFillAsync(x, y, _selectedColor);
                 }
 
@@ -295,7 +324,6 @@ public partial class ColoringPage : ContentPage
                 }
                 else if (_touchPoints.Count == 1)
                 {
-                    // Reset to single touch mode
                     _previousPinchDistance = 0f;
                     var remainingPoint = _touchPoints.Values.First();
                     _lastPanPoint = remainingPoint;
@@ -560,26 +588,43 @@ public partial class ColoringPage : ContentPage
                 _coloringBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
 
-            // Check if this is the first image saved
-            bool isFirstImage = !Preferences.Get(FIRST_IMAGE_SAVED_KEY, false);
+            // Increment coloring count
+            int currentCount = Preferences.Get(COLORING_COUNT_KEY, 0);
+            currentCount++;
+            Preferences.Set(COLORING_COUNT_KEY, currentCount);
 
-            if (isFirstImage)
+            // Check for milestone achievements
+            var milestone = _milestones.FirstOrDefault(m => m.RequiredCount == currentCount);
+
+            if (milestone != null)
             {
-                // Mark that first image has been saved
-                Preferences.Set(FIRST_IMAGE_SAVED_KEY, true);
+                // Check if milestone reward was already claimed
+                string milestoneKey = $"Coloring_Milestone_{milestone.RequiredCount}";
+                bool alreadyClaimed = Preferences.Get(milestoneKey, false);
 
-                // Show success message first
-                await ShowGameAlertAsync($"Tagumpay na na-save ang larawan", false);
+                if (!alreadyClaimed)
+                {
+                    // Unlock milestone medal
+                    await App.Database.UnlockMedalAsync(milestone.MedalId);
 
-                // Navigate to ColoringRewardPage
-                await Navigation.PushAsync(new ColoringRewardPage(20, 21));
+                    // Show success message first
+                    await ShowGameAlertAsync($"Tagumpay na na-save ang larawan", false);
+
+                    // Navigate to ColoringRewardPage for milestone
+                    await Navigation.PushAsync(new ColoringRewardPage(
+                        stars: milestone.RewardStars,
+                        medalId: milestone.MedalId,
+                        rewardKey: milestoneKey,
+                        returnPageType: "ColoringSelection",
+                        returnPageParameter: null
+                    ));
+                    return;
+                }
             }
-            else
-            {
-                // Show normal success message
-                await ShowGameAlertAsync($"Tagumpay na na-save ang larawan", false);
-                await Navigation.PopAsync();
-            }
+
+            // No milestone - show normal success message
+            await ShowGameAlertAsync($"Tagumpay na na-save ang larawan", false);
+            await Navigation.PopAsync();
         }
         catch (Exception ex)
         {
@@ -592,7 +637,6 @@ public partial class ColoringPage : ContentPage
         }
     }
 
-    // Custom Game Alert with Yes/No or OK buttons
     private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
     {
         if (GameAlertOverlay.IsVisible && _alertTcs != null)
@@ -600,15 +644,12 @@ public partial class ColoringPage : ContentPage
 
         _alertTcs = new TaskCompletionSource<bool>();
 
-        // Set message
         AlertMessageLabel.Text = message;
 
-        // Clear existing buttons
         AlertButtonsPanel.Children.Clear();
 
         if (showYesNo)
         {
-            // Add Yes button
             var yesButton = new Button
             {
                 Text = "Oo",
@@ -622,7 +663,6 @@ public partial class ColoringPage : ContentPage
             yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
             AlertButtonsPanel.Children.Add(yesButton);
 
-            // Add No button
             var noButton = new Button
             {
                 Text = "Hindi",
@@ -638,7 +678,6 @@ public partial class ColoringPage : ContentPage
         }
         else
         {
-            // Add OK button
             var okButton = new Button
             {
                 Text = "OK",
@@ -728,29 +767,22 @@ public partial class ColoringPage : ContentPage
         {
             if (page is ColoringSelectionPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is ColoringCollectionPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is ColoringPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is MgaLaroPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
-
         }
 
         await Navigation.PushAsync(new IndexPage());
     }
-
-    
 }

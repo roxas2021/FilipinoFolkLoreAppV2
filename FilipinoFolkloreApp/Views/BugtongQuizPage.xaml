@@ -178,10 +178,9 @@
                   HorizontalOptions="Center"
                   VerticalOptions="Center">
 
-                <!-- Choice 0: transparent white -->
+                <!-- Choice 0 -->
                 <Border x:Name="Choice0Border"
                         BackgroundColor="#ADD8E6"
-                        
                         StrokeThickness="0"
                         Padding="16,12"
                         HorizontalOptions="Center"
@@ -203,7 +202,7 @@
                     </Label>
                 </Border>
 
-                <!-- Choice 1: transparent red -->
+                <!-- Choice 1 -->
                 <Border Grid.Column="1"
                         x:Name="Choice1Border"
                         BackgroundColor="#ADD8E6"
@@ -228,7 +227,7 @@
                     </Label>
                 </Border>
 
-                <!-- Choice 2: transparent yellow -->
+                <!-- Choice 2 -->
                 <Border Grid.Column="2"
                         x:Name="Choice2Border"
                         BackgroundColor="#ADD8E6"
@@ -280,25 +279,27 @@
                        VerticalOptions="Center"
                        Scale="0.96">
                     <Grid ColumnDefinitions="Auto,*"
-                          RowDefinitions="Auto,Auto,Auto"
+                          RowDefinitions="Auto,Auto,Auto,Auto"
                           ColumnSpacing="12"
                           RowSpacing="12">
 
                         <Image x:Name="AlertNarrator"
-                               Grid.RowSpan="3"
+                               Grid.RowSpan="4"
                                HeightRequest="96"
                                WidthRequest="96"
                                Aspect="AspectFill"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
 
+                        <!-- Title row with close button -->
                         <Grid Grid.Column="1"
                               Grid.Row="0"
                               ColumnDefinitions="*,Auto"
                               VerticalOptions="Center">
-                            <Label Text="Subukan muli ang bugtong?"
+                            <Label x:Name="AlertTitleLabel"
+                                   Text="Subukan muli ang bugtong?"
                                    FontSize="18"
-                                   TextColor="#FFCC00"
+                                   TextColor="Blue"
                                    FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center"
@@ -315,6 +316,7 @@
                             </Image>
                         </Grid>
 
+                        <!-- Hearts/Message panel -->
                         <HorizontalStackLayout x:Name="AlertHeartsPanel"
                                                Grid.Column="1"
                                                Grid.Row="1"
@@ -322,7 +324,9 @@
                                                HorizontalOptions="Center"
                                                VerticalOptions="Center"/>
 
-                        <Label Grid.Column="1"
+                        <!-- Retry button (only for wrong answers) -->
+                        <Label x:Name="AlertRetryButton"
+                               Grid.Column="1"
                                Grid.Row="2"
                                Text="Subukan Muli"
                                FontSize="22"
@@ -330,9 +334,27 @@
                                TextColor="#4CAF50"
                                HorizontalTextAlignment="Center"
                                VerticalTextAlignment="Center"
-                               Padding="20,10">
+                               Padding="20,10"
+                               IsVisible="True">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnAlertRetryTapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+
+                        <!-- OK button (only for correct answers) -->
+                        <Label x:Name="AlertOkButton"
+                               Grid.Column="1"
+                               Grid.Row="3"
+                               Text="OK"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="#4CAF50"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center"
+                               Padding="20,10"
+                               IsVisible="False">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnAlertOkTapped"/>
                             </Label.GestureRecognizers>
                         </Label>
                     </Grid>

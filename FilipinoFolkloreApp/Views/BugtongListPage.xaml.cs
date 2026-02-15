@@ -74,7 +74,7 @@ public partial class BugtongListPage : ContentPage
                     Id = b.Id,
                     Name = b.Name,
                     RewardStars = b.RewardStars,
-                    HasMedal = b.MedalId.HasValue
+                    HasMedal = false // No individual medals anymore
                 })
                 .ToList();
 

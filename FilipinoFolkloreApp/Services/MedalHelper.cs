@@ -13,178 +13,178 @@ namespace FilipinoFolkloreApp.Services
             new Medals
             {
                 MedalId = 1,
-                MedalName = "Storyteller",
-                MedalImagePath = "medals/basa.png",
+                MedalName = "Badge ng Alimango",
+                MedalImagePath = "medals/badgealamatngalimango.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 1."
+                MedalDescription = "Basahin ang kwento at masagot nang tama ang tanong tungkol sa Alimango.\nPinapakita ang talino at stratehiya ng alimango sa kwento\r\n"
             },
             new Medals
             {
                 MedalId = 2,
-                MedalName = "Cultural Enthusiast",
-                MedalImagePath = "medals/harireyna.png",
+                MedalName = "Badge ng Bahaghari",
+                MedalImagePath = "medals/badgealamatngbahaghari.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 2."
+                MedalDescription = "Makumpleto ang kwento at sagutin ang quiz tungkol sa bahaghari.\nIpinapakita ang ganda at kahalagahan ng bahaghari sa kwento\r\n"
             },
             new Medals
             {
                 MedalId = 3,
-                MedalName = "Folklore Apprentice",
-                MedalImagePath = "medals/kaibigankwento.png",
+                MedalName = "Badge ng Pinya",
+                MedalImagePath = "medals/badgealamatngpinya.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 3."
+                MedalDescription = "Basahin ang kwento at piliin ang tamang aral tungkol sa pinya.\nPinapakita ang kabutihan at kasipagan ng karakter sa kwento\r\n"
             },
             new Medals
             {
                 MedalId = 4,
-                MedalName = "Folklore Adept",
-                MedalImagePath = "medals/kasangga.png",
+                MedalName = "Badge ng Kabayo",
+                MedalImagePath = "medals/badgealamatngbuwanarawatmgabituin.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 4."
+                MedalDescription = "Makumpleto ang story interaction o mini-game tungkol sa kabayo.\nPinapakita ang tapang at pagkakaibigan ng kabayo sa kwento\r\n"
             },
             new Medals
             {
                 MedalId = 5,
-                MedalName = "Folklore Master",
-                MedalImagePath = "medals/lakambantay.png",
+                MedalName = "Badge ng Kawayan",
+                MedalImagePath = "medals/badgekungbakitmayulan.png",
                 isUnlocked = false,
                 MedalDescription = "Awarded for completing story 5."
             },
             new Medals
             {
                 MedalId = 6,
-                MedalName = "Legend Listener",
-                MedalImagePath = "medals/lakambayanihan.png",
+                MedalName = "Prinsipe ng Tapang Badge",
+                MedalImagePath = "medals/badgebantugan.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 6."
+                MedalDescription = "Makakuha ng mataas na score sa quiz o decision choices.\nSi Bantugan ay bayani sa epikong Darangen ng mga Maranao. \r\n"
             },
             new Medals
             {
                 MedalId = 7,
-                MedalName = "Myth Seeker",
-                MedalImagePath = "medals/lakbaykultura.png",
+                MedalName = "Alamat ng Halawod Badge",
+                MedalImagePath = "medals/badgehinilawod.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 7."
+                MedalDescription = "Makumpleto ang buong story sequence.\nAng epiko ay tungkol sa pakikipagsapalaran ng tatlong magkakapatid na demigod na bayani ng Panay. \r\n"
             },
             new Medals
             {
                 MedalId = 8,
-                MedalName = "Epic Explorer",
-                MedalImagePath = "medals/lakbaykwento.png",
+                MedalName = "Bayani ng Ibalong Badge",
+                MedalImagePath = "medals/badgeibalon.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 8."
+                MedalDescription = "Makumpleto ang story at sagutan ang activity tungkol sa mga bayani.\nIpinapakita ng epiko ang kabayanihan nina Baltog at Handyong laban sa mga halimaw at pagsasaayos ng pamayanan."
             },
             new Medals
             {
                 MedalId = 9,
-                MedalName = "Cultural Guardian",
-                MedalImagePath = "medals/lipad.png",
+                MedalName = "Lakbay-Puso Badge",
+                MedalImagePath = "medals/badgemanimimbin.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 9."
+                MedalDescription = "Matapos basahin o makumpleto ang story ng Manimimbin.\nAng epiko ay tungkol sa paglalakbay ng binatang si Manimimbin sa paghahanap ng pag-ibig at pakikipagkaibigan at tunggalian sa mga tauhan."
             },
             new Medals
             {
                 MedalId = 10,
-                MedalName = "Oral Tradition Keeper",
-                MedalImagePath = "medals/likhakulay.png",
+                MedalName = "Mandirigmang Mindanao Badge",
+                MedalImagePath = "medals/badgemanimimbin.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 10."
+                MedalDescription = "Makapasa sa comprehension quiz o mini-game pagkatapos ng kwento"
             },
             new Medals
             {
                 MedalId = 11,
-                MedalName = "Legend Scholar",
-                MedalImagePath = "medals/medal1.jpg",
+                MedalName = "Badge ng Mabuting Aral",
+                MedalImagePath = "medals/badgeangaralkayloro",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 11."
+                MedalDescription = "Piliin ang tamang aral mula sa kwento.\nItinatampok ang kahalagahan ng pagkilala at pagsasabuhay ng tamang aral."
             },
             new Medals
             {
                 MedalId = 12,
-                MedalName = "Myth Lorekeeper",
-                MedalImagePath = "medals/mananalaysay.png",
+                MedalName = "Badge ng Pagkakaibigan",
+                MedalImagePath = "medals/badgekabayoatkalabaw.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 12."
+                MedalDescription = "Makumpleto ang story interaction o mini-activity.\nNakatuon sa pagtutulungan, pag-unawa, at pagkakaibigan sa kwento\r\n"
             },
             new Medals
             {
                 MedalId = 13,
-                MedalName = "Epic Historian",
-                MedalImagePath = "medals/manlalarobituin.png",
+                MedalName = "Badge ng Matiyagang Mananakbo",
+                MedalImagePath = "medals/badgepagongatkuneho.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 13."
+                MedalDescription = "Makumpleto ang kwento at makapasa sa mga tanong.\nIpinapakita ang pagtitiyaga at determinasyon ng Pagong na manalo sa karera\r\n"
             },
             new Medals
             {
                 MedalId = 14,
-                MedalName = "Ancestral Voice",
-                MedalImagePath = "medals/mapanlikha.png",
+                MedalName = "Badge ng Matalinong Pagong",
+                MedalImagePath = "medals/badgepagongatmatsing.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 14."
+                MedalDescription = "Matapos basahin ang kwento at masagot nang tama ang quiz.\nPinapakita ng kwento ang talino at pagiging mapanlikha ng Pagong sa pagharap sa problema\r\n"
             },
             new Medals
             {
                 MedalId = 15,
-                MedalName = "Folklore Legend",
-                MedalImagePath = "medals/mutyangkarunungan.png",
+                MedalName = "Badge ng Katatagan",
+                MedalImagePath = "medals/badgetularansikawayan.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 15."
+                MedalDescription = "Makuha ang buong score sa quiz ng kwento\nIpinapakita ang tibay, katatagan, at pagtitiis tulad ng kawayan sa mga pagsubok\r\n"
             },
             new Medals
             {
                 MedalId = 16,
-                MedalName = "First Artist",
-                MedalImagePath = "medals/pagpapala.png",
+                MedalName = "Badge ng Tagapangalaga ng Aral",
+                MedalImagePath = "medals/specialbadgepabula.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for coloring your first image."
+                MedalDescription = "Makukuha ito kapag nabasa mo ang lahat ng pabula at nasagot nang tama ang mga tanong o mini-activity tungkol sa aral ng bawat kwento.\nIpinapakita nito na naunawaan mo at nasasabuhay ang mga aral o moral na itinuturo ng mga pabula.\r\n"
             },
             new Medals
             {
                 MedalId = 17,
-                MedalName = "Caring Companion",
-                MedalImagePath = "medals/sandigan.png",
+                MedalName = "Badge ng Maliwanag na Ulo",
+                MedalImagePath = "medals/badgebugtongmahusaynatagahula.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for fully charging narrator battery for the first time."
+                MedalDescription = "Kapag nasagot ng tama ang unang 10 bugtong.\nPinapakita ang talino at pagka-alerto sa palaisipan\r\n"
             },
             new Medals
             {
                 MedalId = 18,
-                MedalName = "Narrator Caretaker",
-                MedalImagePath = "medals/siglakain.png",
+                MedalName = "Badge ng Matalinong Bata",
+                MedalImagePath = "medals/badgebugtongmatalinongbata.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for feeding narrator 5 times."
+                MedalDescription = "Kapag nasagot ng tama ang 13 bugtong mula 15.\nPinapakita ang kakayahang maunawaan ang mas mahihirap na bugtong\r\n"
             },
             new Medals
             {
                 MedalId = 19,
-                MedalName = "Dedicated Guardian",
-                MedalImagePath = "medals/sipagaral.png",
+                MedalName = "Badge ng Pinakamahusay na Tagahula",
+                MedalImagePath = "medals/badgetamalahatngbugtong.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for feeding narrator 10 times."
+                MedalDescription = "Kapag nasagot ng tama lahat ng 15 bugtong.\nPinapakita ang galing sa paghula at pagka-master ng bugtong \r\n"
             },
             new Medals
             {
                 MedalId = 20,
-                MedalName = "Dedicated Guardian",
-                MedalImagePath = "medals/tagapagkwento.png",
+                MedalName = "Badge ng Maliwanag na Kamay",
+                MedalImagePath = "medals/badgemasiglangmagkulay.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for feeding narrator 10 times."
+                MedalDescription = "Kapag nakumpleto ang unang 5 coloring activity.\nPinapakita ang kasanayan sa paggamit ng kulay\r\n"
             },
             new Medals
             {
                 MedalId = 21,
-                MedalName = "Dedicated Guardian",
-                MedalImagePath = "medals/tagumpaybasa.png",
+                MedalName = "Badge ng Masiglang Kulay",
+                MedalImagePath = "medals/badgemasiglangmagkulay.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for feeding narrator 10 times."
+                MedalDescription = "Kapag nakumpleto ang 10 coloring activity.\nPinapakita ang sipag at tiyaga sa paggawa ng makukulay na larawan\r\n"
             },
             new Medals
             {
                 MedalId = 22,
-                MedalName = "Dedicated Guardian",
-                MedalImagePath = "medals/tanglaw.png",
+                MedalName = "Badge ng Pinakamakulay na Bata",
+                MedalImagePath = "medals/pinakamakulaynabata.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for feeding narrator 10 times."
+                MedalDescription = "Kapag nakumpleto lahat ng 15 coloring activity.\nPinapakita ang galing at pagiging malikhain sa paggamit ng kulay\r\n"
             },
         };
     }
