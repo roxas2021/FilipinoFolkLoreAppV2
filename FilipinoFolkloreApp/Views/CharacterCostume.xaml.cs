@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FilipinoFolkloreApp.Services;
+using Microsoft.Maui.Layouts;
 
 namespace FilipinoFolkloreApp.Views
 {
@@ -16,13 +17,58 @@ namespace FilipinoFolkloreApp.Views
 
         TaskCompletionSource<bool> _alertTcs;
         private AvatarCustomizationHelper.AvatarSet currentAvatarSet = AvatarCustomizationHelper.CurrentAvatarSet(AvatarCustomizationHelper.SelectedAvatarSetId);
-          
+
         public string CurrentUserName { get; set; } = "Nichol";
 
         public List<TapisItem> TapisItems { get; set; }
 
         private SoundService SoundService =>
             Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
+        // Tutorial state
+        private int _tutorialStep = 0;
+        private const string TUTORIAL_COMPLETED_KEY = "CharacterCostumeTutorialCompleted";
+
+        // Tutorial steps configuration
+        private readonly TutorialStep[] _tutorialSteps = new[]
+        {
+            new TutorialStep
+            {
+                Title = "Pag-customize ng Avatar!",
+                Message = "Maligayang pagdating sa Avatar Customization! Dito mo pwedeng palitan ang damit ng iyong character.",
+                TargetElementName = null,
+            },
+            new TutorialStep
+            {
+                Title = "Iyong Character",
+                Message = "Dito mo makikita ang iyong current avatar. Mag-preview dito ng mga costumes na pipiliin mo!",
+                TargetElementName = "CharacterImage",
+            },
+            new TutorialStep
+            {
+                Title = "Iyong Pilon Stars",
+                Message = "Dito mo makikita kung gaano karaming stars mayroon ka para bumili ng mga bagong tapis!",
+                TargetElementName = "PilonStarNicholLabel",
+            },
+            new TutorialStep
+            {
+                Title = "Mga Tapis (Costumes)",
+                Message = "Pumili ng tapis mula dito! May presyo bawat isa. Pag nabili mo na, pwede mo nang gamitin!",
+                TargetElementName = "TapisCollectionView",
+            },
+            new TutorialStep
+            {
+                Title = "Bilhin o Piliin",
+                Message = "I-click ang button na ito para bilhin ang bagong tapis o piliin ang nabili mo na!",
+                TargetElementName = "BuyButton",
+            },
+            new TutorialStep
+            {
+                Title = "Bumalik sa Home",
+                Message = "I-click ito para bumalik sa Home page kapag tapos ka na mag-customize!",
+                TargetElementName = "HomeButton",
+            }
+        };
 
         public CharacterCostume()
         {
@@ -31,9 +77,8 @@ namespace FilipinoFolkloreApp.Views
             CurrentUserName = CharacterHelper.CurrentName;
             PilonStarNicholAmountValue = CharacterHelper.CurrentStars;
             BindingContext = this;
-
-
         }
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -45,11 +90,328 @@ namespace FilipinoFolkloreApp.Views
 
             AlertMessageLabel.Text = $"You don't have enough {CurrentUserName}!";
 
+            // Check if tutorial should be shown
+            bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
+            if (!tutorialCompleted)
+            {
+                await Task.Delay(500);
+                await ShowTutorial();
+            }
         }
+
+        private async Task ShowTutorial()
+        {
+            _tutorialStep = 0;
+            TutorialOverlay.IsVisible = true;
+
+            // Animate tarsier entrance
+            await Task.WhenAll(
+                TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+                TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+            );
+
+            // Animate speech bubble
+            await Task.Delay(200);
+            await Task.WhenAll(
+                SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
+                SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
+            );
+
+            UpdateTutorialStep();
+        }
+
+        private async void OnTutorialNextStep(object? sender, EventArgs e)
+        {
+            _tutorialStep++;
+
+            if (_tutorialStep >= _tutorialSteps.Length)
+            {
+                await CompleteTutorial();
+                return;
+            }
+
+            UpdateTutorialStep();
+        }
+
+        private async void UpdateTutorialStep()
+        {
+            var step = _tutorialSteps[_tutorialStep];
+
+            TutorialTitleLabel.Text = step.Title;
+            TutorialMessageLabel.Text = step.Message;
+            TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
+
+            // Update arrow pointer to point at target element dynamically
+            if (!string.IsNullOrEmpty(step.TargetElementName))
+            {
+                await PositionArrowToElement(step.TargetElementName);
+            }
+            else
+            {
+                ArrowPointer.Opacity = 0;
+                // Position speech bubble at default location (upper right of tarsier)
+                PositionSpeechBubble(true);
+            }
+
+            // Highlight target element
+            HighlightTargetElement(step.TargetElementName);
+        }
+
+        private async Task PositionArrowToElement(string elementName)
+        {
+            // 1. Find the target element
+            VisualElement? targetElement = elementName switch
+            {
+                "CharacterImage" => CharacterImage,
+                "PilonStarNicholLabel" => PilonStarNicholLabel.Parent as VisualElement,
+                "TapisCollectionView" => TapisCollectionView,
+                "BuyButton" => BuyButton,
+                "HomeButton" => HomeButton,
+                _ => null
+            };
+
+            if (targetElement == null)
+            {
+                ArrowPointer.Opacity = 0;
+                return;
+            }
+
+            // Wait briefly for layout to settle
+            await Task.Delay(150);
+
+            // 2. Get screen info and target bounds
+            var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+            double screenHeight = displayInfo.Height / displayInfo.Density;
+            double safeZone = 60; // Padding from edges (Safe Zone)
+
+            Rect targetBounds = GetAbsolutePosition(targetElement);
+
+            if (targetBounds == Rect.Zero) return;
+
+            // Arrow dimensions
+            double arrowWidth = 50;
+            double arrowHeight = 50;
+            double padding = 10; // Space between arrow and element
+
+            // 3. Calculate Potential Positions
+
+            // Position A: Above the element (Pointing Down)
+            double yAbove = targetBounds.Top - arrowHeight - padding;
+
+            // Position B: Below the element (Pointing Up)
+            double yBelow = targetBounds.Bottom + padding;
+
+            // 4. Determine Best Position
+            // Default preference based on screen half
+            bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
+
+            double finalArrowY;
+            bool isArrowAbove;
+
+            if (preferAbove)
+            {
+                // We want to be Above. Check if we fit in the Top Safe Zone.
+                if (yAbove >= safeZone)
+                {
+                    finalArrowY = yAbove;
+                    isArrowAbove = true;
+                }
+                else
+                {
+                    // Overflowed Top! Flip to Below.
+                    finalArrowY = yBelow;
+                    isArrowAbove = false;
+                }
+            }
+            else
+            {
+                // We want to be Below. Check if we fit in the Bottom Safe Zone.
+                if (yBelow + arrowHeight <= screenHeight - safeZone)
+                {
+                    finalArrowY = yBelow;
+                    isArrowAbove = false;
+                }
+                else
+                {
+                    // Overflowed Bottom! Flip to Above.
+                    finalArrowY = yAbove;
+                    isArrowAbove = true;
+                }
+            }
+
+            // 5. Apply Position and Rotation
+            // Center horizontally
+            double arrowX = targetBounds.Center.X - (arrowWidth / 2);
+
+            AbsoluteLayout.SetLayoutBounds(ArrowPointer, new Rect(arrowX, finalArrowY, arrowWidth, arrowHeight));
+            AbsoluteLayout.SetLayoutFlags(ArrowPointer, AbsoluteLayoutFlags.None);
+
+            // Rotation Logic for Right-Pointing Arrow Image:
+            // If Arrow is Above -> Needs to point DOWN -> Rotate 90 deg
+            // If Arrow is Below -> Needs to point UP   -> Rotate -90 deg
+            ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
+
+            // 6. Sync Speech Bubble
+            // If Arrow is in top half (y < screenHeight/2), put Bubble at Bottom
+            // If Arrow is in bottom half, put Bubble at Top
+            bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
+            PositionSpeechBubble(!arrowIsAtTopHalf);
+
+            await AnimateArrowPointer();
+        }
+
+        private void PositionSpeechBubble(bool positionAtTop)
+        {
+            var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+            double screenHeight = displayInfo.Height / displayInfo.Density;
+
+            // Use a fixed X position instead of centering
+            // Tarsier ends at 180 (X=30 + Width=150). 
+            // We set Bubble X to 160 to slightly overlap the tail with the Tarsier.
+            double bubbleX = 160;
+
+            double bubbleWidth = 350;
+            double safePadding = 60; // Padding from top/bottom screen edges
+
+            if (positionAtTop)
+            {
+                // Position at Top
+                AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
+            }
+            else
+            {
+                // Position at Bottom
+                // Using a fixed offset from bottom (e.g., 200) to ensure it doesn't cover keyboard/nav bar
+                AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
+            }
+
+            AbsoluteLayout.SetLayoutFlags(SpeechBubbleContainer, AbsoluteLayoutFlags.None);
+        }
+
+        private Rect GetAbsolutePosition(VisualElement element)
+        {
+            if (element == null) return Rect.Zero;
+
+            double x = element.X;
+            double y = element.Y;
+            double width = element.Width;
+            double height = element.Height;
+
+            var current = element.Parent as VisualElement;
+
+            while (current != null && !(current is Page))
+            {
+                x += current.X;
+                y += current.Y;
+
+                if (current is ScrollView scrollView)
+                {
+                    x -= scrollView.ScrollX;
+                    y -= scrollView.ScrollY;
+                }
+
+                current = current.Parent as VisualElement;
+            }
+
+            return new Rect(x, y, width, height);
+        }
+
+        private async Task AnimateArrowPointer()
+        {
+            ArrowPointer.Opacity = 0;
+            ArrowPointer.Scale = 0.8;
+
+            await Task.Delay(100);
+
+            await Task.WhenAll(
+                ArrowPointer.FadeTo(1, 300, Easing.CubicOut),
+                ArrowPointer.ScaleTo(1, 300, Easing.BounceOut)
+            );
+
+            // Bounce animation loop
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    while (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                    {
+                        await MainThread.InvokeOnMainThreadAsync(async () =>
+                        {
+                            if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                            {
+                                await ArrowPointer.ScaleTo(1.2, 500, Easing.CubicInOut);
+                                if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                                {
+                                    await ArrowPointer.ScaleTo(1.0, 500, Easing.CubicInOut);
+                                }
+                            }
+                        });
+                        await Task.Delay(100);
+                    }
+                }
+                catch
+                {
+                    // Animation cancelled - ignore
+                }
+            });
+        }
+
+        private void HighlightTargetElement(string? targetName)
+        {
+            // Reset all highlights
+            CharacterImage.Opacity = 1;
+            TapisCollectionView.Opacity = 1;
+            BuyButton.Opacity = 1;
+
+            if (string.IsNullOrEmpty(targetName))
+                return;
+
+            // Dim everything except target
+            switch (targetName)
+            {
+                case "CharacterImage":
+                    TapisCollectionView.Opacity = 0.3;
+                    BuyButton.Opacity = 0.3;
+                    break;
+                case "PilonStarNicholLabel":
+                    CharacterImage.Opacity = 0.5;
+                    TapisCollectionView.Opacity = 0.3;
+                    BuyButton.Opacity = 0.3;
+                    break;
+                case "TapisCollectionView":
+                    CharacterImage.Opacity = 0.5;
+                    BuyButton.Opacity = 0.3;
+                    break;
+                case "BuyButton":
+                    CharacterImage.Opacity = 0.5;
+                    TapisCollectionView.Opacity = 0.3;
+                    break;
+            }
+        }
+
+        private async Task CompleteTutorial()
+        {
+            // Save that tutorial is completed
+            Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+
+            // Animate out
+            await Task.WhenAll(
+                ArrowPointer.FadeTo(0, 200),
+                SpeechBubbleContainer.FadeTo(0, 300),
+                TarsierImage.FadeTo(0, 300),
+                TutorialOverlay.FadeTo(0, 400)
+            );
+
+            TutorialOverlay.IsVisible = false;
+
+            // Reset opacities
+            CharacterImage.Opacity = 1;
+            TapisCollectionView.Opacity = 1;
+            BuyButton.Opacity = 1;
+        }
+
         private async Task LoadTapisItemsAsync()
         {
-            
-
             await AvatarCustomizationHelper.LoadPurchasedCostume();
 
             purchasedCostumes = AvatarCustomizationHelper.purchasedCostumes;
@@ -65,11 +427,10 @@ namespace FilipinoFolkloreApp.Views
             TapisItems = items;
             TapisCollectionView.ItemsSource = TapisItems;
 
-
             if (selectedCostumeId > 0 && selectedCostumeId <= TapisItems.Count)
                 TapisCollectionView.SelectedItem = TapisItems[selectedCostumeId - 1];
-
         }
+
         private bool IsEquipped(TapisItem item)
         {
             return NormalizeAvatarKey(CharacterHelper.CurrentAvatar)
@@ -89,7 +450,7 @@ namespace FilipinoFolkloreApp.Views
         private async void OnTapisSelected(object sender, SelectionChangedEventArgs e)
         {
             await SoundService.PlayButtonClickAsync();
-            
+
             var selected = e.CurrentSelection.FirstOrDefault() as TapisItem;
             if (selected == null) return;
 
@@ -101,7 +462,6 @@ namespace FilipinoFolkloreApp.Views
 
             UpdateBuyButtonState(selected);
             await AnimateAvatarChangeAsync(selected.AvatarImageSource);
-
         }
 
         private void UpdateBuyButtonState(TapisItem selected)
@@ -126,7 +486,6 @@ namespace FilipinoFolkloreApp.Views
             BuyButton.BackgroundColor = Colors.DeepPink;
             BuyButton.IsEnabled = PilonStarNicholAmountValue >= selected.Price;
         }
-
 
         private async Task AnimateAvatarChangeAsync(string newAvatarSource)
         {
@@ -157,15 +516,14 @@ namespace FilipinoFolkloreApp.Views
             }
             catch
             {
-                
+
             }
         }
-
 
         private async void OnBuyButtonClicked(object sender, EventArgs e)
         {
             await SoundService.PlayButtonClickAsync();
-            
+
             if (selectedCostumeId == 0) return;
 
             var selected = TapisItems[selectedCostumeId - 1];
@@ -229,8 +587,6 @@ namespace FilipinoFolkloreApp.Views
             TapisCollectionView.ItemsSource = TapisItems;
         }
 
-
-
         private async void OnHomeButtonClicked(object sender, EventArgs e)
         {
             await SoundService.PlayButtonClickAsync();
@@ -260,7 +616,6 @@ namespace FilipinoFolkloreApp.Views
 
             return _alertTcs.Task;
         }
-
 
         private async Task AnimateShowOverlayAsync()
         {
@@ -299,6 +654,13 @@ namespace FilipinoFolkloreApp.Views
         private async void OnAlertBackgroundTapped(object sender, EventArgs e)
         {
             await HideGameAlertAsync(false);
+        }
+
+        private class TutorialStep
+        {
+            public string Title { get; set; } = "";
+            public string Message { get; set; } = "";
+            public string? TargetElementName { get; set; }
         }
     }
 

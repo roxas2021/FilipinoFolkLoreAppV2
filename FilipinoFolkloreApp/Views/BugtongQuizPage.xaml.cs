@@ -219,6 +219,7 @@ namespace FilipinoFolkloreApp.Views
 
             BugtongMilestone? milestone = null;
             bool hasMilestone = false;
+            bool wasAlreadyCompleted = isCompleted; // Track this BEFORE marking as completed
 
             if (!isCompleted)
             {
@@ -239,12 +240,6 @@ namespace FilipinoFolkloreApp.Views
 
                     if (!alreadyClaimed)
                     {
-                        // DON'T mark as claimed here - let ColoringRewardPage handle it
-                        // DON'T award milestone stars here - let ColoringRewardPage handle it
-                        // Preferences.Set(milestoneKey, true); // REMOVE THIS
-                        // await App.Database.SetStarsAsync(...); // REMOVE THIS
-                        // CharacterHelper.CurrentStars += milestone.RewardStars; // REMOVE THIS
-
                         // Unlock milestone medal (this is fine to do here)
                         await App.Database.UnlockMedalAsync(milestone.MedalId);
 
@@ -254,8 +249,8 @@ namespace FilipinoFolkloreApp.Views
                 }
             }
 
-            // Show success overlay (will handle milestone navigation when dismissed)
-            await ShowSuccessOverlayAsync(reward);
+            // Show success overlay (pass whether it was already completed)
+            await ShowSuccessOverlayAsync(reward, wasAlreadyCompleted);
         }
 
         private async Task<int> GetTotalCompletedBugtongsAsync()
@@ -271,7 +266,7 @@ namespace FilipinoFolkloreApp.Views
             return count;
         }
 
-        private async Task ShowSuccessOverlayAsync(int stars)
+        private async Task ShowSuccessOverlayAsync(int stars, bool wasAlreadyCompleted)
         {
             // Reuse the existing GameAlertOverlay for success message
             AlertNarrator.Source = AlamatContent.CurrentNarrator.Avatar;
@@ -286,7 +281,7 @@ namespace FilipinoFolkloreApp.Views
             
             var successLabel = new Label
             {
-                Text = $"Tama ang sagot +{stars}",
+                Text = wasAlreadyCompleted ? "Tama ang sagot" : $"Tama ang sagot +{stars}",
                 FontSize = 24,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.FromArgb("#0000FF"),
@@ -443,7 +438,7 @@ namespace FilipinoFolkloreApp.Views
 
         private async Task NavigateToBugtongList()
         {
-            await Navigation.PushAsync(new BugtongListPage());
+            await Navigation.PopAsync();
 
             // Remove this page after navigation
             Navigation.RemovePage(this);
