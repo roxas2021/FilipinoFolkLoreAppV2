@@ -37,18 +37,18 @@ namespace FilipinoFolkloreApp.Services
             new Medals
             {
                 MedalId = 4,
-                MedalName = "Badge ng Kabayo",
+                MedalName = "Badge ng Araw, Buwan, at Bituin",
                 MedalImagePath = "medals/badgealamatngbuwanarawatmgabituin.png",
                 isUnlocked = false,
-                MedalDescription = "Makumpleto ang story interaction o mini-game tungkol sa kabayo.\nPinapakita ang tapang at pagkakaibigan ng kabayo sa kwento\r\n"
+                MedalDescription = "Makumpleto ang kwento at masagot nang tama ang quiz.\nIpinapakita ang pag-unawa sa pinagmulan ng araw, buwan, at mga bituin ayon sa alamat\r\n"
             },
             new Medals
             {
                 MedalId = 5,
-                MedalName = "Badge ng Kawayan",
+                MedalName = "Badge kung bakit may ulan",
                 MedalImagePath = "medals/badgekungbakitmayulan.png",
                 isUnlocked = false,
-                MedalDescription = "Awarded for completing story 5."
+                MedalDescription = "Makumpleto ang kwento at masagot nang tama ang quiz tungkol sa ulan.\nIpinapakita ang pag-unawa sa pinagmulan ng ulan ayon sa alamat\r\n"
             },
             new Medals
             {
@@ -166,7 +166,7 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 20,
                 MedalName = "Badge ng Maliwanag na Kamay",
-                MedalImagePath = "medals/badgemasiglangmagkulay.png",
+                MedalImagePath = "medals/badgengmaliwanagnakamay.png",
                 isUnlocked = false,
                 MedalDescription = "Kapag nakumpleto ang unang 5 coloring activity.\nPinapakita ang kasanayan sa paggamit ng kulay\r\n"
             },

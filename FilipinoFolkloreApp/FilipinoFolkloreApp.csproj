@@ -171,6 +171,7 @@
 	  <None Remove="Resources\Images\medals\badgekungbakitmayulan.png" />
 	  <None Remove="Resources\Images\medals\badgemanimimbin.png" />
 	  <None Remove="Resources\Images\medals\badgemasiglangmagkulay.png" />
+	  <None Remove="Resources\Images\medals\badgengmaliwanagnakamay.png" />
 	  <None Remove="Resources\Images\medals\badgepagongatmatsing.png" />
 	  <None Remove="Resources\Images\medals\badgepinakamakulaynabata.png" />
 	  <None Remove="Resources\Images\medals\badgetamalahatngbugtong.png" />
@@ -565,6 +566,7 @@
     <MauiImage Include="Resources\Images\medals\badgekungbakitmayulan.png" />
     <MauiImage Include="Resources\Images\medals\badgemanimimbin.png" />
     <MauiImage Include="Resources\Images\medals\badgemasiglangmagkulay.png" />
+    <MauiImage Include="Resources\Images\medals\badgengmaliwanagnakamay.png" />
     <MauiImage Include="Resources\Images\medals\badgepagongatmatsing.png" />
     <MauiImage Include="Resources\Images\medals\badgepinakamakulaynabata.png" />
     <MauiImage Include="Resources\Images\medals\badgetamalahatngbugtong.png" />
