@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using FilipinoFolkloreApp.Services;
 using FilipinoFolkloreApp.Views.Home;
+using Microsoft.Maui.Layouts;
 
 namespace FilipinoFolkloreApp.Views;
 
@@ -18,6 +19,36 @@ public partial class NarratorPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
+    // Tutorial state
+    private int _tutorialStep = 0;
+    private const string TUTORIAL_COMPLETED_KEY = "NarratorPageTutorialCompleted4";
+
+    // Tutorial steps configuration - FOCUSED ON NARRATOR MECHANICS
+    private readonly TutorialStep[] _tutorialSteps = new[]
+    {
+        new TutorialStep
+        {
+            Title = "Pumili ng Narrator!",
+            Message = "Dito makikita mo ang mga narrator na pwedeng magbasa ng kuwento. Piliin ang gusto mo!",
+            TargetElementName = null,
+            
+        },
+        new TutorialStep
+        {
+            Title = "Libre ang Tarsier!",
+            Message = "Ang Tarsier narrator ay laging libre at pwede mong gamitin anumang oras! I-click para pumili!",
+            TargetElementName = "FirstUnlockedNarrator",
+            OffsetX = 100
+        },
+        new TutorialStep
+        {
+            Title = "Mga Nakandado",
+            Message = "Ang may lock icon at presyo ay kailangan pang bilhin gamit ang iyong stars. I-click para bumili!",
+            TargetElementName = "FirstLockedNarrator",
+            OffsetX = -100
+        }
+    };
+
     class Card
     {
         public string Id { get; set; } = "";
@@ -27,6 +58,14 @@ public partial class NarratorPage : ContentPage
         public int Price { get; set; }
         public string PriceText => $"{Price}⭐";
     }
+
+    public NarratorPage(string storyId)
+    {
+        InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false);
+        _storyId = storyId;
+    }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -49,13 +88,367 @@ public partial class NarratorPage : ContentPage
         // Refresh UI now that data is consistent
         LoadHud();
         RefreshNarratorList();
+
+        // Check if tutorial should be shown
+        bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
+        if (!tutorialCompleted)
+        {
+            await Task.Delay(800); // Wait for narrators to load
+            await ShowTutorial();
+        }
     }
 
-    public NarratorPage(string storyId)
+    private async Task ShowTutorial()
     {
-        InitializeComponent();
-        NavigationPage.SetHasNavigationBar(this, false);
-        _storyId = storyId;
+        _tutorialStep = 0;
+
+        UpdateTutorialStep();
+        TutorialOverlay.IsVisible = true;
+
+        // Animate tarsier entrance
+        await Task.WhenAll(
+            TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+            TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+        );
+
+        // Animate speech bubble
+        await Task.Delay(200);
+        await Task.WhenAll(
+            SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
+            SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
+        );
+    }
+
+    private async void OnTutorialNextStep(object? sender, EventArgs e)
+    {
+        _tutorialStep++;
+
+        if (_tutorialStep >= _tutorialSteps.Length)
+        {
+            await CompleteTutorial();
+            return;
+        }
+
+        UpdateTutorialStep();
+    }
+
+    private async void UpdateTutorialStep()
+    {
+        var step = _tutorialSteps[_tutorialStep];
+
+        TutorialTitleLabel.Text = step.Title;
+        TutorialMessageLabel.Text = step.Message;
+        TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
+
+        // Update arrow pointer to point at target element dynamically
+        if (!string.IsNullOrEmpty(step.TargetElementName))
+        {
+            await PositionArrowToElement(step.TargetElementName, step.OffsetX);
+        }
+        else
+        {
+            ArrowPointer.Opacity = 0;
+            PositionSpeechBubble(true, 0);
+        }
+
+        // Highlight target element
+        HighlightTargetElement(step.TargetElementName);
+    }
+
+    private async Task PositionArrowToElement(string elementName, double offsetX = 0)
+    {
+        Rect targetBounds = Rect.Zero;
+
+        // 1. Find the target bounds using the Virtual Anchor approach
+        if (elementName == "FirstUnlockedNarrator" || elementName == "FirstLockedNarrator")
+        {
+            await Task.Delay(200); // Give layout time to render
+
+            Rect cvBounds = GetAbsolutePosition(NarratorsView);
+
+            if (cvBounds != Rect.Zero)
+            {
+                // Check device type to match your XAML's OnIdiom Span
+                double columns = 3; // Default for Phone
+                if (DeviceInfo.Idiom == DeviceIdiom.Tablet) columns = 5;
+                if (DeviceInfo.Idiom == DeviceIdiom.Desktop) columns = 6;
+
+                double spacing = 16; // Match your HorizontalItemSpacing
+
+                // Calculate the exact width of a single narrator card
+                double cardWidth = (cvBounds.Width - (spacing * (columns - 1))) / columns;
+
+                double targetX = cvBounds.X;
+
+                // If we want the SECOND item (FirstLockedNarrator), shift right by one card + spacing
+                if (elementName == "FirstLockedNarrator")
+                {
+                    targetX += cardWidth + spacing;
+                }
+
+                // Create the virtual target box (Using 180 for height to roughly cover Avatar + Price)
+                targetBounds = new Rect(targetX, cvBounds.Y, cardWidth, 180);
+            }
+        }
+        else if (elementName == "NarratorsGridContainer")
+        {
+            // Target the whole grid for the first step
+            targetBounds = GetAbsolutePosition(NarratorsGridContainer);
+        }
+
+        if (targetBounds == Rect.Zero)
+        {
+            ArrowPointer.Opacity = 0;
+            return;
+        }
+
+        await Task.Delay(150);
+
+        // 2. Get screen info and target bounds
+        var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+        double screenHeight = displayInfo.Height / displayInfo.Density;
+        double safeZone = 60;
+
+        double arrowWidth = 50;
+        double arrowHeight = 50;
+        double padding = 10;
+
+        // 3. Calculate Potential Positions
+        double yAbove = targetBounds.Top - arrowHeight - padding;
+        double yBelow = targetBounds.Bottom + padding;
+
+        bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
+
+        double finalArrowY;
+        bool isArrowAbove;
+
+        if (preferAbove)
+        {
+            if (yAbove >= safeZone)
+            {
+                finalArrowY = yAbove;
+                isArrowAbove = true;
+            }
+            else
+            {
+                finalArrowY = yBelow;
+                isArrowAbove = false;
+            }
+        }
+        else
+        {
+            if (yBelow + arrowHeight <= screenHeight - safeZone)
+            {
+                finalArrowY = yBelow;
+                isArrowAbove = false;
+            }
+            else
+            {
+                finalArrowY = yAbove;
+                isArrowAbove = true;
+            }
+        }
+
+        // 4. Apply Position and Rotation
+        double arrowX = targetBounds.Center.X - (arrowWidth / 2);
+
+        AbsoluteLayout.SetLayoutBounds(ArrowPointer, new Rect(arrowX, finalArrowY, arrowWidth, arrowHeight));
+        AbsoluteLayout.SetLayoutFlags(ArrowPointer, AbsoluteLayoutFlags.None);
+
+        ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
+
+        bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
+        PositionSpeechBubble(!arrowIsAtTopHalf, offsetX);
+
+        await AnimateArrowPointer();
+    }
+
+    private VisualElement? GetNarratorCardByIndex(int targetIndex)
+    {
+        try
+        {
+            if (NarratorsView?.Handler?.PlatformView != null)
+            {
+                var items = GetVisualTreeDescendants(NarratorsView);
+                var narratorCards = new List<Grid>();
+
+                // Collect all narrator cards in order
+                foreach (var item in items)
+                {
+                    if (item is Grid grid &&
+                        grid.BindingContext is Card &&
+                        grid.IsVisible)
+                    {
+                        narratorCards.Add(grid);
+                    }
+                }
+
+                // Return the card at the specified index
+                if (targetIndex >= 0 && targetIndex < narratorCards.Count)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Found narrator card at index {targetIndex}: {(narratorCards[targetIndex].BindingContext as Card)?.Name}");
+                    return narratorCards[targetIndex];
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Narrator card index {targetIndex} out of range. Total cards: {narratorCards.Count}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error getting narrator card by index: {ex}");
+        }
+
+        return null;
+    }
+
+    private IEnumerable<Element> GetVisualTreeDescendants(Element element)
+    {
+        var queue = new Queue<Element>();
+        queue.Enqueue(element);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            yield return current;
+
+            if (current is Layout layout)
+            {
+                foreach (var child in layout.Children.OfType<Element>())
+                {
+                    queue.Enqueue(child);
+                }
+            }
+            else if (current is ContentView contentView && contentView.Content != null)
+            {
+                queue.Enqueue(contentView.Content);
+            }
+            else if (current is ScrollView scrollView && scrollView.Content != null)
+            {
+                queue.Enqueue(scrollView.Content);
+            }
+        }
+    }
+
+    private void PositionSpeechBubble(bool positionAtTop, double offsetX)
+    {
+        var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+        double screenHeight = displayInfo.Height / displayInfo.Density;
+
+        double bubbleX = 160 + offsetX;
+        double bubbleWidth = 350;
+        double safePadding = 60;
+
+        if (positionAtTop)
+        {
+            AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
+        }
+        else
+        {
+            AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
+        }
+
+        AbsoluteLayout.SetLayoutFlags(SpeechBubbleContainer, AbsoluteLayoutFlags.None);
+    }
+
+    private Rect GetAbsolutePosition(VisualElement element)
+    {
+        if (element == null) return Rect.Zero;
+
+        double x = element.X;
+        double y = element.Y;
+        double width = element.Width;
+        double height = element.Height;
+
+        var current = element.Parent as VisualElement;
+
+        while (current != null && !(current is Page))
+        {
+            x += current.X;
+            y += current.Y;
+
+            if (current is ScrollView scrollView)
+            {
+                x -= scrollView.ScrollX;
+                y -= scrollView.ScrollY;
+            }
+
+            current = current.Parent as VisualElement;
+        }
+
+        return new Rect(x, y, width, height);
+    }
+
+    private async Task AnimateArrowPointer()
+    {
+        ArrowPointer.Opacity = 0;
+        ArrowPointer.Scale = 0.8;
+
+        await Task.Delay(100);
+
+        await Task.WhenAll(
+            ArrowPointer.FadeTo(1, 300, Easing.CubicOut),
+            ArrowPointer.ScaleTo(1, 300, Easing.BounceOut)
+        );
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                while (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                {
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                        {
+                            await ArrowPointer.ScaleTo(1.2, 500, Easing.CubicInOut);
+                            if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                            {
+                                await ArrowPointer.ScaleTo(1.0, 500, Easing.CubicInOut);
+                            }
+                        }
+                    });
+                    await Task.Delay(100);
+                }
+            }
+            catch { }
+        });
+    }
+
+    private void HighlightTargetElement(string? targetName)
+    {
+        // Reset all highlights
+        NarratorsGridContainer.Opacity = 1;
+
+        if (string.IsNullOrEmpty(targetName))
+            return;
+
+        // For specific narrator cards, we slightly dim the container
+        switch (targetName)
+        {
+            case "FirstUnlockedNarrator":
+            case "FirstLockedNarrator":
+                NarratorsGridContainer.Opacity = 0.95;
+                break;
+        }
+    }
+
+    private async Task CompleteTutorial()
+    {
+        Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+
+        await Task.WhenAll(
+            ArrowPointer.FadeTo(0, 200),
+            SpeechBubbleContainer.FadeTo(0, 300),
+            TarsierImage.FadeTo(0, 300),
+            TutorialOverlay.FadeTo(0, 400)
+        );
+
+        TutorialOverlay.IsVisible = false;
+
+        // Reset opacities
+        NarratorsGridContainer.Opacity = 1;
     }
 
     void RefreshNarratorList()
@@ -86,7 +479,7 @@ public partial class NarratorPage : ContentPage
     async void OnNarratorTapped(object? sender, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
+
         if (sender is not Grid g || g.BindingContext is not Card c) return;
 
         // Check narrator battery before proceeding
@@ -331,5 +724,13 @@ public partial class NarratorPage : ContentPage
     {
         await SoundService.PlayButtonClickAsync();
         await NavigationHelper.NavigateToIndexPage(Navigation);
+    }
+
+    private class TutorialStep
+    {
+        public string Title { get; set; } = "";
+        public string Message { get; set; } = "";
+        public string? TargetElementName { get; set; }
+        public double OffsetX { get; set; } = 0;
     }
 }

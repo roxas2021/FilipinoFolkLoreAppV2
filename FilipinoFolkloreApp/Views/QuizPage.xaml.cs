@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using FilipinoFolkloreApp.Views.Home;
 using FilipinoFolkloreApp.Services;
+using Microsoft.Maui.Layouts;
 
 namespace FilipinoFolkloreApp.Views;
 
@@ -23,6 +24,27 @@ public partial class QuizPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
+    // Tutorial state
+    private int _tutorialStep = 0;
+    private const string TUTORIAL_COMPLETED_KEY = "QuizPageTutorialCompleted4";
+
+    // Tutorial steps configuration - FOCUSED ON QUIZ MECHANICS ONLY
+    private readonly TutorialStep[] _tutorialSteps = new[]
+    {
+        new TutorialStep
+        {
+            Title = "Ito ang Quiz!",
+            Message = "Basahin ang tanong sa itaas at piliin ang tamang sagot!",
+            TargetElementName = "QuestionArea",
+        },
+        new TutorialStep
+        {
+            Title = "Pumili ng Sagot",
+            Message = "I-click ang isa sa tatlong choices para sagutin ang tanong. Mabilis, may time limit!",
+            TargetElementName = "ChoicesArea",
+            OffsetX = -150
+        }
+    };
 
     public QuizPage(string storyId)
     {
@@ -43,9 +65,26 @@ public partial class QuizPage : ContentPage
             return;
         }
 
-        
+
         LoadQuiz();
 
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        AlamatContent.Hearts = HeartService.GetHearts();
+        // ?? Restore hearts if 5 minutes already passed
+        RefreshHearts();
+
+        // Check if tutorial should be shown
+        bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
+        if (!tutorialCompleted)
+        {
+            await Task.Delay(800); // Wait for quiz to load
+            await ShowTutorial();
+        }
     }
 
     protected override void OnDisappearing()
@@ -53,6 +92,274 @@ public partial class QuizPage : ContentPage
         base.OnDisappearing();
         _cts?.Cancel();
     }
+
+    private async Task ShowTutorial()
+    {
+        _tutorialStep = 0;
+
+        // Pause the quiz timer during tutorial
+        _cts?.Cancel();
+
+        UpdateTutorialStep();
+        TutorialOverlay.IsVisible = true;
+
+        // Animate tarsier entrance
+        await Task.WhenAll(
+            TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+            TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+        );
+
+        // Animate speech bubble
+        await Task.Delay(200);
+        await Task.WhenAll(
+            SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
+            SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
+        );
+    }
+
+    private async void OnTutorialNextStep(object? sender, EventArgs e)
+    {
+        _tutorialStep++;
+
+        if (_tutorialStep >= _tutorialSteps.Length)
+        {
+            await CompleteTutorial();
+            return;
+        }
+
+        UpdateTutorialStep();
+    }
+
+    private async void UpdateTutorialStep()
+    {
+        var step = _tutorialSteps[_tutorialStep];
+
+        TutorialTitleLabel.Text = step.Title;
+        TutorialMessageLabel.Text = step.Message;
+        TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
+
+        // Update arrow pointer to point at target element dynamically
+        if (!string.IsNullOrEmpty(step.TargetElementName))
+        {
+            await PositionArrowToElement(step.TargetElementName, step.OffsetX);
+        }
+        else
+        {
+            ArrowPointer.Opacity = 0;
+            PositionSpeechBubble(true, 0);
+        }
+
+        // Highlight target element
+        HighlightTargetElement(step.TargetElementName);
+    }
+
+    private async Task PositionArrowToElement(string elementName, double offsetX = 0)
+    {
+        VisualElement? targetElement = elementName switch
+        {
+            "QuestionArea" => QuestionArea,
+            "ChoicesArea" => ChoicesArea,
+            _ => null
+        };
+
+        if (targetElement == null)
+        {
+            ArrowPointer.Opacity = 0;
+            return;
+        }
+
+        await Task.Delay(150);
+
+        var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+        double screenHeight = displayInfo.Height / displayInfo.Density;
+        double safeZone = 60;
+
+        Rect targetBounds = GetAbsolutePosition(targetElement);
+
+        if (targetBounds == Rect.Zero) return;
+
+        double arrowWidth = 50;
+        double arrowHeight = 50;
+        double padding = 10;
+
+        double yAbove = targetBounds.Top - arrowHeight - padding;
+        double yBelow = targetBounds.Bottom + padding;
+
+        bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
+
+        double finalArrowY;
+        bool isArrowAbove;
+
+        if (preferAbove)
+        {
+            if (yAbove >= safeZone)
+            {
+                finalArrowY = yAbove;
+                isArrowAbove = true;
+            }
+            else
+            {
+                finalArrowY = yBelow;
+                isArrowAbove = false;
+            }
+        }
+        else
+        {
+            if (yBelow + arrowHeight <= screenHeight - safeZone)
+            {
+                finalArrowY = yBelow;
+                isArrowAbove = false;
+            }
+            else
+            {
+                finalArrowY = yAbove;
+                isArrowAbove = true;
+            }
+        }
+
+        double arrowX = targetBounds.Center.X - (arrowWidth / 2);
+
+        AbsoluteLayout.SetLayoutBounds(ArrowPointer, new Rect(arrowX, finalArrowY, arrowWidth, arrowHeight));
+        AbsoluteLayout.SetLayoutFlags(ArrowPointer, AbsoluteLayoutFlags.None);
+
+        ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
+
+        bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
+        PositionSpeechBubble(!arrowIsAtTopHalf, offsetX);
+
+        await AnimateArrowPointer();
+    }
+
+    private void PositionSpeechBubble(bool positionAtTop, double offsetX)
+    {
+        var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+        double screenHeight = displayInfo.Height / displayInfo.Density;
+
+        double bubbleX = 160 + offsetX;
+        double bubbleWidth = 350;
+        double safePadding = 60;
+
+        if (positionAtTop)
+        {
+            AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
+        }
+        else
+        {
+            AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
+        }
+
+        AbsoluteLayout.SetLayoutFlags(SpeechBubbleContainer, AbsoluteLayoutFlags.None);
+    }
+
+    private Rect GetAbsolutePosition(VisualElement element)
+    {
+        if (element == null) return Rect.Zero;
+
+        double x = element.X;
+        double y = element.Y;
+        double width = element.Width;
+        double height = element.Height;
+
+        var current = element.Parent as VisualElement;
+
+        while (current != null && !(current is Page))
+        {
+            x += current.X;
+            y += current.Y;
+
+            if (current is ScrollView scrollView)
+            {
+                x -= scrollView.ScrollX;
+                y -= scrollView.ScrollY;
+            }
+
+            current = current.Parent as VisualElement;
+        }
+
+        return new Rect(x, y, width, height);
+    }
+
+    private async Task AnimateArrowPointer()
+    {
+        ArrowPointer.Opacity = 0;
+        ArrowPointer.Scale = 0.8;
+
+        await Task.Delay(100);
+
+        await Task.WhenAll(
+            ArrowPointer.FadeTo(1, 300, Easing.CubicOut),
+            ArrowPointer.ScaleTo(1, 300, Easing.BounceOut)
+        );
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                while (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                {
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                        {
+                            await ArrowPointer.ScaleTo(1.2, 500, Easing.CubicInOut);
+                            if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                            {
+                                await ArrowPointer.ScaleTo(1.0, 500, Easing.CubicInOut);
+                            }
+                        }
+                    });
+                    await Task.Delay(100);
+                }
+            }
+            catch { }
+        });
+    }
+
+    private void HighlightTargetElement(string? targetName)
+    {
+        // Reset all highlights
+        QuestionArea.Opacity = 1;
+        ChoicesArea.Opacity = 1;
+
+        if (string.IsNullOrEmpty(targetName))
+            return;
+
+        // Dim everything except target
+        switch (targetName)
+        {
+            case "QuestionArea":
+                ChoicesArea.Opacity = 0.3;
+                break;
+            case "ChoicesArea":
+                QuestionArea.Opacity = 0.5;
+                break;
+        }
+    }
+
+    private async Task CompleteTutorial()
+    {
+        Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+
+        await Task.WhenAll(
+            ArrowPointer.FadeTo(0, 200),
+            SpeechBubbleContainer.FadeTo(0, 300),
+            TarsierImage.FadeTo(0, 300),
+            TutorialOverlay.FadeTo(0, 400)
+        );
+
+        TutorialOverlay.IsVisible = false;
+
+        // Reset opacities
+        QuestionArea.Opacity = 1;
+        ChoicesArea.Opacity = 1;
+
+        // Resume quiz timer
+        var story = AlamatContent.GetStory(_storyId);
+        var q = story.Quiz[_quizIndex];
+        _cts = new CancellationTokenSource();
+        _ = TimerAsync(q.TimeLimitSec, _cts.Token);
+    }
+
     async Task LoadQuiz()
     {
         var story = AlamatContent.GetStory(_storyId);
@@ -108,7 +415,7 @@ public partial class QuizPage : ContentPage
     async Task HandlePickAsync(int idx)
     {
         await SoundService.PlayButtonClickAsync();
-        
+
         // ?? Guard: no hearts left
         if (HeartService.GetHearts() <= 0)
         {
@@ -135,13 +442,13 @@ public partial class QuizPage : ContentPage
 
         // Check if this is the first time answering this question correctly
         bool isFirstTime = await App.Database.SetQuizQuestionAnsweredAsync(_storyId, _quizIndex);
-        
+
         if (isFirstTime)
         {
             // Award stars for first correct answer
             int starsToAward = currentQuestion.RewardStars;
             _totalQuizStarsEarned += starsToAward;
-            
+
             await App.Database.SetStarsAsync(CharacterHelper.CurrentStars + starsToAward);
             CharacterHelper.CurrentStars += starsToAward;
             RefreshStars();
@@ -216,14 +523,6 @@ public partial class QuizPage : ContentPage
     GameAlertCard.ScaleTo(0.96, 80, Easing.CubicIn)
 );
         GameAlertOverlay.IsVisible = false;
-    }
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-
-        AlamatContent.Hearts = HeartService.GetHearts();
-        // ?? Restore hearts if 5 minutes already passed
-        RefreshHearts();
     }
 
     async void OnAlertReplayTapped(object? s, TappedEventArgs e)
@@ -337,4 +636,11 @@ public partial class QuizPage : ContentPage
         await Navigation.PushAsync(new IndexPage());
     }
 
+    private class TutorialStep
+    {
+        public string Title { get; set; } = "";
+        public string Message { get; set; } = "";
+        public string? TargetElementName { get; set; }
+        public double OffsetX { get; set; } = 0;
+    }
 }

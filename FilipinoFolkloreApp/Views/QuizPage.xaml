@@ -77,7 +77,8 @@
                              Orientation="Horizontal"
                              HorizontalOptions="Start">
 
-                    <Image Source="icon_home.png"
+                    <Image x:Name="HomeButton"
+                           Source="icon_home.png"
                            WidthRequest="48" HeightRequest="48"
                            Aspect="AspectFit"
                            Margin="0">
@@ -95,7 +96,8 @@
                   Grid.Row="1" 
                   RowDefinitions="Auto, Auto"
                   RowSpacing="16">
-                <Grid Grid.Row="0"
+                <Grid x:Name="QuestionArea"
+                      Grid.Row="0"
                       ColumnDefinitions="Auto,Auto"
                       ColumnSpacing="8"
                       HorizontalOptions="Center"
@@ -131,7 +133,8 @@
                 </Grid>
 
                 <!-- ===== Choices with Text ===== -->
-                <Grid Grid.Row="1"
+                <Grid x:Name="ChoicesArea"
+                      Grid.Row="1"
                       ColumnDefinitions="*,*,*"
                       ColumnSpacing="12"
                       Padding="8,0"
@@ -139,7 +142,8 @@
                       VerticalOptions="Center">
 
                     <!-- Choice 0: White background -->
-                    <Border BackgroundColor="#E6FFFFFF"
+                    <Border x:Name="Choice0Border"
+                            BackgroundColor="#E6FFFFFF"
                             StrokeThickness="3"
                             Stroke="#FFFFFF"
                             Padding="16,12"
@@ -164,7 +168,8 @@
                     </Border>
 
                     <!-- Choice 1: Red background -->
-                    <Border Grid.Column="1"
+                    <Border x:Name="Choice1Border"
+                            Grid.Column="1"
                             BackgroundColor="#E6FF6B6B"
                             StrokeThickness="3"
                             Stroke="#FF4444"
@@ -190,7 +195,8 @@
                     </Border>
 
                     <!-- Choice 2: Yellow background -->
-                    <Border Grid.Column="2"
+                    <Border x:Name="Choice2Border"
+                            Grid.Column="2"
                             BackgroundColor="#E6FFE066"
                             StrokeThickness="3"
                             Stroke="#FFCC00"
@@ -302,6 +308,96 @@
                 </Frame>
             </Grid>
         </Grid>
+
+        <!-- Tutorial Overlay -->
+        <AbsoluteLayout x:Name="TutorialOverlay" 
+                        IsVisible="False"
+                        InputTransparent="False">
+
+            <!-- Semi-transparent background -->
+            <BoxView BackgroundColor="#99000000"
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTutorialNextStep" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <!-- Tarsier Character - Left Side -->
+            <Image x:Name="TarsierImage" 
+                   Source="elements/tarsier.png"
+                   WidthRequest="150"
+                   HeightRequest="150"
+                   Opacity="0"
+                   Scale="0.8"
+                   AbsoluteLayout.LayoutBounds="30,80,150,150"
+                   AbsoluteLayout.LayoutFlags="None" />
+
+            <!-- Speech Bubble Container - Upper Right of Tarsier -->
+            <Grid x:Name="SpeechBubbleContainer" 
+                  Opacity="0"
+                  Scale="0.9"
+                  AbsoluteLayout.LayoutBounds="200,50,350,AutoSize"
+                  AbsoluteLayout.LayoutFlags="None">
+
+                <Border BackgroundColor="White"
+                        StrokeShape="RoundRectangle 15">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" 
+                                Offset="3,3" 
+                                Radius="8" 
+                                Opacity="0.3" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Padding="15" Spacing="8">
+                        <Label x:Name="TutorialTitleLabel"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#FF1493"
+                               HorizontalOptions="Center" />
+
+                        <Label x:Name="TutorialMessageLabel"
+                               FontSize="14"
+                               TextColor="#333333"
+                               HorizontalTextAlignment="Start"
+                               LineBreakMode="WordWrap" />
+
+                        <Label x:Name="TutorialProgressLabel"
+                               Text="1/3"
+                               FontSize="12"
+                               TextColor="#666666"
+                               HorizontalOptions="End"
+                               Margin="0,0,0,5" />
+
+                        <HorizontalStackLayout Spacing="15" 
+                                               HorizontalOptions="End"
+                                               Margin="0,10,0,0">
+                            <Button x:Name="NextTutorialButton"
+                                    Text="Susunod"
+                                    BackgroundColor="#00A6FF"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    CornerRadius="15"
+                                    Padding="15,5"
+                                    HeightRequest="35"
+                                    Clicked="OnTutorialNextStep" />
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Arrow Pointer (Points to specific elements dynamically) -->
+            <Image x:Name="ArrowPointer"
+                   Source="arrow_pointer.png"
+                   WidthRequest="50"
+                   HeightRequest="50"
+                   Opacity="0"
+                   Scale="0.8"
+                   AbsoluteLayout.LayoutBounds="0,0,50,50"
+                   AbsoluteLayout.LayoutFlags="None" />
+        </AbsoluteLayout>
 
     </Grid>
 </ContentPage>

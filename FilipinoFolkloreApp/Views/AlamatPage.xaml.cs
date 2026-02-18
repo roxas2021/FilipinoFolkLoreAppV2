@@ -1,287 +1,775 @@
-﻿using Microsoft.Maui.Controls;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using FilipinoFolkloreApp.Views.Home;
-using FilipinoFolkloreApp.Services;
+﻿    using Microsoft.Maui.Controls;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Linq;
+    using FilipinoFolkloreApp.Views.Home;
+    using FilipinoFolkloreApp.Services;
+    using Microsoft.Maui.Layouts;
 
-namespace FilipinoFolkloreApp.Views;
+    namespace FilipinoFolkloreApp.Views;
 
-public partial class AlamatPage : ContentPage
-{
-    private HeartService HeartService =>
-    Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
-    
-    private SoundService SoundService =>
-        Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
-    
-    private TaskCompletionSource<bool>? _alertTcs;
-
-    public class StoryCard
+    public partial class AlamatPage : ContentPage
     {
-        public string Id { get; set; } = "";
-        public string Title { get; set; } = "";
-        public string Thumb { get; set; } = "";
-        public bool IsLocked { get; set; }
-        public string Category { get; set; } = "";
-        public bool IsPurchased { get; set; }
-        public bool IsRewardClaimed { get; set; }
-        public int Price { get; set; }
-        public string PriceText => $"{Price}⭐";
-    }
+        private HeartService HeartService =>
+        Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
 
-    public AlamatPage(string category)
-    {
-        InitializeComponent();
-        NavigationPage.SetHasNavigationBar(this, false);
-        AlamatContent.category = category;
+        private SoundService SoundService =>
+            Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
-        LoadHud();
-    }
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
+        private TaskCompletionSource<bool>? _alertTcs;
 
-        try
+        // Tutorial state
+        private int _tutorialStep = 0;
+        private const string TUTORIAL_COMPLETED_KEY = "AlamatPageTutorialCompleted";
+
+        // Tutorial steps configuration
+        private readonly TutorialStep[] _tutorialSteps = new[]
         {
-            await App.Database.LoadStoriesAsync();
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"LoadStoriesAsync failed: {ex}");
-        }
-
-        LoadHud();
-        LoadStories();
-    }
-    void RefreshHearts()
-    {
-        HeartsPanel.Children.Clear();
-        for (int i = 0; i < AlamatContent.Hearts; i++)
-        {
-            HeartsPanel.Children.Add(new Image
+            new TutorialStep
             {
-                Source = "heart_full.png",
-                WidthRequest = 24,
-                HeightRequest = 24,
-                Aspect = Aspect.AspectFit
-            });
-        }
-    }
-    void LoadHud()
-    {
-        HudAvatar.Source = CharacterHelper.CurrentAvatar;
-        PlayerNameLabel.Text = CharacterHelper.CurrentName;
-        StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
-        RefreshHearts();
-    }
-    async void OnBackTapped(object? s, TappedEventArgs e)
-    {
-        await SoundService.PlayButtonClickAsync();
-        if (Navigation.NavigationStack.Count > 1)
-            await Navigation.PopAsync();
-    }
-
-    async void OnHomeTapped(object? s, TappedEventArgs e)
-    {
-        await SoundService.PlayButtonClickAsync();
-        await Navigation.PushAsync(new IndexPage());
-    }
-
-    void LoadStories()
-    {
-        var currentCategory = AlamatContent.category ?? "";
-
-        StoriesView.ItemsSource = AlamatContent.Stories.Where(s => string.IsNullOrEmpty(currentCategory)
-                || (!string.IsNullOrEmpty(s.Category)
-                    && s.Category.Equals(currentCategory, StringComparison.OrdinalIgnoreCase))).Select(s => new StoryCard
-                    {
-                        Id = s.Id,
-                        Title = s.Title,
-                        Thumb = s.Thumb,
-                        IsPurchased = s.IsPurchased,
-                        IsRewardClaimed = s.IsRewardClaimed,
-
-                        Price = s.PriceStars,
-                        IsLocked = !(s.PriceStars == 0 || s.IsPurchased || AlamatContent.UnlockedStories.Contains(s.Id))
-                    }).ToList();
-    }
-    async void OnStoryTapped(object? sender, TappedEventArgs e)
-    {
-        await SoundService.PlayButtonClickAsync();
-        
-        if (sender is not Grid g || g.BindingContext is not StoryCard card) return;
-
-        var story = AlamatContent.GetStory(card.Id);
-
-        if (!AlamatContent.IsStoryUnlocked(card.Id))
-        {
-            // Try to spend stars (updates in-memory AlamatContent.Stars)
-            if (!AlamatContent.TrySpendStars(card.Price))
+                Title = "Maligayang Pagdating sa Stories!",
+                Message = "Dito makikita mo ang lahat ng kwentong maaari mong basahin!",
+                TargetElementName = null,
+            },
+            new TutorialStep
             {
-                await ShowGameAlertAsync($"Kailangan: {card.Price}", false);
-                return;
+                Title = "Iyong Avatar",
+                Message = "Ito ang iyong avatar at pangalan!",
+                TargetElementName = "HudAvatar",
+            },
+            new TutorialStep
+            {
+                Title = "Pilon Stars",
+                Message = "Dito mo makikita ang iyong stars na pwede mong gamitin para bumili ng mga kwento!",
+                TargetElementName = "StarsLabel",
+            },
+            new TutorialStep
+            {
+                Title = "Mga Puso (Lives)",
+                Message = "Ito ang iyong mga puso o lives para sa mga quiz!",
+                TargetElementName = "HeartsPanel",
+            },
+            new TutorialStep
+            {
+                Title = "Balik Button",
+                Message = "I-click ito para bumalik sa nakaraang page!",
+                TargetElementName = "BackButton",
+            },
+            new TutorialStep
+            {
+                Title = "Home Button",
+                Message = "I-click ito para bumalik sa Home Page!",
+                TargetElementName = "HomeButton",
+            },
+            new TutorialStep
+            {
+                Title = "Mga Kwento",
+                Message = "Ito ang mga kwentong maaari mong basahin! Ang may lock ay kailangan mong bilhin gamit ang stars.",
+                TargetElementName = "SecondStoryCard",
+                OffsetX = +200
             }
+        };
 
-            // Optimistically mark as purchased in memory
-            story.IsPurchased = true;
+        public class StoryCard
+        {
+            public string Id { get; set; } = "";
+            public string Title { get; set; } = "";
+            public string Thumb { get; set; } = "";
+            public bool IsLocked { get; set; }
+            public string Category { get; set; } = "";
+            public bool IsPurchased { get; set; }
+            public bool IsRewardClaimed { get; set; }
+            public int Price { get; set; }
+            public string PriceText => $"{Price}⭐";
+        }
 
-            bool savedToDb = false;
+        public AlamatPage(string category)
+        {
+            InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
+            AlamatContent.category = category;
+
+            LoadHud();
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
             try
             {
-                // Persist monitored story data
-                await App.Database.UpdateStoryAsync(story);
-
-                // Keep the fast-check set in sync (UpdateStoryAsync also tries to sync it,
-                // but we ensure it here immediately so UI checks are consistent).
-                AlamatContent.UnlockedStories.Add(story.Id);
-                await App.Database.SetStarsAsync(CharacterHelper.CurrentStars - card.Price);
-                CharacterHelper.CurrentStars -= card.Price; // keep in sync
-                savedToDb = true;
+                await App.Database.LoadStoriesAsync();
             }
             catch (Exception ex)
             {
-                // Rollback in-memory changes on failure
-                story.IsPurchased = false;
-                AlamatContent.Stars += card.Price; // refund
-                System.Diagnostics.Debug.WriteLine($"UpdateStoryAsync failed: {ex}");
-
-                await ShowGameAlertAsync("Hindi naisave ang binili — subukang muli.", false);
+                System.Diagnostics.Debug.WriteLine($"LoadStoriesAsync failed: {ex}");
             }
 
-            // If saving failed, stop here (user was refunded). If saved, refresh UI.
-            if (!savedToDb)
-                return;
-
-            // Refresh HUD and list
             LoadHud();
             LoadStories();
+
+            // Check if tutorial should be shown
+            bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
+            if (!tutorialCompleted)
+            {
+                await Task.Delay(500);
+                await ShowTutorial();
+            }
         }
-        AlamatContent.CurrentStoryId = story.Id;
 
-        // Navigate to narrator page (story view)
-        await Navigation.PushAsync(new NarratorPage(card.Id));
-    }
-
-    // Custom Game Alert with Yes/No or OK buttons
-    private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
-    {
-        if (GameAlertOverlay.IsVisible && _alertTcs != null)
-            return _alertTcs.Task;
-
-        _alertTcs = new TaskCompletionSource<bool>();
-
-        // Set message
-        AlertMessageLabel.Text = message;
-
-        // Clear existing buttons
-        AlertButtonsPanel.Children.Clear();
-
-        if (showYesNo)
+        private async Task ShowTutorial()
         {
-            // Add Yes button
-            var yesButton = new Button
-            {
-                Text = "Oo",
-                FontAttributes = FontAttributes.Bold,
-                CornerRadius = 18,
-                HeightRequest = 44,
-                WidthRequest = 100,
-                BackgroundColor = Color.FromArgb("#00A6FF"),
-                TextColor = Colors.White
-            };
-            yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
-            AlertButtonsPanel.Children.Add(yesButton);
+            _firstStoryImage = null; // Reset captured image reference for tutorial targeting
+        _tutorialStep = 0;
 
-            // Add No button
-            var noButton = new Button
+            UpdateTutorialStep();
+            TutorialOverlay.IsVisible = true;
+
+            // Animate tarsier entrance
+            await Task.WhenAll(
+                TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+                TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+            );
+
+            // Animate speech bubble
+            await Task.Delay(200);
+            await Task.WhenAll(
+                SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
+                SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
+            );
+        }
+
+        private async void OnTutorialNextStep(object? sender, EventArgs e)
+        {
+            _tutorialStep++;
+
+            if (_tutorialStep >= _tutorialSteps.Length)
             {
-                Text = "Hindi",
-                FontAttributes = FontAttributes.Bold,
-                CornerRadius = 18,
-                HeightRequest = 44,
-                WidthRequest = 100,
-                BackgroundColor = Color.FromArgb("#FF6B6B"),
-                TextColor = Colors.White
-            };
-            noButton.Clicked += (s, e) => OnAlertNoClicked(s, e);
-            AlertButtonsPanel.Children.Add(noButton);
+                await CompleteTutorial();
+                return;
+            }
+
+            UpdateTutorialStep();
+        }
+
+        private async void UpdateTutorialStep()
+        {
+            var step = _tutorialSteps[_tutorialStep];
+
+            TutorialTitleLabel.Text = step.Title;
+            TutorialMessageLabel.Text = step.Message;
+            TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
+
+            // Update arrow pointer to point at target element dynamically
+            if (!string.IsNullOrEmpty(step.TargetElementName))
+            {
+                await PositionArrowToElement(step.TargetElementName, step.OffsetX);
+            }
+            else
+            {
+                ArrowPointer.Opacity = 0;
+                // Position speech bubble at default location (upper right of tarsier)
+                PositionSpeechBubble(true, 0);
+            }
+
+            // Highlight target element
+            HighlightTargetElement(step.TargetElementName);
+        }
+
+    // Update the PositionArrowToElement method to use the named elements directly
+    private async Task PositionArrowToElement(string elementName, double offsetX = 0)
+    {
+        Rect targetBounds = Rect.Zero;
+
+        // 1. Find the target bounds
+        // 1. Find the target bounds
+        if (elementName == "SecondStoryCard" || elementName == "FirstStoryCard")
+        {
+            // Give the CollectionView a tiny moment to finish rendering
+            await Task.Delay(200);
+
+            Rect cvBounds = GetAbsolutePosition(StoriesView);
+
+            if (cvBounds != Rect.Zero)
+            {
+                // Your XAML uses Span="5" and HorizontalItemSpacing="8"
+                double columns = 5;
+                double spacing = 8;
+
+                // Calculate the exact width of one card based on the actual screen width
+                double cardWidth = (cvBounds.Width - (spacing * (columns - 1))) / columns;
+
+                // Start with the X position of the first column
+                double targetX = cvBounds.X;
+
+                // Shift right by one full card width + spacing to hit the second column
+                if (elementName == "SecondStoryCard")
+                {
+                    targetX += cardWidth + spacing;
+                }
+
+                // Target box: X position + 8px visual padding, Y position + 8px padding
+                targetBounds = new Rect(targetX + 8, cvBounds.Y + 8, cardWidth, 150);
+            }
         }
         else
         {
-            // Add OK button
-            var okButton = new Button
+            VisualElement? targetElement = elementName switch
             {
-                Text = "OK",
-                FontAttributes = FontAttributes.Bold,
-                CornerRadius = 18,
-                HeightRequest = 44,
-                WidthRequest = 120,
-                BackgroundColor = Color.FromArgb("#00A6FF"),
-                TextColor = Colors.White
+                "HudAvatar" => HudAvatar,
+                "StarsLabel" => StarsLabel.Parent as VisualElement,
+                "HeartsPanel" => HeartsPanel,
+                "BackButton" => BackButton,
+                "HomeButton" => HomeButton,
+                _ => null
             };
-            okButton.Clicked += (s, e) => OnAlertOkClicked(s, e);
-            AlertButtonsPanel.Children.Add(okButton);
+
+            if (targetElement != null)
+            {
+                targetBounds = GetAbsolutePosition(targetElement);
+            }
         }
 
-        GameAlertOverlay.IsVisible = true;
-        GameAlertOverlay.Opacity = 0;
-        GameAlertCard.Scale = 0.96;
-
-        _ = AnimateShowOverlayAsync();
-
-        return _alertTcs.Task;
-    }
-
-    private async Task AnimateShowOverlayAsync()
-    {
-        try
+        // If we couldn't find the bounds, hide the arrow and bail out
+        if (targetBounds == Rect.Zero)
         {
-            await GameAlertOverlay.FadeTo(1, 180, Easing.CubicIn);
-            await GameAlertCard.ScaleTo(1.06, 220, Easing.CubicOut);
-            await GameAlertCard.ScaleTo(1.0, 120, Easing.CubicIn);
+            ArrowPointer.Opacity = 0;
+            return;
         }
-        catch { }
-    }
 
-    private async Task HideGameAlertAsync(bool result)
-    {
-        if (!GameAlertOverlay.IsVisible) return;
+        // Wait briefly for layout to settle
+        await Task.Delay(150);
 
-        try
+        // 2. Get screen info (targetBounds is already calculated now!)
+        var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+        double screenHeight = displayInfo.Height / displayInfo.Density;
+        double safeZone = 60; // Padding from edges (Safe Zone)
+
+        // Arrow dimensions
+        double arrowWidth = 50;
+        double arrowHeight = 50;
+        double padding = 10; // Space between arrow and element
+
+        // 3. Calculate Potential Positions
+        // Position A: Above the element (Pointing Down)
+        double yAbove = targetBounds.Top - arrowHeight - padding;
+
+        // Position B: Below the element (Pointing Up)
+        double yBelow = targetBounds.Bottom + padding;
+
+        // 4. Determine Best Position
+        bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
+        double finalArrowY;
+        bool isArrowAbove;
+
+        if (preferAbove)
         {
-            await GameAlertCard.ScaleTo(0.96, 120, Easing.CubicIn);
-            await GameAlertOverlay.FadeTo(0, 140, Easing.CubicOut);
+            if (yAbove >= safeZone)
+            {
+                finalArrowY = yAbove;
+                isArrowAbove = true;
+            }
+            else
+            {
+                finalArrowY = yBelow;
+                isArrowAbove = false;
+            }
         }
-        catch { }
+        else
+        {
+            if (yBelow + arrowHeight <= screenHeight - safeZone)
+            {
+                finalArrowY = yBelow;
+                isArrowAbove = false;
+            }
+            else
+            {
+                finalArrowY = yAbove;
+                isArrowAbove = true;
+            }
+        }
 
-        GameAlertOverlay.IsVisible = false;
+        // 5. Apply Position and Rotation
+        double arrowX = targetBounds.Center.X - (arrowWidth / 2);
 
-        _alertTcs?.TrySetResult(result);
-        _alertTcs = null;
+        AbsoluteLayout.SetLayoutBounds(ArrowPointer, new Rect(arrowX, finalArrowY, arrowWidth, arrowHeight));
+        AbsoluteLayout.SetLayoutFlags(ArrowPointer, AbsoluteLayoutFlags.None);
+
+        ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
+
+        // 6. Sync Speech Bubble
+        bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
+        PositionSpeechBubble(!arrowIsAtTopHalf, offsetX);
+
+        await AnimateArrowPointer();
     }
 
-    private async void OnAlertOkClicked(object? sender, EventArgs e)
+    private VisualElement? GetFirstVisibleStoryCard()
     {
-        await SoundService.PlayButtonClickAsync();
-        await HideGameAlertAsync(true);
+        return _firstStoryImage;
     }
 
-    private async void OnAlertYesClicked(object? sender, EventArgs e)
-    {
-        await SoundService.PlayButtonClickAsync();
-        await HideGameAlertAsync(true);
-    }
+    private IEnumerable<Element> GetVisualTreeDescendants(Element element)
+        {
+            var queue = new Queue<Element>();
+            queue.Enqueue(element);
 
-    private async void OnAlertNoClicked(object? sender, EventArgs e)
-    {
-        await SoundService.PlayButtonClickAsync();
-        await HideGameAlertAsync(false);
-    }
+            while (queue.Count > 0)
+            {
+                var current = queue.Dequeue();
+                yield return current;
 
-    private async void OnAlertBackgroundTapped(object? sender, EventArgs e)
+                if (current is Layout layout)
+                {
+                    foreach (var child in layout.Children.OfType<Element>())
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+                else if (current is ContentView contentView && contentView.Content != null)
+                {
+                    queue.Enqueue(contentView.Content);
+                }
+                else if (current is ScrollView scrollView && scrollView.Content != null)
+                {
+                    queue.Enqueue(scrollView.Content);
+                }
+            }
+        }
+
+        private void PositionSpeechBubble(bool positionAtTop, double offsetX)
+        {
+            var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+            double screenHeight = displayInfo.Height / displayInfo.Density;
+
+            // Use a fixed X position instead of centering
+            // Tarsier ends at 180 (X=30 + Width=150). 
+            // We set Bubble X to 160 to slightly overlap the tail with the Tarsier.
+            double bubbleX = 160;
+            bubbleX += offsetX; // Apply any additional offset from the tutorial step
+            double bubbleWidth = 350;
+            double safePadding = 60; // Padding from top/bottom screen edges
+
+            if (positionAtTop)
+            {
+                // Position at Top
+                AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
+            }
+            else
+            {
+                // Position at Bottom
+                // Using a fixed offset from bottom (e.g., 200) to ensure it doesn't cover keyboard/nav bar
+                AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
+            }
+
+            AbsoluteLayout.SetLayoutFlags(SpeechBubbleContainer, AbsoluteLayoutFlags.None);
+        }
+
+        private Rect GetAbsolutePosition(VisualElement element)
+        {
+            if (element == null) return Rect.Zero;
+
+            double x = element.X;
+            double y = element.Y;
+            double width = element.Width;
+            double height = element.Height;
+
+            var current = element.Parent as VisualElement;
+
+            while (current != null && !(current is Page))
+            {
+                x += current.X;
+                y += current.Y;
+
+                if (current is ScrollView scrollView)
+                {
+                    x -= scrollView.ScrollX;
+                    y -= scrollView.ScrollY;
+                }
+
+                current = current.Parent as VisualElement;
+            }
+
+            return new Rect(x, y, width, height);
+        }
+
+        private async Task AnimateArrowPointer()
+        {
+            ArrowPointer.Opacity = 0;
+            ArrowPointer.Scale = 0.8;
+
+            await Task.Delay(100);
+
+            await Task.WhenAll(
+                ArrowPointer.FadeTo(1, 300, Easing.CubicOut),
+                ArrowPointer.ScaleTo(1, 300, Easing.BounceOut)
+            );
+
+            // Bounce animation loop
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    while (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                    {
+                        await MainThread.InvokeOnMainThreadAsync(async () =>
+                        {
+                            if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                            {
+                                await ArrowPointer.ScaleTo(1.2, 500, Easing.CubicInOut);
+                                if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                                {
+                                    await ArrowPointer.ScaleTo(1.0, 500, Easing.CubicInOut);
+                                }
+                            }
+                        });
+                        await Task.Delay(100);
+                    }
+                }
+                catch
+                {
+                    // Animation cancelled - ignore
+                }
+            });
+        }
+
+        // Update HighlightTargetElement to use direct references
+        private void HighlightTargetElement(string? targetName)
+        {
+            // Reset all highlights
+            HudAvatar.Opacity = 1;
+            StarsLabel.Opacity = 1;
+            HeartsPanel.Opacity = 1;
+            StoriesView.Opacity = 1;
+            BackButton.Opacity = 1;
+            HomeButton.Opacity = 1;
+
+            if (string.IsNullOrEmpty(targetName))
+                return;
+
+            // Dim everything except target
+            switch (targetName)
+            {
+                case "HudAvatar":
+                    StarsLabel.Opacity = 0.3;
+                    HeartsPanel.Opacity = 0.3;
+                    BackButton.Opacity = 0.3;
+                    HomeButton.Opacity = 0.3;
+                    StoriesView.Opacity = 0.3;
+                    break;
+                case "StarsLabel":
+                    HudAvatar.Opacity = 0.5;
+                    HeartsPanel.Opacity = 0.3;
+                    BackButton.Opacity = 0.3;
+                    HomeButton.Opacity = 0.3;
+                    StoriesView.Opacity = 0.3;
+                    break;
+                case "HeartsPanel":
+                    HudAvatar.Opacity = 0.5;
+                    StarsLabel.Opacity = 0.3;
+                    BackButton.Opacity = 0.3;
+                    HomeButton.Opacity = 0.3;
+                    StoriesView.Opacity = 0.3;
+                    break;
+                case "BackButton":
+                    HudAvatar.Opacity = 0.5;
+                    StarsLabel.Opacity = 0.3;
+                    HeartsPanel.Opacity = 0.3;
+                    HomeButton.Opacity = 0.3;
+                    StoriesView.Opacity = 0.3;
+                    break;
+                case "HomeButton":
+                    HudAvatar.Opacity = 0.5;
+                    StarsLabel.Opacity = 0.3;
+                    HeartsPanel.Opacity = 0.3;
+                    BackButton.Opacity = 0.3;
+                    StoriesView.Opacity = 0.3;
+                    break;
+                case "SecondStoryCard":
+                    HudAvatar.Opacity = 0.5;
+                    StarsLabel.Opacity = 0.3;
+                    HeartsPanel.Opacity = 0.3;
+                    BackButton.Opacity = 0.3;
+                    HomeButton.Opacity = 0.3;
+                    StoriesView.Opacity = 1;
+                    break;
+            }
+        }
+    private VisualElement? _firstStoryImage;
+
+    // The event handler triggered by the XAML
+    private void OnTargetImageLoaded(object? sender, EventArgs e)
     {
-        await HideGameAlertAsync(false);
+        // If we haven't captured an image yet, grab the very first one that loads
+        if (_firstStoryImage == null && sender is VisualElement img)
+        {
+            _firstStoryImage = img;
+        }
     }
-}
+    // Update CompleteTutorial to use direct references
+    private async Task CompleteTutorial()
+        {
+            // Save that tutorial is completed
+            Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+
+            // Animate out
+            await Task.WhenAll(
+                ArrowPointer.FadeTo(0, 200),
+                SpeechBubbleContainer.FadeTo(0, 300),
+                TarsierImage.FadeTo(0, 300),
+                TutorialOverlay.FadeTo(0, 400)
+            );
+
+            TutorialOverlay.IsVisible = false;
+
+            // Reset opacities
+            HudAvatar.Opacity = 1;
+            StarsLabel.Opacity = 1;
+            HeartsPanel.Opacity = 1;
+            StoriesView.Opacity = 1;
+            BackButton.Opacity = 1;
+            HomeButton.Opacity = 1;
+        }
+
+        void RefreshHearts()
+        {
+            HeartsPanel.Children.Clear();
+            for (int i = 0; i < AlamatContent.Hearts; i++)
+            {
+                HeartsPanel.Children.Add(new Image
+                {
+                    Source = "heart_full.png",
+                    WidthRequest = 24,
+                    HeightRequest = 24,
+                    Aspect = Aspect.AspectFit
+                });
+            }
+        }
+
+        void LoadHud()
+        {
+            HudAvatar.Source = CharacterHelper.CurrentAvatar;
+            PlayerNameLabel.Text = CharacterHelper.CurrentName;
+            StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
+            RefreshHearts();
+        }
+
+        async void OnBackTapped(object? s, TappedEventArgs e)
+        {
+            await SoundService.PlayButtonClickAsync();
+            if (Navigation.NavigationStack.Count > 1)
+                await Navigation.PopAsync();
+        }
+
+        async void OnHomeTapped(object? s, TappedEventArgs e)
+        {
+            await SoundService.PlayButtonClickAsync();
+            await Navigation.PushAsync(new IndexPage());
+        }
+
+        void LoadStories()
+        {
+            var currentCategory = AlamatContent.category ?? "";
+
+            StoriesView.ItemsSource = AlamatContent.Stories.Where(s => string.IsNullOrEmpty(currentCategory)
+                    || (!string.IsNullOrEmpty(s.Category)
+                        && s.Category.Equals(currentCategory, StringComparison.OrdinalIgnoreCase))).Select(s => new StoryCard
+                        {
+                            Id = s.Id,
+                            Title = s.Title,
+                            Thumb = s.Thumb,
+                            IsPurchased = s.IsPurchased,
+                            IsRewardClaimed = s.IsRewardClaimed,
+
+                            Price = s.PriceStars,
+                            IsLocked = !(s.PriceStars == 0 || s.IsPurchased || AlamatContent.UnlockedStories.Contains(s.Id))
+                        }).ToList();
+        }
+
+        async void OnStoryTapped(object? sender, TappedEventArgs e)
+        {
+            await SoundService.PlayButtonClickAsync();
+
+            if (sender is not Grid g || g.BindingContext is not StoryCard card) return;
+
+            var story = AlamatContent.GetStory(card.Id);
+
+            if (!AlamatContent.IsStoryUnlocked(card.Id))
+            {
+                // Try to spend stars (updates in-memory AlamatContent.Stars)
+                if (!AlamatContent.TrySpendStars(card.Price))
+                {
+                    await ShowGameAlertAsync($"Kailangan: {card.Price}", false);
+                    return;
+                }
+
+                // Optimistically mark as purchased in memory
+                story.IsPurchased = true;
+
+                bool savedToDb = false;
+                try
+                {
+                    // Persist monitored story data
+                    await App.Database.UpdateStoryAsync(story);
+
+                    // Keep the fast-check set in sync (UpdateStoryAsync also tries to sync it,
+                    // but we ensure it here immediately so UI checks are consistent).
+                    AlamatContent.UnlockedStories.Add(story.Id);
+                    await App.Database.SetStarsAsync(CharacterHelper.CurrentStars - card.Price);
+                    CharacterHelper.CurrentStars -= card.Price; // keep in sync
+                    savedToDb = true;
+                }
+                catch (Exception ex)
+                {
+                    // Rollback in-memory changes on failure
+                    story.IsPurchased = false;
+                    AlamatContent.Stars += card.Price; // refund
+                    System.Diagnostics.Debug.WriteLine($"UpdateStoryAsync failed: {ex}");
+
+                    await ShowGameAlertAsync("Hindi naisave ang binili — subukang muli.", false);
+                }
+
+                // If saving failed, stop here (user was refunded). If saved, refresh UI.
+                if (!savedToDb)
+                    return;
+
+                // Refresh HUD and list
+                LoadHud();
+                LoadStories();
+            }
+            AlamatContent.CurrentStoryId = story.Id;
+
+            // Navigate to narrator page (story view)
+            await Navigation.PushAsync(new NarratorPage(card.Id));
+        }
+
+        // Custom Game Alert with Yes/No or OK buttons
+        private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
+        {
+            if (GameAlertOverlay.IsVisible && _alertTcs != null)
+                return _alertTcs.Task;
+
+            _alertTcs = new TaskCompletionSource<bool>();
+
+            // Set message
+            AlertMessageLabel.Text = message;
+
+            // Clear existing buttons
+            AlertButtonsPanel.Children.Clear();
+
+            if (showYesNo)
+            {
+                // Add Yes button
+                var yesButton = new Button
+                {
+                    Text = "Oo",
+                    FontAttributes = FontAttributes.Bold,
+                    CornerRadius = 18,
+                    HeightRequest = 44,
+                    WidthRequest = 100,
+                    BackgroundColor = Color.FromArgb("#00A6FF"),
+                    TextColor = Colors.White
+                };
+                yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
+                AlertButtonsPanel.Children.Add(yesButton);
+
+                // Add No button
+                var noButton = new Button
+                {
+                    Text = "Hindi",
+                    FontAttributes = FontAttributes.Bold,
+                    CornerRadius = 18,
+                    HeightRequest = 44,
+                    WidthRequest = 100,
+                    BackgroundColor = Color.FromArgb("#FF6B6B"),
+                    TextColor = Colors.White
+                };
+                noButton.Clicked += (s, e) => OnAlertNoClicked(s, e);
+                AlertButtonsPanel.Children.Add(noButton);
+            }
+            else
+            {
+                // Add OK button
+                var okButton = new Button
+                {
+                    Text = "OK",
+                    FontAttributes = FontAttributes.Bold,
+                    CornerRadius = 18,
+                    HeightRequest = 44,
+                    WidthRequest = 120,
+                    BackgroundColor = Color.FromArgb("#00A6FF"),
+                    TextColor = Colors.White
+                };
+                okButton.Clicked += (s, e) => OnAlertOkClicked(s, e);
+                AlertButtonsPanel.Children.Add(okButton);
+            }
+
+            GameAlertOverlay.IsVisible = true;
+            GameAlertOverlay.Opacity = 0;
+            GameAlertCard.Scale = 0.96;
+
+            _ = AnimateShowOverlayAsync();
+
+            return _alertTcs.Task;
+        }
+
+        private async Task AnimateShowOverlayAsync()
+        {
+            try
+            {
+                await GameAlertOverlay.FadeTo(1, 180, Easing.CubicIn);
+                await GameAlertCard.ScaleTo(1.06, 220, Easing.CubicOut);
+                await GameAlertCard.ScaleTo(1.0, 120, Easing.CubicIn);
+            }
+            catch { }
+        }
+
+        private async Task HideGameAlertAsync(bool result)
+        {
+            if (!GameAlertOverlay.IsVisible) return;
+
+            try
+            {
+                await GameAlertCard.ScaleTo(0.96, 120, Easing.CubicIn);
+                await GameAlertOverlay.FadeTo(0, 140, Easing.CubicOut);
+            }
+            catch { }
+
+            GameAlertOverlay.IsVisible = false;
+
+            _alertTcs?.TrySetResult(result);
+            _alertTcs = null;
+        }
+
+        private async void OnAlertOkClicked(object? sender, EventArgs e)
+        {
+            await SoundService.PlayButtonClickAsync();
+            await HideGameAlertAsync(true);
+        }
+
+        private async void OnAlertYesClicked(object? sender, EventArgs e)
+        {
+            await SoundService.PlayButtonClickAsync();
+            await HideGameAlertAsync(true);
+        }
+
+        private async void OnAlertNoClicked(object? sender, EventArgs e)
+        {
+            await SoundService.PlayButtonClickAsync();
+            await HideGameAlertAsync(false);
+        }
+
+        private async void OnAlertBackgroundTapped(object? sender, EventArgs e)
+        {
+            await HideGameAlertAsync(false);
+        }
+
+        private class TutorialStep
+        {
+            public string Title { get; set; } = "";
+            public string Message { get; set; } = "";
+            public string? TargetElementName { get; set; }
+            public double OffsetX { get; set; } = 0;
+        }
+    }

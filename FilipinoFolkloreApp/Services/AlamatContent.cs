@@ -119,7 +119,7 @@ namespace FilipinoFolkloreApp.Services
         {
             new Story{
                 StoryIndex=1, Category = "alamat", MedalId = 1,
-                Id="1_juan_tamad", Title="Alamat ng Alimango", PriceStars=0, RewardStars=20, 
+                Id="1_juan_tamad", Title="Alamat ng Alimango", PriceStars=0, RewardStars=50, 
                 Thumb ="storiesalamat/alamatngalimgango/iconalamatngalimango.png",
                 Slides =  CreateSlidesFromSubtitles(
                 "subs/alamatngalimango.txt","storiesalamat/alamatngalimango","alamatngalimango"
@@ -158,7 +158,7 @@ namespace FilipinoFolkloreApp.Services
             },
             new Story{
                 StoryIndex =2,Category = "alamat", MedalId = 2,
-                Id="2_alamatngbahaghari", Title="alamatngbahaghari", PriceStars=1, RewardStars=20,Thumb="storiesalamat/alamatngbahaghari/iconalamatngbahaghari.png",
+                Id="2_alamatngbahaghari", Title="alamatngbahaghari", PriceStars=20, RewardStars=50,Thumb="storiesalamat/alamatngbahaghari/iconalamatngbahaghari.png",
                 Slides =  CreateSlidesFromSubtitles(
                 "subs/alamatngbahaghari.txt","storiesalamat/alamatngbahaghari","alamatngbahaghari"
                 ),
@@ -193,7 +193,7 @@ namespace FilipinoFolkloreApp.Services
             },
             new Story{
                 StoryIndex =3,Category = "alamat", MedalId = 3,
-                Id="3_alamatngpinya", Title="Alamat ng Pinya", PriceStars=2, RewardStars=50,
+                Id="3_alamatngpinya", Title="Alamat ng Pinya", PriceStars=20, RewardStars=50,
                 Thumb= "storiesalamat/alamatngpinya/iconalamatngpinya.png",
                 Slides =  CreateSlidesFromSubtitles(
                 "subs/alamatngpinya.txt","storiesalamat/alamatngpinya","alamatngpinya"
@@ -229,7 +229,7 @@ namespace FilipinoFolkloreApp.Services
             },
             new Story{
                 StoryIndex=4,Category = "alamat", MedalId= 4,
-                Id="4_batmayarawbuwanatbituin", Title="Bat may araw,buwan at bituin", PriceStars=3, RewardStars=20,
+                Id="4_batmayarawbuwanatbituin", Title="Bat may araw,buwan at bituin", PriceStars=30, RewardStars=50,
                 Thumb="storiesalamat/batmayarawbuwanatbituin/iconbatmayarawbuwanatbituin.png",
                 Slides =  CreateSlidesFromSubtitles(
                 "subs/batmayarawbuwanatbituin.txt","storiesalamat/batmayarawbuwanatbituin","batmayarawbuwanatbituin"
@@ -265,7 +265,7 @@ namespace FilipinoFolkloreApp.Services
             },
             new Story{
                 StoryIndex= 5,Category = "alamat", MedalId = 5,
-                Id="5_kungbakitmayulan", Title="Kung bakit may ulan", PriceStars=1, RewardStars=25,
+                Id="5_kungbakitmayulan", Title="Kung bakit may ulan", PriceStars=30, RewardStars=25,
                 Thumb = "storiesalamat/kungbakitmayulan/iconkungbakitmayulan.png",
                 Slides =  CreateSlidesFromSubtitles(
                 "subs/kungbakitmayulan.txt","storiesalamat/kungbakitmayulan","kungbakitmayulan"
@@ -303,7 +303,7 @@ namespace FilipinoFolkloreApp.Services
             //Epiko
             new Story{
                 StoryIndex =21,Category = "epiko", MedalId =6,
-                Id="6_Bantugan", Title="Bantugan", PriceStars=1, RewardStars=25,Thumb ="storiesepiko/bantugan/iconbantugan.png",
+                Id="6_Bantugan", Title="Bantugan", PriceStars=20, RewardStars=50,Thumb ="storiesepiko/bantugan/iconbantugan.png",
                 Slides =  CreateSlidesFromSubtitles(
                 "subs/bantugan.txt","storiesepiko/bantugan","bantugan"
                 ),
@@ -342,7 +342,7 @@ namespace FilipinoFolkloreApp.Services
                 Id = "7_hinilawod",
                 Title = "hinilawod",
                 MedalId = 7,
-                PriceStars = 0,
+                PriceStars = 20,
                 RewardStars = 50,
                 Thumb = "storiesepiko/hinilawod/iconhinilawod.png",
                 Slides =  CreateSlidesFromSubtitles(
@@ -383,7 +383,7 @@ namespace FilipinoFolkloreApp.Services
             Id = "8_ibalon",
             Title = "Ibalon",
             MedalId = 8,
-            PriceStars = 1,
+            PriceStars = 20,
             RewardStars = 50,
             Thumb = "storiesepiko/ibalon/iconibalon.png",
             Slides =  CreateSlidesFromSubtitles(
@@ -424,7 +424,7 @@ namespace FilipinoFolkloreApp.Services
             Id = "9_manimimbin",
             Title = "Manimimbin",
             MedalId = 9,
-            PriceStars = 0,
+            PriceStars = 20,
             RewardStars = 50,
             Thumb = "storiesepiko/manimimbin/iconmanimimbin.png",
             Slides =  CreateSlidesFromSubtitles(
@@ -461,7 +461,7 @@ namespace FilipinoFolkloreApp.Services
         },
         new Story{
                 StoryIndex =25,Category = "epiko", MedalId = 10,
-                Id="10_tudbulul", Title="tudbulul", PriceStars=2, RewardStars=20,
+                Id="10_tudbulul", Title="tudbulul", PriceStars=20, RewardStars=50,
                 Thumb = "storiesepiko/tudbulul/icontudbulul.png",
                 Slides =  CreateSlidesFromSubtitles(
                 "subs/tudbulul.txt","storiesepiko/tudbulul","tudbulul"
@@ -537,7 +537,7 @@ namespace FilipinoFolkloreApp.Services
             Id = "12_angkabayoatkalabaw",
             Title = "Kabayo at Kalabaw",
             MedalId =  12,
-            PriceStars = 0,
+            PriceStars = 20,
             RewardStars = 50,
             Thumb = "storiespabula/angkabayoatkalabaw/iconangkabayoatkalabaw.png",
             Slides =  CreateSlidesFromSubtitles(
@@ -574,7 +574,7 @@ namespace FilipinoFolkloreApp.Services
         },
             new Story{
                 StoryIndex =33,Category = "pabula", MedalId = 13,
-                Id="3_pagongatkuneho", Title="Pagong at Kuneho", PriceStars=1, RewardStars=20,
+                Id="3_pagongatkuneho", Title="Pagong at Kuneho", PriceStars=20, RewardStars=50,
                 Thumb = "storiespabula/pagongatkuneho/iconpagongatkuneho.png",
                 Slides =  CreateSlidesFromSubtitles(
                 "subs/pagongatkuneho.txt","storiespabula/pagongatkuneho","pagongatkuneho"
@@ -614,7 +614,7 @@ namespace FilipinoFolkloreApp.Services
             Id = "14_pagong_at_matsing",
             Title = "Pagong at Matsing",
             MedalId = 14,
-            PriceStars = 1,
+            PriceStars = 20,
             RewardStars = 50,
             Thumb = "storiespabula/pagongatmatsing/iconpagongatmatsing.png",
             Slides =  CreateSlidesFromSubtitles(
@@ -652,7 +652,7 @@ namespace FilipinoFolkloreApp.Services
         
         new Story{
                 StoryIndex =35,Category = "pabula", MedalId = 15,
-                Id="3_tularansikawayan", Title="Tularan si Kawayan", PriceStars=1, RewardStars=20,
+                Id="3_tularansikawayan", Title="Tularan si Kawayan", PriceStars=20, RewardStars=50,
                 Thumb = "storiespabula/tularansikawayan/icontularansikawayan.png",
                 Slides =  CreateSlidesFromSubtitles(
                 "subs/tularansikawayan.txt","storiespabula/tularansikawayan","tularansikawayan"

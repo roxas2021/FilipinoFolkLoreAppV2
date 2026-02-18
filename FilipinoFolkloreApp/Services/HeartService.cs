@@ -9,7 +9,7 @@ namespace FilipinoFolkloreApp.Services
     public class HeartService
     {
         const int MaxHearts = 3;
-        const int ResetMinutes = 1;
+        const int ResetMinutes = 5;
         const string LastHeartLostKey = "LastHeartLost";
 
         public int GetHearts()

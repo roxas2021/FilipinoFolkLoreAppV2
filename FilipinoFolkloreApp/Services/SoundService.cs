@@ -30,7 +30,7 @@ public class SoundService
             using var player = _audioManager.CreatePlayer(stream);
 
             // Set volume and play
-            player.Volume = 0.5; // Adjust as needed
+            player.Volume = 1; // Adjust as needed
             player.Play();
 
             // Wait for the sound to finish (assuming short duration ~200-500ms)

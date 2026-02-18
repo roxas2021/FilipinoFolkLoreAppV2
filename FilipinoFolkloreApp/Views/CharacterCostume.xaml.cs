@@ -27,7 +27,7 @@ namespace FilipinoFolkloreApp.Views
 
         // Tutorial state
         private int _tutorialStep = 0;
-        private const string TUTORIAL_COMPLETED_KEY = "CharacterCostumeTutorialCompleted";
+        private const string TUTORIAL_COMPLETED_KEY = "CharacterCostumeTutorialCompleted2";
 
         // Tutorial steps configuration
         private readonly TutorialStep[] _tutorialSteps = new[]
@@ -37,36 +37,42 @@ namespace FilipinoFolkloreApp.Views
                 Title = "Pag-customize ng Avatar!",
                 Message = "Maligayang pagdating sa Avatar Customization! Dito mo pwedeng palitan ang damit ng iyong character.",
                 TargetElementName = null,
+                OffsetX = 0
             },
             new TutorialStep
             {
                 Title = "Iyong Character",
                 Message = "Dito mo makikita ang iyong current avatar. Mag-preview dito ng mga costumes na pipiliin mo!",
                 TargetElementName = "CharacterImage",
+                OffsetX = +200
             },
             new TutorialStep
             {
                 Title = "Iyong Pilon Stars",
                 Message = "Dito mo makikita kung gaano karaming stars mayroon ka para bumili ng mga bagong tapis!",
                 TargetElementName = "PilonStarNicholLabel",
+                OffsetX = 50
             },
             new TutorialStep
             {
                 Title = "Mga Tapis (Costumes)",
                 Message = "Pumili ng tapis mula dito! May presyo bawat isa. Pag nabili mo na, pwede mo nang gamitin!",
                 TargetElementName = "TapisCollectionView",
+                OffsetX = -100
             },
             new TutorialStep
             {
                 Title = "Bilhin o Piliin",
                 Message = "I-click ang button na ito para bilhin ang bagong tapis o piliin ang nabili mo na!",
                 TargetElementName = "BuyButton",
+                OffsetX = +200
             },
             new TutorialStep
             {
                 Title = "Bumalik sa Home",
                 Message = "I-click ito para bumalik sa Home page kapag tapos ka na mag-customize!",
                 TargetElementName = "HomeButton",
+                OffsetX = -50
             }
         };
 
@@ -145,20 +151,20 @@ namespace FilipinoFolkloreApp.Views
             // Update arrow pointer to point at target element dynamically
             if (!string.IsNullOrEmpty(step.TargetElementName))
             {
-                await PositionArrowToElement(step.TargetElementName);
+                await PositionArrowToElement(step.TargetElementName, step.OffsetX);
             }
             else
             {
                 ArrowPointer.Opacity = 0;
                 // Position speech bubble at default location (upper right of tarsier)
-                PositionSpeechBubble(true);
+                PositionSpeechBubble(true, 0);
             }
 
             // Highlight target element
             HighlightTargetElement(step.TargetElementName);
         }
 
-        private async Task PositionArrowToElement(string elementName)
+        private async Task PositionArrowToElement(string elementName, double offsetX = 0)
         {
             // 1. Find the target element
             VisualElement? targetElement = elementName switch
@@ -256,12 +262,12 @@ namespace FilipinoFolkloreApp.Views
             // If Arrow is in top half (y < screenHeight/2), put Bubble at Bottom
             // If Arrow is in bottom half, put Bubble at Top
             bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
-            PositionSpeechBubble(!arrowIsAtTopHalf);
+            PositionSpeechBubble(!arrowIsAtTopHalf, offsetX);
 
             await AnimateArrowPointer();
         }
 
-        private void PositionSpeechBubble(bool positionAtTop)
+        private void PositionSpeechBubble(bool positionAtTop, double offsetX)
         {
             var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
             double screenHeight = displayInfo.Height / displayInfo.Density;
@@ -270,7 +276,7 @@ namespace FilipinoFolkloreApp.Views
             // Tarsier ends at 180 (X=30 + Width=150). 
             // We set Bubble X to 160 to slightly overlap the tail with the Tarsier.
             double bubbleX = 160;
-
+            bubbleX += offsetX; // Apply any additional offset from the tutorial step
             double bubbleWidth = 350;
             double safePadding = 60; // Padding from top/bottom screen edges
 
@@ -662,6 +668,7 @@ namespace FilipinoFolkloreApp.Views
             public string Title { get; set; } = "";
             public string Message { get; set; } = "";
             public string? TargetElementName { get; set; }
+            public double OffsetX { get; set; } = 0;
         }
     }
 
