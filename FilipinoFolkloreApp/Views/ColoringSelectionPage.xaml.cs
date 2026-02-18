@@ -18,99 +18,92 @@ public partial class ColoringSelectionPage : ContentPage
         {
             Id = "ski",
             Title = "Magkulay 1",
-            ThumbnailPath = "emptysketchsketch1.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht1.png"
+            ThumbnailPath = "drawingicon1.png",
+            TemplatePath = "coloring/templates/drawing1.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay2",
             Title = "Magkulay 2",
-            ThumbnailPath = "emptysketchsketch2.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht2.png"
+            ThumbnailPath = "drawingicon2.png",
+            TemplatePath = "coloring/templates/drawing2.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay3",
             Title = "Magkulay 3",
-            ThumbnailPath = "emptysketchsketch3.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht3.png"
+            ThumbnailPath = "drawingicon3.png",
+            TemplatePath = "coloring/templates/drawing3.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay4",
             Title = "Magkulay 4",
-            ThumbnailPath = "emptysketchsketch4.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht4.png"
+            ThumbnailPath = "drawingicon4.png",
+            TemplatePath = "coloring/templates/drawing4.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay5",
             Title = "Magkulay 5",
-            ThumbnailPath = "emptysketchsketch5.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht5.png"
+            ThumbnailPath = "drawingicon5.png",
+            TemplatePath = "coloring/templates/drawing5.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay6",
             Title = "Magkulay 6",
-            ThumbnailPath = "emptysketchsketch6.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht6.png"
+            ThumbnailPath = "drawingicon6.png",
+            TemplatePath = "coloring/templates/drawing6.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay7",
             Title = "Magkulay 7",
-            ThumbnailPath = "emptysketchsketch7.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht7.png"
+            ThumbnailPath = "drawingicon7.png",
+            TemplatePath = "coloring/templates/drawing7.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay8",
             Title = "Magkulay 8",
-            ThumbnailPath = "emptysketchsketch8.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht8.png"
+            ThumbnailPath = "drawingicon8.png",
+            TemplatePath = "coloring/templates/drawing8.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay9",
             Title = "Magkulay 9",
-            ThumbnailPath = "emptysketchsketch9.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht9.png"
+            ThumbnailPath = "drawingicon9.png",
+            TemplatePath = "coloring/templates/drawing9.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay10",
             Title = "Magkulay 10",
-            ThumbnailPath = "emptysketchsketch10.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht10.png"
+            ThumbnailPath = "drawingicon10.png",
+            TemplatePath = "coloring/templates/drawing10.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay11",
             Title = "Magkulay 11",
-            ThumbnailPath = "emptysketchsketch11.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht11.png"
+            ThumbnailPath = "drawingicon11.png",
+            TemplatePath = "coloring/templates/drawing11.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay12",
             Title = "Magkulay 12",
-            ThumbnailPath = "emptysketchsketch12.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht12.png"
+            ThumbnailPath = "drawingicon12.png",
+            TemplatePath = "coloring/templates/drawing12.png"
         },
         new ColoringTemplate
         {
             Id = "magkulay13",
             Title = "Magkulay 13",
-            ThumbnailPath = "emptysketchsketch13.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht13.png"
-        },
-        new ColoringTemplate
-        {
-            Id = "magkulay14",
-            Title = "Magkulay 14",
-            ThumbnailPath = "emptysketchsketch14.png",
-            TemplatePath = "coloring/templates/emptysketchsketcht14.png"
+            ThumbnailPath = "drawingicon13.png",
+            TemplatePath = "coloring/templates/drawing13.png"
         }
     };
 

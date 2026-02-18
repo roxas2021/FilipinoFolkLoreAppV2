@@ -134,20 +134,19 @@
 	  <None Remove="Resources\Images\bg\login_bg.jpg" />
 	  <None Remove="Resources\Images\bg\narator_bg.jpg" />
 	  <None Remove="Resources\Images\bg\reward_bg.jpg" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch1.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch10.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch11.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch12.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch13.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch14.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch2.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch3.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch4.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch5.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch6.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch7.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch8.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\emptysketchsketch9.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon1.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon10.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon11.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon12.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon13.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon2.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon3.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon4.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon5.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon6.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon7.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon8.png" />
+	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon9.png" />
 	  <None Remove="Resources\Images\elements\close.png" />
 	  <None Remove="Resources\Images\elements\eagle.png" />
 	  <None Remove="Resources\Images\elements\lock.png" />
@@ -447,26 +446,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch1.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch10.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch11.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch12.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch13.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch14.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch2.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch3.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch4.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch5.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch6.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch7.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch8.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\emptysketchsketch9.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\coloringthumbnail1.png">
-	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-	  </MauiImage>
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon1.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon10.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon11.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon12.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon13.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon2.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon3.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon4.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon5.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon6.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon7.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon8.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon9.png" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -102,6 +102,8 @@ namespace FilipinoFolkloreApp.Views
         private async Task ShowTutorial()
         {
             _tutorialStep = 0;
+
+            UpdateTutorialStep();
             TutorialOverlay.IsVisible = true;
 
             // Animate tarsier entrance
@@ -117,7 +119,6 @@ namespace FilipinoFolkloreApp.Views
                 SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
             );
 
-            UpdateTutorialStep();
         }
 
         private async void OnTutorialNextStep(object? sender, EventArgs e)
