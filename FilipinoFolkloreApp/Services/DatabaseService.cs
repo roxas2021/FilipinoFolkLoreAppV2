@@ -32,11 +32,6 @@ namespace FilipinoFolkloreApp.Services
                             .FirstOrDefaultAsync();
         }
 
-        /// <summary>
-        /// Ensures the single row with Id==1 exists. If it doesn't, create it (with Id = 1).
-        /// Returns the character that exists/was created.
-        /// </summary>
-        /// 
         public async Task<List<Medals>> LoadMedalsAsync()
         {
             var dbMedals = await _database.Table<Medals>().ToListAsync();

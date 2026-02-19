@@ -498,22 +498,17 @@
         }
     private VisualElement? _firstStoryImage;
 
-    // The event handler triggered by the XAML
     private void OnTargetImageLoaded(object? sender, EventArgs e)
     {
-        // If we haven't captured an image yet, grab the very first one that loads
         if (_firstStoryImage == null && sender is VisualElement img)
         {
             _firstStoryImage = img;
         }
     }
-    // Update CompleteTutorial to use direct references
     private async Task CompleteTutorial()
         {
-            // Save that tutorial is completed
             Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
 
-            // Animate out
             await Task.WhenAll(
                 ArrowPointer.FadeTo(0, 200),
                 SpeechBubbleContainer.FadeTo(0, 300),
@@ -523,7 +518,6 @@
 
             TutorialOverlay.IsVisible = false;
 
-            // Reset opacities
             HudAvatar.Opacity = 1;
             StarsLabel.Opacity = 1;
             HeartsPanel.Opacity = 1;

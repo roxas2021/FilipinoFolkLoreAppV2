@@ -208,7 +208,7 @@ public partial class NarratorDetailPage : ContentPage
                 // Medal ID for narrator first full battery achievement
                 await Navigation.PushAsync(new ColoringRewardPage(
                     stars: 50,
-                    medalId: 22,
+                    medalId: 23,
                     rewardKey: firstFullBatteryKey,
                     returnPageType: "NarratorDetail",
                     returnPageParameter: _narratorId

@@ -182,10 +182,19 @@ namespace FilipinoFolkloreApp.Services
             {
                 MedalId = 22,
                 MedalName = "Badge ng Pinakamakulay na Bata",
-                MedalImagePath = "medals/pinakamakulaynabata.png",
+                MedalImagePath = "medals/badgepinakamakulaynabata.png",
                 isUnlocked = false,
                 MedalDescription = "Kapag nakumpleto lahat ng 15 coloring activity.\nPinapakita ang galing at pagiging malikhain sa paggamit ng kulay\r\n"
             },
+            new Medals
+            {
+                MedalId = 23,
+                MedalName = "Badge ng Pagpapakain sa Narrator",
+                MedalImagePath = "medals/badgeparasaunangpagbusogngnarrator.png",
+                isUnlocked = false,
+                MedalDescription = "Kapag unang pagkakataon na pakainin ang narrator.\nPinapakita ang pagmamalasakit at pagtulong sa narrator ng app\r\n"
+            },
+
         };
     }
 }

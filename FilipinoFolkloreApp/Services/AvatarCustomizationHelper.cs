@@ -155,8 +155,5 @@ namespace FilipinoFolkloreApp.Services
             var first = GetFirstCostumePath(avatarSetId);
             return string.IsNullOrEmpty(first) ? fallback : first;
         }
-        /// <summary>
-        /// Returns costume info (path + unlock status) for the given avatar.
-        /// </summary>
     }
 }
