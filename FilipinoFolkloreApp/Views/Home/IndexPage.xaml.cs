@@ -11,9 +11,12 @@ public partial class IndexPage : ContentPage
 {
     private HeartService HeartService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<HeartService>()!;
-    
+
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
+
+    // Double-tap prevention flag
+    private bool _isNavigating = false;
 
     // Tutorial state
     private int _tutorialStep = 0;
@@ -86,7 +89,7 @@ public partial class IndexPage : ContentPage
             TargetElementName = "MgaLaroButton",
         }
     };
-    
+
     public IndexPage()
     {
         InitializeComponent();
@@ -95,15 +98,18 @@ public partial class IndexPage : ContentPage
         var data = App.Database.GetCharAsync();
         LoadSettings();
     }
-    
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
+        // Reset navigation flag when page appears
+        _isNavigating = false;
+
         AlamatContent.Hearts = HeartService.GetHearts();
         loadhud();
         LoadSettings();
-        
+
         // Resume background music based on settings
         if (Application.Current is App app)
         {
@@ -165,13 +171,13 @@ public partial class IndexPage : ContentPage
         // Update arrow pointer to point at target element dynamically
         if (!string.IsNullOrEmpty(step.TargetElementName))
         {
-            await PositionArrowToElement(step.TargetElementName,step.OffsetX);
+            await PositionArrowToElement(step.TargetElementName, step.OffsetX);
         }
         else
         {
             ArrowPointer.Opacity = 0;
             // Position speech bubble at default location (upper right of tarsier)
-            PositionSpeechBubble(true,0);
+            PositionSpeechBubble(true, 0);
         }
 
         // Highlight target element
@@ -481,7 +487,7 @@ public partial class IndexPage : ContentPage
         PabulaButton.Opacity = 1;
         MgaLaroButton.Opacity = 1;
     }
-    
+
     void loadhud()
     {
         HudAvatar.Source = CharacterHelper.CurrentAvatar;
@@ -490,7 +496,7 @@ public partial class IndexPage : ContentPage
 
         RefreshHearts();
     }
-    
+
     void RefreshHearts()
     {
         HeartsPanel.Children.Clear();
@@ -505,41 +511,113 @@ public partial class IndexPage : ContentPage
             });
         }
     }
-    
+
     private async void OnAvatarTapped(object sender, EventArgs e)
     {
+        if (_isNavigating) return;
+
         await SoundService.PlayButtonClickAsync();
-        await Navigation.PushAsync(new CharacterCostume());
+
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PushAsync(new CharacterCostume());
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnAvatarTapped: {ex}");
+            _isNavigating = false;
+        }
     }
-    
+
     private async void OnAlamatClicked(object sender, EventArgs e)
     {
+        if (_isNavigating) return;
+
         await SoundService.PlayButtonClickAsync();
-        await Navigation.PushAsync(new AlamatPage("alamat"));
+
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PushAsync(new AlamatPage("alamat"));
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnAlamatClicked: {ex}");
+            _isNavigating = false;
+        }
     }
-    
+
     private async void OnEpikoClicked(object sender, EventArgs e)
     {
+        if (_isNavigating) return;
+
         await SoundService.PlayButtonClickAsync();
-        await Navigation.PushAsync(new AlamatPage("epiko"));
+
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PushAsync(new AlamatPage("epiko"));
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnEpikoClicked: {ex}");
+            _isNavigating = false;
+        }
     }
-    
+
     private async void OnPabulaClicked(object sender, EventArgs e)
     {
+        if (_isNavigating) return;
+
         await SoundService.PlayButtonClickAsync();
-        await Navigation.PushAsync(new AlamatPage("pabula"));
+
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PushAsync(new AlamatPage("pabula"));
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnPabulaClicked: {ex}");
+            _isNavigating = false;
+        }
     }
-    
+
     private async void OnMedalyaClicked(object sender, EventArgs e)
     {
+        if (_isNavigating) return;
+
         await SoundService.PlayButtonClickAsync();
-        await Navigation.PushAsync(new MedalPage());
+
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PushAsync(new MedalPage());
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnMedalyaClicked: {ex}");
+            _isNavigating = false;
+        }
     }
-    
+
     private async void OnMgaLaroClicked(object sender, EventArgs e)
     {
+        if (_isNavigating) return;
+
         await SoundService.PlayButtonClickAsync();
-        await Navigation.PushAsync(new MgaLaroPage());
+
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PushAsync(new MgaLaroPage());
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnMgaLaroClicked: {ex}");
+            _isNavigating = false;
+        }
     }
 
     private async void OnSettingsClicked(object sender, EventArgs e)
@@ -547,13 +625,13 @@ public partial class IndexPage : ContentPage
         await SoundService.PlayButtonClickAsync();
         SettingsModalOverlay.IsVisible = true;
     }
-    
+
     private async void OnCloseSettingsModal(object sender, EventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
         SettingsModalOverlay.IsVisible = false;
     }
-    
+
     private void OnMusicToggled(object sender, ToggledEventArgs e)
     {
         if (Application.Current is App app)
@@ -561,7 +639,7 @@ public partial class IndexPage : ContentPage
             app.UpdateBackgroundMusic(e.Value);
         }
     }
-    
+
     private void OnBackgroundVolumeChanged(object sender, ValueChangedEventArgs e)
     {
         int volumePercent = (int)e.NewValue;
@@ -575,32 +653,42 @@ public partial class IndexPage : ContentPage
             app.SetBackgroundMusicVolume(volumeValue);
         }
     }
-    
+
     private async void OnKreditsClicked(object sender, EventArgs e)
     {
+        if (_isNavigating) return;
+
         await SoundService.PlayButtonClickAsync();
-        
+
         // Close the settings modal first
         SettingsModalOverlay.IsVisible = false;
 
-        // Navigate to Credits page
-        await Navigation.PushAsync(new CreditsPage());
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PushAsync(new CreditsPage());
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnKreditsClicked: {ex}");
+            _isNavigating = false;
+        }
     }
-    
+
     private void OnVolumeChanged(object sender, ValueChangedEventArgs e)
     {
         // Update the volume label
         int volumePercent = (int)e.NewValue;
         BackgroundVolumeLabel.Text = $"{volumePercent}%";
-        
+
         // Save to preferences (0.0 to 1.0 range)
         double volumeValue = e.NewValue / 100.0;
         Preferences.Set("NarratorVolume", volumeValue);
-        
+
         // Store in AlamatContent for easy access
         AlamatContent.NarratorVolume = volumeValue;
     }
-    
+
     private void OnNarratorVolumeChanged(object sender, ValueChangedEventArgs e)
     {
         // Update the volume label
@@ -614,7 +702,7 @@ public partial class IndexPage : ContentPage
         // Store in AlamatContent for easy access
         AlamatContent.NarratorVolume = volumeValue;
     }
-    
+
     private void LoadSettings()
     {
         double savedBackgroundVolume = Preferences.Get("BackgroundMusicVolume", 0.3);

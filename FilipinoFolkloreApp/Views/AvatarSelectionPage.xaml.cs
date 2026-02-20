@@ -17,6 +17,9 @@ namespace FilipinoFolkloreApp.Views
         private int _tutorialStep = 0;
         private const string TUTORIAL_COMPLETED_KEY = "AvatarSelectionTutorialCompleted";
 
+        // Double-tap prevention flag
+        private bool _isNavigating = false;
+
         // Tutorial steps configuration
         private readonly TutorialStep[] _tutorialSteps = new[]
         {
@@ -58,6 +61,9 @@ namespace FilipinoFolkloreApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            // Reset navigation flag when page appears
+            _isNavigating = false;
 
             // Check if tutorial should be shown
             bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
@@ -434,56 +440,77 @@ namespace FilipinoFolkloreApp.Views
 
         async void AvatarGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Prevent double-tap: if already navigating, ignore this selection
+            if (_isNavigating)
+            {
+                System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to IndexPage.");
+                AvatarGrid.SelectedItem = null;
+                return;
+            }
+
             if (e.CurrentSelection.FirstOrDefault() is not Avatar selected)
             {
                 AvatarGrid.SelectedItem = null;
                 return;
             }
 
-            // Animation
-            PointsOverlay.Scale = 0.9;
-            PointsOverlay.Opacity = 0;
-            PointsOverlay.IsVisible = true;
+            // Set navigation flag to prevent double-tap
+            _isNavigating = true;
 
-            await Task.WhenAll(
-                PointsOverlay.FadeTo(1, 350),
-                PointsOverlay.ScaleTo(1.05, 350, Easing.CubicOut)
-            );
-
-            await Task.Delay(2500);
-
-            // Update character points
-            var existingChar = await App.Database.GetCharAsync();
-            if (existingChar != null)
+            try
             {
-                existingChar.points = 50;
-                await App.Database.UpdateCharAsync(existingChar);
+                // Animation
+                PointsOverlay.Scale = 0.9;
+                PointsOverlay.Opacity = 0;
+                PointsOverlay.IsVisible = true;
+
+                await Task.WhenAll(
+                    PointsOverlay.FadeTo(1, 350),
+                    PointsOverlay.ScaleTo(1.05, 350, Easing.CubicOut)
+                );
+
+                await Task.Delay(2500);
+
+                // Update character points
+                var existingChar = await App.Database.GetCharAsync();
+                if (existingChar != null)
+                {
+                    existingChar.points = 50;
+                    await App.Database.UpdateCharAsync(existingChar);
+                }
+
+                // Save avatar set
+                var fileName = Path.GetFileNameWithoutExtension(selected.ImageSource ?? "");
+                var avatarId = string.IsNullOrWhiteSpace(fileName) ? "avatar1" : fileName;
+
+                var set = new AvatarCostumeSet
+                {
+                    avatarid = avatarId,
+                    avatarblueunlocked = false,
+                    avatarblueredunlocked = false,
+                    avatargreenunlocked = false,
+                    avatarpinkunlocked = false,
+                    avatarredunlocked = false,
+                };
+
+                await App.Database.SaveAvatarSetAsync(set);
+                AvatarCustomizationHelper.SelectedAvatarSetId = set.avatarid;
+                CharacterHelper.CurrentAvatar = AvatarCustomizationHelper.GetFirstCostumePathOrDefault(set.avatarid);
+                await App.Database.UpdateCurrentAvatarAsync(CharacterHelper.CurrentAvatar);
+
+                // Navigate to IndexPage
+                await Navigation.PushAsync(new IndexPage());
+                Navigation.RemovePage(this);
+
+                AvatarGrid.SelectedItem = null;
             }
-
-            // Save avatar set
-            var fileName = Path.GetFileNameWithoutExtension(selected.ImageSource ?? "");
-            var avatarId = string.IsNullOrWhiteSpace(fileName) ? "avatar1" : fileName;
-
-            var set = new AvatarCostumeSet
+            catch (Exception ex)
             {
-                avatarid = avatarId,
-                avatarblueunlocked = false,
-                avatarblueredunlocked = false,
-                avatargreenunlocked = false,
-                avatarpinkunlocked = false,
-                avatarredunlocked = false,
-            };
-
-            await App.Database.SaveAvatarSetAsync(set);
-            AvatarCustomizationHelper.SelectedAvatarSetId = set.avatarid;
-            CharacterHelper.CurrentAvatar = AvatarCustomizationHelper.GetFirstCostumePathOrDefault(set.avatarid);
-            await App.Database.UpdateCurrentAvatarAsync(CharacterHelper.CurrentAvatar);
-
-            // Navigate to IndexPage
-            await Navigation.PushAsync(new IndexPage());
-            Navigation.RemovePage(this);
-
-            AvatarGrid.SelectedItem = null;
+                System.Diagnostics.Debug.WriteLine($"Error in AvatarGrid_SelectionChanged: {ex}");
+                _isNavigating = false; // Reset flag on error
+                AvatarGrid.SelectedItem = null;
+            }
+            // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
         }
 
         private class TutorialStep

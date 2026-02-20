@@ -105,7 +105,7 @@ namespace FilipinoFolkloreApp.Views
                     StrokeThickness = 3,
                     Padding = new Thickness(12, 8),
                     Margin = new Thickness(4, 2),
-                    WidthRequest = letter == ' ' ? 20 : 45, 
+                    WidthRequest = letter == ' ' ? 20 : 45,
                     HeightRequest = 50,
                     StrokeShape = new RoundRectangle { CornerRadius = 8 }
                 };
@@ -144,7 +144,7 @@ namespace FilipinoFolkloreApp.Views
         private async Task HandlePickAsync(int idx)
         {
             await SoundService.PlayButtonClickAsync();
-            
+
             if (_currentBugtong == null) return;
 
             // Check heart availability
@@ -240,9 +240,8 @@ namespace FilipinoFolkloreApp.Views
 
                     if (!alreadyClaimed)
                     {
-                        // Unlock milestone medal (this is fine to do here)
-                        await App.Database.UnlockMedalAsync(milestone.MedalId);
-
+                        // DON'T unlock medal here - let ColoringRewardPage handle it
+                        // Just store the pending milestone
                         hasMilestone = true;
                         _pendingMilestone = milestone;
                     }
@@ -270,18 +269,18 @@ namespace FilipinoFolkloreApp.Views
         {
             // Reuse the existing GameAlertOverlay for success message
             AlertNarrator.Source = AlamatContent.CurrentNarrator.Avatar;
-            
+
             // Hide title and retry button, show OK button
             AlertTitleLabel.IsVisible = false;
             AlertRetryButton.IsVisible = false;
             AlertOkButton.IsVisible = true;
-            
+
             // Clear the hearts panel and show success message
             AlertHeartsPanel.Children.Clear();
-            
+
             var successLabel = new Label
             {
-                Text = wasAlreadyCompleted ? "Tama ang sagot" : $"Tama ang sagot +{stars}",
+                Text = wasAlreadyCompleted ? "Tama ang sagot" : $"Tama ang sagot +{stars}⭐",
                 FontSize = 24,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.FromArgb("#0000FF"),
@@ -405,6 +404,8 @@ namespace FilipinoFolkloreApp.Views
                 _pendingMilestone = null;
 
                 string milestoneKey = $"Bugtong_Milestone_{milestone.RequiredCorrect}";
+
+                // Navigate to reward page which will handle unlocking the medal and claiming the reward
                 await Navigation.PushAsync(new ColoringRewardPage(
                     stars: milestone.RewardStars,
                     medalId: milestone.MedalId,
@@ -453,7 +454,7 @@ namespace FilipinoFolkloreApp.Views
         private async void OnHomeTapped(object? sender, TappedEventArgs e)
         {
             await SoundService.PlayButtonClickAsync();
-            
+
             // Use NavigationHelper for safer navigation
             var pages = Navigation.NavigationStack.ToList();
             foreach (var page in pages)

@@ -11,6 +11,9 @@ public partial class ColoringSelectionPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
+    // Double-tap prevention flag
+    private bool _isNavigating = false;
+
     // Hardcoded list of coloring templates
     private readonly List<ColoringTemplate> _coloringTemplates = new()
     {
@@ -119,6 +122,10 @@ public partial class ColoringSelectionPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        // Reset navigation flag when page appears
+        _isNavigating = false;
+
         LoadHUD();
     }
 
@@ -254,14 +261,54 @@ public partial class ColoringSelectionPage : ContentPage
 
     private async void OnColoringTemplateTapped(ColoringTemplate template)
     {
+        // Prevent double-tap: if already navigating, ignore this tap
+        if (_isNavigating)
+        {
+            System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to ColoringPage.");
+            return;
+        }
+
         await SoundService.PlayButtonClickAsync();
-        await Navigation.PushAsync(new ColoringPage(template.TemplatePath));
+
+        // Set navigation flag to prevent double-tap
+        _isNavigating = true;
+
+        try
+        {
+            await Navigation.PushAsync(new ColoringPage(template.TemplatePath));
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnColoringTemplateTapped: {ex}");
+            _isNavigating = false; // Reset flag on error
+        }
+        // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
     }
 
     private async void OnCollectionTapped(object? sender, EventArgs e)
     {
+        // Prevent double-tap: if already navigating, ignore this tap
+        if (_isNavigating)
+        {
+            System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to ColoringCollectionPage.");
+            return;
+        }
+
         await SoundService.PlayButtonClickAsync();
-        await Navigation.PushAsync(new ColoringCollectionPage());
+
+        // Set navigation flag to prevent double-tap
+        _isNavigating = true;
+
+        try
+        {
+            await Navigation.PushAsync(new ColoringCollectionPage());
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnCollectionTapped: {ex}");
+            _isNavigating = false; // Reset flag on error
+        }
+        // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
     }
 
     private async void OnBackTapped(object? sender, TappedEventArgs e)

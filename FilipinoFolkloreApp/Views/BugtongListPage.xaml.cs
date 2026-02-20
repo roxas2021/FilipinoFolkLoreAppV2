@@ -17,6 +17,9 @@ public partial class BugtongListPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
+    // Double-tap prevention flag
+    private bool _isNavigating = false;
+
     public BugtongListPage()
     {
         InitializeComponent();
@@ -28,6 +31,10 @@ public partial class BugtongListPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        // Reset navigation flag when page appears
+        _isNavigating = false;
+
         AlamatContent.Hearts = HeartService.GetHearts();
         RefreshHearts();
         RefreshStars();
@@ -74,7 +81,7 @@ public partial class BugtongListPage : ContentPage
                     Id = b.Id,
                     Name = b.Name,
                     RewardStars = b.RewardStars,
-                    HasMedal = false // No individual medals anymore
+                    HasMedal = false
                 })
                 .ToList();
 
@@ -89,11 +96,30 @@ public partial class BugtongListPage : ContentPage
 
     private async void OnBugtongTapped(object? sender, TappedEventArgs e)
     {
+        // Prevent double-tap: if already navigating, ignore this tap
+        if (_isNavigating)
+        {
+            System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to BugtongQuizPage.");
+            return;
+        }
+
         await SoundService.PlayButtonClickAsync();
         
         if (e.Parameter is string bugtongId)
         {
-            await Navigation.PushAsync(new BugtongQuizPage(bugtongId));
+            // Set navigation flag to prevent double-tap
+            _isNavigating = true;
+
+            try
+            {
+                await Navigation.PushAsync(new BugtongQuizPage(bugtongId));
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in OnBugtongTapped: {ex}");
+                _isNavigating = false; // Reset flag on error
+            }
+            // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
         }
     }
     

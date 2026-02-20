@@ -79,7 +79,7 @@
                                        VerticalOptions="Center" />
                             </Grid>
 
-                            <Image Source="star.png"
+                            <Image Source="icon_star_yellow.png"
                                    WidthRequest="64"
                                    HeightRequest="64"
                                    VerticalOptions="Center"

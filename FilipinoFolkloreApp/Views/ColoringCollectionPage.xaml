@@ -73,7 +73,7 @@
                                    FontAttributes="Bold" 
                                    FontSize="20" 
                                    TextColor="#FFCC00"/>
-                                    <Image Source="elements/star.png" 
+                                    <Image Source="icon_star_yellow.png" 
                                    WidthRequest="35" 
                                    HeightRequest="35"/>
                                 </HorizontalStackLayout>

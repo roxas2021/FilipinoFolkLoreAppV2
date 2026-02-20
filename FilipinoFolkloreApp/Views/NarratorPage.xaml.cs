@@ -19,6 +19,9 @@ public partial class NarratorPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
+    // Double-tap prevention flag
+    private bool _isNavigating = false;
+
     // Tutorial state
     private int _tutorialStep = 0;
     private const string TUTORIAL_COMPLETED_KEY = "NarratorPageTutorialCompleted4";
@@ -31,7 +34,7 @@ public partial class NarratorPage : ContentPage
             Title = "Pumili ng Narrator!",
             Message = "Dito makikita mo ang mga narrator na pwedeng magbasa ng kuwento. Piliin ang gusto mo!",
             TargetElementName = null,
-            
+
         },
         new TutorialStep
         {
@@ -69,6 +72,10 @@ public partial class NarratorPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        // Reset navigation flag when page appears
+        _isNavigating = false;
+
         AlamatContent.Hearts = HeartService.GetHearts();
 
         // Check and refresh narrator battery
@@ -478,6 +485,13 @@ public partial class NarratorPage : ContentPage
 
     async void OnNarratorTapped(object? sender, TappedEventArgs e)
     {
+        // Prevent double-tap: if already navigating, ignore this tap
+        if (_isNavigating)
+        {
+            System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to story.");
+            return;
+        }
+
         await SoundService.PlayButtonClickAsync();
 
         if (sender is not Grid g || g.BindingContext is not Card c) return;
@@ -496,77 +510,91 @@ public partial class NarratorPage : ContentPage
             return;
         }
 
-        // If already unlocked for this story or globally, just select and continue
-        var story = AlamatContent.GetStory(_storyId);
+        // Set navigation flag to prevent double-tap
+        _isNavigating = true;
 
-        bool alreadyUnlockedForThisStory =
-            c.Id == "tarsier" ||
-            AlamatContent.UnlockedNarrators.Contains(c.Id) || // global
-            (c.Id == "eagle" && story.NarratorEagleUnlocked) ||
-            (c.Id == "monkey" && story.NarratorMonkeyUnlocked);
-
-        if (!alreadyUnlockedForThisStory)
+        try
         {
-            if (!AlamatContent.TrySpendStars(c.Price))
-            {
-                await ShowGameAlertAsync($"Kailangan: {c.Price}", false);
-                return;
-            }
+            // If already unlocked for this story or globally, just select and continue
+            var story = AlamatContent.GetStory(_storyId);
 
-            // Save previous flags to rollback on DB failure
-            bool previousEagle = story.NarratorEagleUnlocked;
-            bool previousMonkey = story.NarratorMonkeyUnlocked;
+            bool alreadyUnlockedForThisStory =
+                c.Id == "tarsier" ||
+                AlamatContent.UnlockedNarrators.Contains(c.Id) || // global
+                (c.Id == "eagle" && story.NarratorEagleUnlocked) ||
+                (c.Id == "monkey" && story.NarratorMonkeyUnlocked);
 
-            // set the per-story flag
-            switch (c.Id)
+            if (!alreadyUnlockedForThisStory)
             {
-                case "eagle":
-                    story.NarratorEagleUnlocked = true;
-                    break;
-                case "monkey":
-                    story.NarratorMonkeyUnlocked = true;
-                    break;
-            }
+                if (!AlamatContent.TrySpendStars(c.Price))
+                {
+                    await ShowGameAlertAsync($"Kailangan: {c.Price}", false);
+                    _isNavigating = false; // Reset flag before returning
+                    return;
+                }
 
-            bool saved = false;
-            try
-            {
-                await App.Database.UpdateStoryAsync(story);
-                await App.Database.SetStarsAsync(CharacterHelper.CurrentStars - c.Price);
-                CharacterHelper.CurrentStars -= c.Price; // keep in sync
-                saved = true;
-            }
-            catch (Exception ex)
-            {
-                // rollback if DB save fails: restore story flags and refund stars
-                story.NarratorEagleUnlocked = previousEagle;
-                story.NarratorMonkeyUnlocked = previousMonkey;
-                AlamatContent.Stars += c.Price; // refund
-                System.Diagnostics.Debug.WriteLine($"UpdateStoryAsync failed while unlocking narrator: {ex}");
-                await ShowGameAlertAsync("Hindi naisave ang narrator — subukang muli.", false);
-            }
+                // Save previous flags to rollback on DB failure
+                bool previousEagle = story.NarratorEagleUnlocked;
+                bool previousMonkey = story.NarratorMonkeyUnlocked;
 
-            if (!saved)
-            {
+                // set the per-story flag
+                switch (c.Id)
+                {
+                    case "eagle":
+                        story.NarratorEagleUnlocked = true;
+                        break;
+                    case "monkey":
+                        story.NarratorMonkeyUnlocked = true;
+                        break;
+                }
+
+                bool saved = false;
+                try
+                {
+                    await App.Database.UpdateStoryAsync(story);
+                    await App.Database.SetStarsAsync(CharacterHelper.CurrentStars - c.Price);
+                    CharacterHelper.CurrentStars -= c.Price; // keep in sync
+                    saved = true;
+                }
+                catch (Exception ex)
+                {
+                    // rollback if DB save fails: restore story flags and refund stars
+                    story.NarratorEagleUnlocked = previousEagle;
+                    story.NarratorMonkeyUnlocked = previousMonkey;
+                    AlamatContent.Stars += c.Price; // refund
+                    System.Diagnostics.Debug.WriteLine($"UpdateStoryAsync failed while unlocking narrator: {ex}");
+                    await ShowGameAlertAsync("Hindi naisave ang narrator — subukang muli.", false);
+                }
+
+                if (!saved)
+                {
+                    LoadHud();
+                    RefreshNarratorList();
+                    _isNavigating = false; // Reset flag before returning
+                    return;
+                }
+
+                // saved ok -> refresh HUD and list
                 LoadHud();
                 RefreshNarratorList();
-                return;
             }
 
-            // saved ok -> refresh HUD and list
-            LoadHud();
-            RefreshNarratorList();
+            // Use narrator battery (deduct 1)
+            await AlamatContent.UseNarratorAsync();
+
+            // Save selected narrator to database
+            AlamatContent.SelectedNarratorId = c.Id;
+            AlamatContent.CurrentNarratorImage = c.Avatar;
+            await App.Database.UpdateSelectedNarratorAsync(c.Id);
+
+            await Navigation.PushAsync(new StoryPage(_storyId));
         }
-
-        // Use narrator battery (deduct 1)
-        await AlamatContent.UseNarratorAsync();
-
-        // Save selected narrator to database
-        AlamatContent.SelectedNarratorId = c.Id;
-        AlamatContent.CurrentNarratorImage = c.Avatar;
-        await App.Database.UpdateSelectedNarratorAsync(c.Id);
-
-        await Navigation.PushAsync(new StoryPage(_storyId));
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in OnNarratorTapped: {ex}");
+            _isNavigating = false; // Reset flag on error
+        }
+        // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
     }
 
     void LoadHud()
