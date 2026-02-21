@@ -120,8 +120,8 @@
             <!-- ===== Question (avatar left, pink pill around text only) ===== -->
             <Grid x:Name="QuizContentWrapper"
                   Grid.Row="1"
-                  RowDefinitions="Auto,Auto"
-                  RowSpacing="16">
+                  RowDefinitions="Auto,*,Auto"
+                  RowSpacing="8">
 
                 <Grid Grid.Row="0"
                       ColumnDefinitions="Auto,Auto"
@@ -138,23 +138,28 @@
                            VerticalOptions="Center"/>
 
                     <Border Grid.Column="1"
-                            BackgroundColor="#FF69B4"
-                            Padding="12,6"
-                            StrokeThickness="0"
-                            HorizontalOptions="Start"
-                            VerticalOptions="Center"
-                            MaximumWidthRequest="560">
+        BackgroundColor="#FF69B4"
+        StrokeThickness="0"
+        HorizontalOptions="Start"
+        VerticalOptions="Center"
+        MaximumWidthRequest="560"
+        HeightRequest="50">
+
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="24"/>
                         </Border.StrokeShape>
-                        <Label x:Name="BugtongPrompt"
-                               Text="..."
-                               FontAttributes="Bold"
-                               FontSize="20"
-                               TextColor="#FFCC00"
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               LineBreakMode="WordWrap"/>
+
+                        <ScrollView VerticalScrollBarVisibility="Always">
+
+                            <Label x:Name="BugtongPrompt"
+               FontAttributes="Bold"
+               FontSize="20"
+               TextColor="#FFCC00"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center"
+               LineBreakMode="WordWrap"/>
+
+                        </ScrollView>
                     </Border>
                 </Grid>
 
@@ -168,90 +173,91 @@
                             HorizontalOptions="Center"
                             VerticalOptions="Center"
                             Margin="0,8"/>
+                <!-- ===== Three Word Choices ===== -->
+                <Grid Grid.Row="2"
+      ColumnDefinitions="*,*,*"
+      ColumnSpacing="8"
+      Padding="8,0"
+      HorizontalOptions="Center"
+      VerticalOptions="Center">
+
+                    <!-- Choice 0 -->
+                    <Border x:Name="Choice0Border"
+            BackgroundColor="#ADD8E6"
+            StrokeThickness="0"
+            Padding="16,12"
+            HorizontalOptions="Center"
+            VerticalOptions="End">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <Label x:Name="Choice0"
+               Text="CHOICE 1"
+               FontSize="20"
+               FontAttributes="Bold"
+               TextColor="#333333"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center"
+               Padding="12,8">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnPick0"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+
+                    <!-- Choice 1 -->
+                    <Border Grid.Column="1"
+            x:Name="Choice1Border"
+            BackgroundColor="#ADD8E6"
+            StrokeThickness="0"
+            Padding="16,12"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <Label x:Name="Choice1"
+               Text="CHOICE 2"
+               FontSize="20"
+               FontAttributes="Bold"
+               TextColor="#333333"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center"
+               Padding="12,8">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnPick1"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+
+                    <!-- Choice 2 -->
+                    <Border Grid.Column="2"
+            x:Name="Choice2Border"
+            BackgroundColor="#ADD8E6"
+            StrokeThickness="0"
+            Padding="16,12"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <Label x:Name="Choice2"
+               Text="CHOICE 3"
+               FontSize="20"
+               FontAttributes="Bold"
+               TextColor="#333333"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center"
+               Padding="12,8">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnPick2"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                </Grid>
             </Grid>
 
-            <!-- ===== Three Word Choices ===== -->
-            <Grid Grid.Row="2"
-                  ColumnDefinitions="Auto,Auto,Auto"
-                  ColumnSpacing="8"
-                  Padding="8,0"
-                  HorizontalOptions="Center"
-                  VerticalOptions="Center">
-
-                <!-- Choice 0 -->
-                <Border x:Name="Choice0Border"
-                        BackgroundColor="#ADD8E6"
-                        StrokeThickness="0"
-                        Padding="16,12"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="16"/>
-                    </Border.StrokeShape>
-                    <Label x:Name="Choice0"
-                           Text="CHOICE 1"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="Black"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"
-                           Padding="12,8">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnPick0"/>
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Border>
-
-                <!-- Choice 1 -->
-                <Border Grid.Column="1"
-                        x:Name="Choice1Border"
-                        BackgroundColor="#ADD8E6"
-                        StrokeThickness="0"
-                        Padding="16,12"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="16"/>
-                    </Border.StrokeShape>
-                    <Label x:Name="Choice1"
-                           Text="CHOICE 2"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="Black"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"
-                           Padding="12,8">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnPick1"/>
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Border>
-
-                <!-- Choice 2 -->
-                <Border Grid.Column="2"
-                        x:Name="Choice2Border"
-                        BackgroundColor="#ADD8E6"
-                        StrokeThickness="0"
-                        Padding="16,12"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="16"/>
-                    </Border.StrokeShape>
-                    <Label x:Name="Choice2"
-                           Text="CHOICE 3"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="Black"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"
-                           Padding="12,8">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnPick2"/>
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Border>
-            </Grid>
+            
         </Grid>
 
         <!-- Modal overlay - OUTSIDE the padded grid, at root level -->
