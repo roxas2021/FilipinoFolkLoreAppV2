@@ -25,13 +25,11 @@ namespace FilipinoFolkloreApp.Views
         private SoundService SoundService =>
             Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
-        // Tutorial state
         private int _tutorialStep = 0;
         private const string TUTORIAL_COMPLETED_KEY = "CharacterCostumeTutorialCompleted2";
 
-        // Tutorial steps configuration
         private readonly TutorialStep[] _tutorialSteps = new[]
-        {
+{
             new TutorialStep
             {
                 Title = "Pag-customize ng Avatar!",
@@ -96,7 +94,6 @@ namespace FilipinoFolkloreApp.Views
 
             AlertMessageLabel.Text = $"You don't have enough {CurrentUserName}!";
 
-            // Check if tutorial should be shown
             bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
             if (!tutorialCompleted)
             {
@@ -112,13 +109,11 @@ namespace FilipinoFolkloreApp.Views
             UpdateTutorialStep();
             TutorialOverlay.IsVisible = true;
 
-            // Animate tarsier entrance
             await Task.WhenAll(
-                TarsierImage.FadeTo(1, 400, Easing.CubicOut),
-                TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
-            );
+   TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+   TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+);
 
-            // Animate speech bubble
             await Task.Delay(200);
             await Task.WhenAll(
                 SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
@@ -148,7 +143,6 @@ namespace FilipinoFolkloreApp.Views
             TutorialMessageLabel.Text = step.Message;
             TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
 
-            // Update arrow pointer to point at target element dynamically
             if (!string.IsNullOrEmpty(step.TargetElementName))
             {
                 await PositionArrowToElement(step.TargetElementName, step.OffsetX);
@@ -156,17 +150,14 @@ namespace FilipinoFolkloreApp.Views
             else
             {
                 ArrowPointer.Opacity = 0;
-                // Position speech bubble at default location (upper right of tarsier)
                 PositionSpeechBubble(true, 0);
             }
 
-            // Highlight target element
             HighlightTargetElement(step.TargetElementName);
         }
 
         private async Task PositionArrowToElement(string elementName, double offsetX = 0)
         {
-            // 1. Find the target element
             VisualElement? targetElement = elementName switch
             {
                 "CharacterImage" => CharacterImage,
@@ -183,33 +174,23 @@ namespace FilipinoFolkloreApp.Views
                 return;
             }
 
-            // Wait briefly for layout to settle
             await Task.Delay(150);
 
-            // 2. Get screen info and target bounds
             var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
             double screenHeight = displayInfo.Height / displayInfo.Density;
-            double safeZone = 60; // Padding from edges (Safe Zone)
-
+            double safeZone = 60;
             Rect targetBounds = GetAbsolutePosition(targetElement);
 
             if (targetBounds == Rect.Zero) return;
 
-            // Arrow dimensions
             double arrowWidth = 50;
             double arrowHeight = 50;
-            double padding = 10; // Space between arrow and element
+            double padding = 10;
 
-            // 3. Calculate Potential Positions
-
-            // Position A: Above the element (Pointing Down)
             double yAbove = targetBounds.Top - arrowHeight - padding;
 
-            // Position B: Below the element (Pointing Up)
             double yBelow = targetBounds.Bottom + padding;
 
-            // 4. Determine Best Position
-            // Default preference based on screen half
             bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
 
             double finalArrowY;
@@ -217,7 +198,6 @@ namespace FilipinoFolkloreApp.Views
 
             if (preferAbove)
             {
-                // We want to be Above. Check if we fit in the Top Safe Zone.
                 if (yAbove >= safeZone)
                 {
                     finalArrowY = yAbove;
@@ -225,14 +205,12 @@ namespace FilipinoFolkloreApp.Views
                 }
                 else
                 {
-                    // Overflowed Top! Flip to Below.
                     finalArrowY = yBelow;
                     isArrowAbove = false;
                 }
             }
             else
             {
-                // We want to be Below. Check if we fit in the Bottom Safe Zone.
                 if (yBelow + arrowHeight <= screenHeight - safeZone)
                 {
                     finalArrowY = yBelow;
@@ -240,27 +218,18 @@ namespace FilipinoFolkloreApp.Views
                 }
                 else
                 {
-                    // Overflowed Bottom! Flip to Above.
                     finalArrowY = yAbove;
                     isArrowAbove = true;
                 }
             }
 
-            // 5. Apply Position and Rotation
-            // Center horizontally
             double arrowX = targetBounds.Center.X - (arrowWidth / 2);
 
             AbsoluteLayout.SetLayoutBounds(ArrowPointer, new Rect(arrowX, finalArrowY, arrowWidth, arrowHeight));
             AbsoluteLayout.SetLayoutFlags(ArrowPointer, AbsoluteLayoutFlags.None);
 
-            // Rotation Logic for Right-Pointing Arrow Image:
-            // If Arrow is Above -> Needs to point DOWN -> Rotate 90 deg
-            // If Arrow is Below -> Needs to point UP   -> Rotate -90 deg
             ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
 
-            // 6. Sync Speech Bubble
-            // If Arrow is in top half (y < screenHeight/2), put Bubble at Bottom
-            // If Arrow is in bottom half, put Bubble at Top
             bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
             PositionSpeechBubble(!arrowIsAtTopHalf, offsetX);
 
@@ -272,23 +241,15 @@ namespace FilipinoFolkloreApp.Views
             var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
             double screenHeight = displayInfo.Height / displayInfo.Density;
 
-            // Use a fixed X position instead of centering
-            // Tarsier ends at 180 (X=30 + Width=150). 
-            // We set Bubble X to 160 to slightly overlap the tail with the Tarsier.
             double bubbleX = 160;
-            bubbleX += offsetX; // Apply any additional offset from the tutorial step
-            double bubbleWidth = 350;
-            double safePadding = 60; // Padding from top/bottom screen edges
-
+            bubbleX += offsetX; double bubbleWidth = 350;
+            double safePadding = 60;
             if (positionAtTop)
             {
-                // Position at Top
                 AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
             }
             else
             {
-                // Position at Bottom
-                // Using a fixed offset from bottom (e.g., 200) to ensure it doesn't cover keyboard/nav bar
                 AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
             }
 
@@ -335,37 +296,34 @@ namespace FilipinoFolkloreApp.Views
                 ArrowPointer.ScaleTo(1, 300, Easing.BounceOut)
             );
 
-            // Bounce animation loop
             _ = Task.Run(async () =>
-            {
-                try
-                {
-                    while (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
-                    {
-                        await MainThread.InvokeOnMainThreadAsync(async () =>
-                        {
-                            if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
-                            {
-                                await ArrowPointer.ScaleTo(1.2, 500, Easing.CubicInOut);
-                                if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
-                                {
-                                    await ArrowPointer.ScaleTo(1.0, 500, Easing.CubicInOut);
-                                }
-                            }
-                        });
-                        await Task.Delay(100);
-                    }
-                }
-                catch
-                {
-                    // Animation cancelled - ignore
-                }
-            });
+{
+   try
+   {
+       while (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+       {
+           await MainThread.InvokeOnMainThreadAsync(async () =>
+           {
+               if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+               {
+                   await ArrowPointer.ScaleTo(1.2, 500, Easing.CubicInOut);
+                   if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                   {
+                       await ArrowPointer.ScaleTo(1.0, 500, Easing.CubicInOut);
+                   }
+               }
+           });
+           await Task.Delay(100);
+       }
+   }
+   catch
+   {
+   }
+});
         }
 
         private void HighlightTargetElement(string? targetName)
         {
-            // Reset all highlights
             CharacterImage.Opacity = 1;
             TapisCollectionView.Opacity = 1;
             BuyButton.Opacity = 1;
@@ -373,7 +331,6 @@ namespace FilipinoFolkloreApp.Views
             if (string.IsNullOrEmpty(targetName))
                 return;
 
-            // Dim everything except target
             switch (targetName)
             {
                 case "CharacterImage":
@@ -398,20 +355,17 @@ namespace FilipinoFolkloreApp.Views
 
         private async Task CompleteTutorial()
         {
-            // Save that tutorial is completed
             Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
 
-            // Animate out
             await Task.WhenAll(
-                ArrowPointer.FadeTo(0, 200),
-                SpeechBubbleContainer.FadeTo(0, 300),
-                TarsierImage.FadeTo(0, 300),
-                TutorialOverlay.FadeTo(0, 400)
-            );
+   ArrowPointer.FadeTo(0, 200),
+   SpeechBubbleContainer.FadeTo(0, 300),
+   TarsierImage.FadeTo(0, 300),
+   TutorialOverlay.FadeTo(0, 400)
+);
 
             TutorialOverlay.IsVisible = false;
 
-            // Reset opacities
             CharacterImage.Opacity = 1;
             TapisCollectionView.Opacity = 1;
             BuyButton.Opacity = 1;

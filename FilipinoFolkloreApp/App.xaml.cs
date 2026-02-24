@@ -30,12 +30,9 @@ namespace FilipinoFolkloreApp
             InitializeComponent();
             AlamatContent.MusicIsEnabled = Preferences.Get("MusicEnabled", true);
 
-            // Initialize data asynchronously but don't await (non-blocking)
             Task.Run(async () => await Database.LoadStoriesAsync());
             Task.Run(async () => await Database.LoadMedalsAsync());
-            Task.Run(async () => await Database.LoadNarratorDataAsync()); // Load narrator data
-
-            // Start background music
+            Task.Run(async () => await Database.LoadNarratorDataAsync());
             _ = InitializeBackgroundMusicAsync();
         }
 
@@ -43,11 +40,9 @@ namespace FilipinoFolkloreApp
         {
             try
             {
-                // Load your background music file (replace with your actual music file path)
                 _backgroundMusicStream = await FileSystem.OpenAppPackageFileAsync("bgmusic/Homepage.mp3");
                 _backgroundMusicPlayer = AudioManager.Current.CreatePlayer(_backgroundMusicStream);
 
-                // Set to loop
                 _backgroundMusicPlayer.Loop = true;
                 double savedVolume = Preferences.Get("BackgroundMusicVolume", 0.3);
                 _backgroundMusicPlayer.Volume = savedVolume;
@@ -70,7 +65,6 @@ namespace FilipinoFolkloreApp
 
         public void ResumeBackgroundMusic()
         {
-            // Only resume if music is enabled
             if (AlamatContent.MusicIsEnabled && _backgroundMusicPlayer != null)
             {
                 _backgroundMusicPlayer.Play();
@@ -79,7 +73,6 @@ namespace FilipinoFolkloreApp
 
         public void UpdateBackgroundMusic(bool isEnabled)
         {
-            // Update the global state and save to preferences
             AlamatContent.MusicIsEnabled = isEnabled;
             Preferences.Set("MusicEnabled", isEnabled);
 
@@ -120,12 +113,10 @@ namespace FilipinoFolkloreApp
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            // Synchronously determine the initial page
             ContentPage initialPage = DetermineInitialPage();
 
             var navigationPage = new NavigationPage(initialPage);
 
-            // Hide navigation bar globally
             NavigationPage.SetHasNavigationBar(initialPage, false);
             navigationPage.BarBackgroundColor = Colors.Transparent;
             navigationPage.BarTextColor = Colors.Transparent;
@@ -133,8 +124,7 @@ namespace FilipinoFolkloreApp
             MainPage = navigationPage;
 
             var window = new Window(MainPage);
-            
-            // Subscribe to window lifecycle events
+
             window.Activated += OnAppActivated;
             window.Deactivated += OnAppDeactivated;
             window.Stopped += OnAppStopped;
@@ -146,28 +136,24 @@ namespace FilipinoFolkloreApp
         private void OnAppActivated(object? sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("App Activated");
-            // Resume music when app comes to foreground
             ResumeBackgroundMusic();
         }
 
         private void OnAppDeactivated(object? sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("App Deactivated");
-            // Pause music when app goes to background
             PauseBackgroundMusic();
         }
 
         private void OnAppStopped(object? sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("App Stopped");
-            // Pause music when app is stopped
             PauseBackgroundMusic();
         }
 
         private void OnAppResumed(object? sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("App Resumed");
-            // Resume music when app is resumed
             ResumeBackgroundMusic();
         }
 
@@ -175,17 +161,14 @@ namespace FilipinoFolkloreApp
         {
             try
             {
-                // Synchronously check for existing character (blocking call is acceptable here since it's startup)
                 var existingChar = Database.GetCharAsync().GetAwaiter().GetResult();
 
                 if (existingChar != null && !string.IsNullOrWhiteSpace(existingChar.name))
                 {
-                    // Character exists - check for avatar set
                     var existingAvatarSets = Database.GetAllAvatarSetsAsync().GetAwaiter().GetResult();
 
                     if (existingAvatarSets != null && existingAvatarSets.Count > 0)
                     {
-                        // Everything is set up - go directly to IndexPage
                         CharacterHelper.CurrentName = existingChar.name;
                         CharacterHelper.CurrentStars = existingChar.stars;
                         CharacterHelper.CurrentAvatar = existingChar.currentavatar;
@@ -195,7 +178,6 @@ namespace FilipinoFolkloreApp
                     }
                     else
                     {
-                        // Character exists but no avatar set - go to AvatarSelectionPage
                         CharacterHelper.CurrentName = existingChar.name;
                         CharacterHelper.CurrentStars = existingChar.stars;
 
@@ -203,13 +185,11 @@ namespace FilipinoFolkloreApp
                     }
                 }
 
-                // No character exists, show MainPage
                 return new MainPage();
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"DetermineInitialPage failed: {ex}");
-                // Stay on MainPage if anything goes wrong
                 return new MainPage();
             }
         }

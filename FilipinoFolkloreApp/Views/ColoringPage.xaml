@@ -96,17 +96,27 @@
                     </Frame>
                 </Grid>
 
-                <!-- RIGHT: Save + Back + Home buttons -->
+                <!-- RIGHT: Undo + Save + Back + Home buttons -->
                 <StackLayout Grid.Column="2"
                      Spacing="8"
                      VerticalOptions="Start"
                      Orientation="Horizontal"
                      HorizontalOptions="Start">
 
+                    <Button x:Name="UndoButton"
+                    Text="Undo" 
+                    BackgroundColor="#FF9800" 
+                    TextColor="white"
+                    FontAttributes="Bold"
+                    CornerRadius="40"
+                    Clicked="OnUndoClicked"
+                    IsEnabled="False"
+                    Padding="15,8"
+                    VerticalOptions="Center"/>
+
                     <Button x:Name="SaveButton"
                     Text="I-Save" 
                     BackgroundColor="Green" 
-                    
                     TextColor="white"
                     FontAttributes="Bold"
                     CornerRadius="40"
@@ -249,6 +259,6 @@
             </Grid>
         </Grid>
     </Grid>
-    
-    
+
+
 </ContentPage>

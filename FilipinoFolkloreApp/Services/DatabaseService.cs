@@ -22,7 +22,7 @@ namespace FilipinoFolkloreApp.Services
             _database.CreateTableAsync<AvatarCostumeSet>().Wait();
             _database.CreateTableAsync<Medals>().Wait();
             _database.CreateTableAsync<BugtongMonitored>().Wait();
-            _database.CreateTableAsync<QuizMonitored>().Wait(); // Add quiz tracking table
+            _database.CreateTableAsync<QuizMonitored>().Wait(); 
         }
 
         public Task<Character> GetCharAsync()
@@ -41,12 +41,10 @@ namespace FilipinoFolkloreApp.Services
                 var dbEntry = dbMedals.FirstOrDefault(m => m.MedalId == medal.MedalId);
                 if (dbEntry != null)
                 {
-                    // Copy monitored fields into the in-memory medal
                     medal.isUnlocked = dbEntry.isUnlocked;
                 }
                 else
                 {
-                    // Insert default if not found
                     await _database.InsertAsync(new Medals
                     {
                         MedalId = medal.MedalId,
@@ -91,25 +89,18 @@ namespace FilipinoFolkloreApp.Services
 
             var defaultChar = new Character
             {
-                Id = MAIN_CHAR_ID,      // assign the ID explicitly so the single-row is always id==1
+                Id = MAIN_CHAR_ID,     
                 name = "Player",
                 currentavatar = string.Empty,
                 points = 0,
                 stars = 0
             };
 
-            // InsertAsync will use the provided Id value
             await _database.InsertAsync(defaultChar).ConfigureAwait(false);
 
-            // return the inserted row
             return await GetCharAsync().ConfigureAwait(false);
         }
 
-        // ---------- Update operations (no id parameter) ----------
-
-        /// <summary>
-        /// Update currentavatar of the single character.
-        /// </summary>
         public async Task<Character> UpdateCurrentAvatarAsync(string newAvatar)
         {
             await _lock.WaitAsync().ConfigureAwait(false);
@@ -128,9 +119,6 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        /// <summary>
-        /// Set stars to an absolute non-negative value.
-        /// </summary>
         public async Task<Character> SetStarsAsync(int stars)
         {
             if (stars < 0) stars = 0;
@@ -150,10 +138,7 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        /// <summary>
-        /// Add (or subtract if negative) a delta to stars. Ensures stars never go below 0.
-        /// Returns updated character.
-        /// </summary>
+        
         public async Task<Character> AddStarsAsync(int delta)
         {
             await _lock.WaitAsync().ConfigureAwait(false);
@@ -175,9 +160,7 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        /// <summary>
-        /// Update avatar and change stars together (atomic from caller POV).
-        /// </summary>
+        
         public async Task<Character> UpdateAvatarAndAddStarsAsync(string newAvatar, int starDelta)
         {
             await _lock.WaitAsync().ConfigureAwait(false);
@@ -200,9 +183,7 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        /// <summary>
-        /// Optional helper: reset the character back to defaults (keeps Id == 1).
-        /// </summary>
+        
         public async Task<Character> ResetCharacterToDefaultsAsync()
         {
             await _lock.WaitAsync().ConfigureAwait(false);
@@ -217,7 +198,7 @@ namespace FilipinoFolkloreApp.Services
                     stars = 0
                 };
 
-                // If a row exists -> Update, otherwise Insert
+                
                 var existing = await GetCharAsync().ConfigureAwait(false);
                 if (existing == null)
                 {
@@ -225,7 +206,7 @@ namespace FilipinoFolkloreApp.Services
                 }
                 else
                 {
-                    // keep the Id==1 and update other fields
+                    
                     existing.name = defaultChar.name;
                     existing.currentavatar = defaultChar.currentavatar;
                     existing.points = defaultChar.points;
@@ -241,9 +222,7 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        /// <summary>
-        /// Return everything (should be only one row) - useful for debugging.
-        /// </summary>
+       
         public Task<List<Character>> GetAllCharactersAsync()
         {
             return _database.Table<Character>().ToListAsync();
@@ -266,7 +245,7 @@ namespace FilipinoFolkloreApp.Services
                 var dbEntry = dbStories.FirstOrDefault(s => s.StoryIndex == story.StoryIndex);
                 if (dbEntry != null)
                 {
-                    // Copy monitored fields into the in-memory story
+                    
                     story.IsPurchased = dbEntry.IsPurchased;
                     story.Category = dbEntry.Category;
                     story.IsRewardClaimed = dbEntry.IsRewardClaimed;
@@ -275,7 +254,7 @@ namespace FilipinoFolkloreApp.Services
                 }
                 else
                 {
-                    // Insert default if not found
+                    
                     await _database.InsertAsync(new StoryMonitored
                     {
                         StoryIndex = story.StoryIndex,
@@ -288,8 +267,7 @@ namespace FilipinoFolkloreApp.Services
                 }
             }
 
-            // ---- Sync global sets from the story monitored flags ----
-            // Unlocked stories: include purchased OR free stories (PriceStars == 0).
+            
             AlamatContent.UnlockedStories.Clear();
             foreach (var s in AlamatContent.Stories)
             {
@@ -297,7 +275,7 @@ namespace FilipinoFolkloreApp.Services
                     AlamatContent.UnlockedStories.Add(s.Id);
             }
 
-            // Unlocked narrators: always include 'tarsier' (free). Add others if any monitored true.
+            
             AlamatContent.UnlockedNarrators.Clear();
             AlamatContent.UnlockedNarrators.Add("tarsier");
             foreach (var s in AlamatContent.Stories)
@@ -308,13 +286,13 @@ namespace FilipinoFolkloreApp.Services
 
             return AlamatContent.Stories;
         }
-        // Update a story's monitored data
+        
         public async Task UpdateStoryAsync(AlamatContent.Story story)
         {
             var dbStory = await _database.FindAsync<StoryMonitored>(story.StoryIndex);
             if (dbStory != null)
             {
-                // Update DB record
+                
                 dbStory.IsPurchased = story.IsPurchased;
                 dbStory.Category = story.Category;
                 dbStory.IsRewardClaimed = story.IsRewardClaimed;
@@ -324,7 +302,7 @@ namespace FilipinoFolkloreApp.Services
             }
             else
             {
-                // Insert if missing
+                
                 await _database.InsertAsync(new StoryMonitored
                 {
                     StoryIndex = story.StoryIndex,
@@ -336,19 +314,18 @@ namespace FilipinoFolkloreApp.Services
                 });
             }
 
-            // ---- Keep global in-memory sets in sync immediately ----
-            // Story unlocked:
+            
             if (story.IsPurchased || story.PriceStars == 0)
                 AlamatContent.UnlockedStories.Add(story.Id);
             else
                 AlamatContent.UnlockedStories.Remove(story.Id);
 
-            // Narrator unlocks (global): if any story turn on narrator unlock, add it globally.
+            
             if (story.NarratorEagleUnlocked) AlamatContent.UnlockedNarrators.Add("eagle");
-            // If you want to allow turning narrator lock OFF (rare), you might need to recompute from all stories:
+            
             else
             {
-                // recompute presence
+                
                 if (!AlamatContent.Stories.Any(s => s.NarratorEagleUnlocked))
                     AlamatContent.UnlockedNarrators.Remove("eagle");
             }
@@ -360,16 +337,16 @@ namespace FilipinoFolkloreApp.Services
                     AlamatContent.UnlockedNarrators.Remove("monkey");
             }
 
-            // ensure 'tarsier' always present
+            
             AlamatContent.UnlockedNarrators.Add("tarsier");
         }
         public async Task<bool> IsAnyStoryNarratorUnlockedAsync(string narratorId)
         {
             if (string.IsNullOrEmpty(narratorId)) return false;
-            // tarsier is always unlocked
+            
             if (narratorId == "tarsier") return true;
 
-            // Query the StoryMonitored table directly for any row that has the narrator flag set
+           
             switch (narratorId)
             {
                 case "eagle":
@@ -389,7 +366,7 @@ namespace FilipinoFolkloreApp.Services
             return _database.Table<AvatarCostumeSet>().ToListAsync();
         }
 
-        // get by avatarid (string)
+        
         public Task<AvatarCostumeSet> GetAvatarSetByAvatarIdAsync(string avatarId)
         {
             return _database.Table<AvatarCostumeSet>()
@@ -404,24 +381,24 @@ namespace FilipinoFolkloreApp.Services
 
             try
             {
-                // try to find an existing record with the same avatarid
+               
                 var existing = await GetAvatarSetByAvatarIdAsync(set.avatarid);
 
                 if (existing != null)
                 {
-                    // ensure we're updating the existing row (preserve its PK)
+                    
                     set.id = existing.id;
                     return await _database.UpdateAsync(set);
                 }
                 else
                 {
-                    // no existing record -> insert
+                    
                     return await _database.InsertAsync(set);
                 }
             }
             catch (Exception)
             {
-                // rethrow so calling code can inspect the exception details (or log here)
+                
                 throw;
             }
         }
@@ -434,14 +411,14 @@ namespace FilipinoFolkloreApp.Services
 
             if (set == null)
             {
-                // create default set if not exists
+               
                 set = new AvatarCostumeSet
                 {
                     avatarid = avatarId
                 };
             }
 
-            // set the right flag
+            
             switch (costumeKey.ToLowerInvariant())
             {
                 case "avatarblue":
@@ -461,7 +438,7 @@ namespace FilipinoFolkloreApp.Services
                  
                     break;
                 default:
-                    // unknown key - optionally throw or return false
+                    
                     return false;
             }
 
@@ -469,7 +446,7 @@ namespace FilipinoFolkloreApp.Services
             return true;
         }
 
-        // helper to check if costume unlocked
+        
         public async Task<bool> IsCostumeUnlockedAsync(string avatarId, string costumeKey)
         {
             var set = await GetAvatarSetByAvatarIdAsync(avatarId);
@@ -486,9 +463,6 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        /// <summary>
-        /// Update narrator selection
-        /// </summary>
         public async Task<Character> UpdateSelectedNarratorAsync(string narratorId)
         {
             await _lock.WaitAsync().ConfigureAwait(false);
@@ -507,9 +481,7 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        /// <summary>
-        /// Update narrator battery level and last use time
-        /// </summary>
+       
         public async Task<Character> UpdateNarratorBatteryAsync(int battery, DateTime lastUseTime)
         {
             await _lock.WaitAsync().ConfigureAwait(false);
@@ -529,9 +501,7 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        /// <summary>
-        /// Load narrator data from database
-        /// </summary>
+        
         public async Task LoadNarratorDataAsync()
         {
             var c = await GetCharAsync().ConfigureAwait(false);
@@ -543,14 +513,11 @@ namespace FilipinoFolkloreApp.Services
                 AlamatContent.NarratorBattery = c.narratorBattery;
                 AlamatContent.LastNarratorUseTime = c.lastNarratorUseTime;
                 
-                // Initialize battery refresh timer
                 AlamatContent.InitializeNarratorBatteryTimer();
             }
         }
 
-        /// <summary>
-        /// Load bugtongs from database and sync with in-memory collection
-        /// </summary>
+       
         public async Task<List<Bugtong>> LoadBugtongsAsync()
         {
             var dbBugtongs = await _database.Table<BugtongMonitored>().ToListAsync();
@@ -560,7 +527,6 @@ namespace FilipinoFolkloreApp.Services
                 var dbEntry = dbBugtongs.FirstOrDefault(b => b.BugtongId == bugtong.Id);
                 if (dbEntry == null)
                 {
-                    // Insert default if not found
                     await _database.InsertAsync(new BugtongMonitored
                     {
                         BugtongId = bugtong.Id,
@@ -573,9 +539,6 @@ namespace FilipinoFolkloreApp.Services
             return BugtongService.Bugtongs;
         }
 
-        /// <summary>
-        /// Check if a bugtong is completed
-        /// </summary>
         public async Task<bool> IsBugtongCompletedAsync(string bugtongId)
         {
             var bugtong = await _database.Table<BugtongMonitored>()
@@ -584,9 +547,6 @@ namespace FilipinoFolkloreApp.Services
             return bugtong?.IsCompleted ?? false;
         }
 
-        /// <summary>
-        /// Mark a bugtong as completed
-        /// </summary>
         public async Task SetBugtongCompletedAsync(string bugtongId)
         {
             var bugtong = await _database.Table<BugtongMonitored>()
@@ -611,9 +571,7 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        /// <summary>
-        /// Check if a quiz question was already answered correctly
-        /// </summary>
+        
         public async Task<bool> IsQuizQuestionAnsweredAsync(string storyId, int questionIndex)
         {
             var quiz = await _database.Table<QuizMonitored>()
@@ -622,10 +580,7 @@ namespace FilipinoFolkloreApp.Services
             return quiz?.IsAnsweredCorrectly ?? false;
         }
 
-        /// <summary>
-        /// Mark a quiz question as correctly answered for the first time
-        /// Returns true if this is the first time answering correctly (award stars)
-        /// </summary>
+        
         public async Task<bool> SetQuizQuestionAnsweredAsync(string storyId, int questionIndex)
         {
             var quiz = await _database.Table<QuizMonitored>()
@@ -634,11 +589,10 @@ namespace FilipinoFolkloreApp.Services
     
             if (quiz != null)
             {
-                // Already answered correctly before
+                
                 if (quiz.IsAnsweredCorrectly)
                     return false;
                 
-                // First time answering correctly
                 quiz.IsAnsweredCorrectly = true;
                 quiz.AnsweredDate = DateTime.Now;
                 await _database.UpdateAsync(quiz);
@@ -646,7 +600,7 @@ namespace FilipinoFolkloreApp.Services
             }
             else
             {
-                // First time answering this question correctly
+                
                 await _database.InsertAsync(new QuizMonitored
                 {
                     StoryId = storyId,

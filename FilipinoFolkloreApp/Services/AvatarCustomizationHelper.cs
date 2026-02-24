@@ -117,8 +117,8 @@ namespace FilipinoFolkloreApp.Services
         public static async Task LoadPurchasedCostume()
         {
 
-            var set = await App.Database.GetAllAvatarSetsAsync(); // or GetAvatarSetByAvatarIdAsync(...)
-            var costume = set?.FirstOrDefault(); // get the single saved set (if any)
+            var set = await App.Database.GetAllAvatarSetsAsync(); 
+            var costume = set?.FirstOrDefault();
 
             if (costume == null)
             {

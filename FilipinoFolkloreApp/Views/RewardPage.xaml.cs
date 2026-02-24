@@ -21,7 +21,6 @@ public partial class RewardPage : ContentPage
         _storyId = storyId;
         RewardLabel.Text = $"{_stars}";
         RewardStarIcon.IsVisible = true;
-        // Default text (will be updated in OnAppearing after DB sync)
     }
 
     protected override async void OnAppearing()
@@ -29,7 +28,6 @@ public partial class RewardPage : ContentPage
         base.OnAppearing();
         var MedalId = AlamatContent.GetStory(_storyId).MedalId;
         MedalImage.Source = DatabaseService.GetMedalImagePath(MedalId);
-        // Sync DB state to ensure we show the correct "already claimed" text
         try
         {
             await App.Database.LoadStoriesAsync();
@@ -39,26 +37,23 @@ public partial class RewardPage : ContentPage
             System.Diagnostics.Debug.WriteLine($"LoadStoriesAsync failed in RewardPage.OnAppearing: {ex}");
         }
 
-        // If this reward is tied to a story, check whether it was already claimed
         if (!string.IsNullOrEmpty(_storyId))
         {
             var story = AlamatContent.Stories.FirstOrDefault(st => st.Id == _storyId);
-            
+
 
             if (story != null && story.IsRewardClaimed)
             {
                 RewardLabel.Text = "Reward already claimed";
                 RewardStarIcon.IsVisible = false;
                 OkButton.Text = "Close";
-                
-                // keep the button enabled so user can dismiss, but prevent awarding again
+
                 OkButton.IsEnabled = true;
                 return;
             }
         }
 
-        // otherwise show the normal reward text
-        
+
         RewardLabel.Text = $"{_stars}";
         RewardStarIcon.IsVisible = true;
         OkButton.Text = "OK";
@@ -68,8 +63,7 @@ public partial class RewardPage : ContentPage
     async void OnRewardOk(object? s, EventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
-        // Ensure latest DB-state (again) to avoid race conditions
+
         try
         {
             await App.Database.LoadStoriesAsync();
@@ -79,13 +73,11 @@ public partial class RewardPage : ContentPage
             System.Diagnostics.Debug.WriteLine($"LoadStoriesAsync failed in RewardPage.OnRewardOk: {ex}");
         }
 
-        // If story is provided and the reward has already been claimed, just close
         if (!string.IsNullOrEmpty(_storyId))
         {
             var story = AlamatContent.Stories.FirstOrDefault(st => st.Id == _storyId);
             if (story != null && story.IsRewardClaimed)
             {
-                // Remove the reward/quiz/story pages and go back to AlamatPage (same behavior as before)
                 var pages = Navigation.NavigationStack.ToList();
                 foreach (var page in pages)
                 {
@@ -126,7 +118,6 @@ public partial class RewardPage : ContentPage
                     }
                     catch (Exception ex)
                     {
-                        // Rollback on failure
                         story.IsRewardClaimed = false;
                         AlamatContent.Stars -= _stars;
                         System.Diagnostics.Debug.WriteLine($"Failed to update story reward flag: {ex}");
@@ -135,7 +126,7 @@ public partial class RewardPage : ContentPage
                 }
                 else
                 {
-                    rewardGiven = false; // already claimed
+                    rewardGiven = false;
                 }
             }
         }
@@ -145,7 +136,6 @@ public partial class RewardPage : ContentPage
             rewardGiven = true;
         }
 
-        // Re-sync to ensure UI consistency
         try
         {
             await App.Database.LoadStoriesAsync();
@@ -155,7 +145,6 @@ public partial class RewardPage : ContentPage
             System.Diagnostics.Debug.WriteLine($"Post-reward LoadStoriesAsync failed: {ex}");
         }
 
-        // Remove reward/quiz/story/narrator pages from nav stack like before
         var pages2 = Navigation.NavigationStack.ToList();
         foreach (var page in pages2)
         {
@@ -165,7 +154,6 @@ public partial class RewardPage : ContentPage
             if (page is NarratorPage) Navigation.RemovePage(page);
         }
 
-        // Navigate back to AlamatPage (HUD will show updated stars)
         await Navigation.PushAsync(new AlamatPage(AlamatContent.category));
     }
 }

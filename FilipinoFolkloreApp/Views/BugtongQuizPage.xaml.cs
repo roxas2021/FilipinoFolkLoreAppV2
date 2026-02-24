@@ -82,7 +82,6 @@ namespace FilipinoFolkloreApp.Views
             BugtongPrompt.Text = _currentBugtong.Prompt;
             InitializeLetterBoxes();
 
-            // Shuffle choices and display them
             ShuffleAndDisplayChoices();
         }
 
@@ -92,12 +91,10 @@ namespace FilipinoFolkloreApp.Views
 
             AnswerLetterBoxes.Children.Clear();
 
-            // Get the answer text to determine number of boxes needed
             string answer = _currentBugtong.Answer.ToUpper();
 
             foreach (char letter in answer)
             {
-                // Create a border for each letter
                 var letterBorder = new Border
                 {
                     BackgroundColor = Colors.White,
@@ -129,13 +126,10 @@ namespace FilipinoFolkloreApp.Views
         {
             if (_currentBugtong == null) return;
 
-            // Shuffle the choices
             _shuffledChoices = BugtongService.ShuffleChoices(_currentBugtong.Choices);
 
-            // Find the correct index in shuffled list
             _correctIndex = _shuffledChoices.IndexOf(_currentBugtong.Answer);
 
-            // Display the shuffled choices
             Choice0.Text = _shuffledChoices.ElementAtOrDefault(0) ?? "";
             Choice1.Text = _shuffledChoices.ElementAtOrDefault(1) ?? "";
             Choice2.Text = _shuffledChoices.ElementAtOrDefault(2) ?? "";
@@ -147,7 +141,6 @@ namespace FilipinoFolkloreApp.Views
 
             if (_currentBugtong == null) return;
 
-            // Check heart availability
             if (HeartService.GetHearts() <= 0)
             {
                 await DisplayAlert(
@@ -158,13 +151,10 @@ namespace FilipinoFolkloreApp.Views
                 return;
             }
 
-            // Get the selected word
             string selectedWord = _shuffledChoices.ElementAtOrDefault(idx) ?? "";
 
-            // Show the selected word in answer box with animation
             await ShowAnswerAsync(selectedWord);
 
-            // Check if correct
             if (idx == _correctIndex)
             {
                 await HandleCorrectAsync();
@@ -179,19 +169,16 @@ namespace FilipinoFolkloreApp.Views
         {
             string upperAnswer = answer.ToUpper();
 
-            // Set all letters first
             for (int i = 0; i < AnswerLetterBoxes.Children.Count && i < upperAnswer.Length; i++)
             {
                 if (AnswerLetterBoxes.Children[i] is Border border && border.Content is Label label)
                 {
                     label.Text = upperAnswer[i].ToString();
-                    // Set initial state for animation
                     border.Scale = 0.5;
                     border.Opacity = 0;
                 }
             }
 
-            // Create list of animation tasks to run all together
             var animationTasks = new List<Task>();
 
             foreach (var child in AnswerLetterBoxes.Children)
@@ -203,10 +190,8 @@ namespace FilipinoFolkloreApp.Views
                 }
             }
 
-            // Execute all animations simultaneously
             await Task.WhenAll(animationTasks);
 
-            // Keep visible for a moment
             await Task.Delay(500);
         }
 
@@ -219,8 +204,7 @@ namespace FilipinoFolkloreApp.Views
 
             BugtongMilestone? milestone = null;
             bool hasMilestone = false;
-            bool wasAlreadyCompleted = isCompleted; // Track this BEFORE marking as completed
-
+            bool wasAlreadyCompleted = isCompleted;
             if (!isCompleted)
             {
                 await App.Database.SetBugtongCompletedAsync(_bugtongId);
@@ -228,27 +212,22 @@ namespace FilipinoFolkloreApp.Views
                 CharacterHelper.CurrentStars += reward;
                 RefreshStars();
 
-                // Check for milestone achievements
                 var totalCompleted = await GetTotalCompletedBugtongsAsync();
                 milestone = BugtongService.GetAchievedMilestone(totalCompleted);
 
                 if (milestone != null)
                 {
-                    // Check if milestone reward was already claimed
                     string milestoneKey = $"Bugtong_Milestone_{milestone.RequiredCorrect}";
                     bool alreadyClaimed = Preferences.Get(milestoneKey, false);
 
                     if (!alreadyClaimed)
                     {
-                        // DON'T unlock medal here - let ColoringRewardPage handle it
-                        // Just store the pending milestone
                         hasMilestone = true;
                         _pendingMilestone = milestone;
                     }
                 }
             }
 
-            // Show success overlay (pass whether it was already completed)
             await ShowSuccessOverlayAsync(reward, wasAlreadyCompleted);
         }
 
@@ -267,15 +246,12 @@ namespace FilipinoFolkloreApp.Views
 
         private async Task ShowSuccessOverlayAsync(int stars, bool wasAlreadyCompleted)
         {
-            // Reuse the existing GameAlertOverlay for success message
             AlertNarrator.Source = AlamatContent.CurrentNarrator.Avatar;
 
-            // Hide title and retry button, show OK button
             AlertTitleLabel.IsVisible = false;
             AlertRetryButton.IsVisible = false;
             AlertOkButton.IsVisible = true;
 
-            // Clear the hearts panel and show success message
             AlertHeartsPanel.Children.Clear();
 
             var successLabel = new Label
@@ -322,7 +298,6 @@ namespace FilipinoFolkloreApp.Views
         {
             AlertNarrator.Source = AlamatContent.CurrentNarrator.Avatar;
 
-            // Show title and retry button, hide OK button
             AlertTitleLabel.IsVisible = true;
             AlertRetryButton.IsVisible = true;
             AlertOkButton.IsVisible = false;
@@ -340,8 +315,7 @@ namespace FilipinoFolkloreApp.Views
             }
 
             GameAlertOverlay.IsVisible = true;
-            GameAlertOverlay.InputTransparent = false; // Block clicks
-            GameAlertOverlay.Opacity = 0;
+            GameAlertOverlay.InputTransparent = false; GameAlertOverlay.Opacity = 0;
             GameAlertCard.Scale = 0.96;
 
             await Task.WhenAll(
@@ -357,13 +331,11 @@ namespace FilipinoFolkloreApp.Views
                 GameAlertCard.ScaleTo(0.96, 80, Easing.CubicIn)
             );
             GameAlertOverlay.IsVisible = false;
-            GameAlertOverlay.InputTransparent = true; // Allow clicks again
+            GameAlertOverlay.InputTransparent = true;
         }
 
         private void OnOverlayBackgroundTapped(object? sender, TappedEventArgs e)
         {
-            // Do nothing - prevents clicks from passing through
-            // This keeps the modal locked until user interacts with buttons
         }
 
         private async void OnAlertRetryTapped(object? sender, TappedEventArgs e)
@@ -371,7 +343,6 @@ namespace FilipinoFolkloreApp.Views
             await SoundService.PlayButtonClickAsync();
             await HideWrongModalAsync();
 
-            // Clear answer boxes
             ClearAnswerBoxes();
             ShuffleAndDisplayChoices();
         }
@@ -397,7 +368,6 @@ namespace FilipinoFolkloreApp.Views
             await SoundService.PlayButtonClickAsync();
             await HideSuccessOverlayAsync();
 
-            // Check if there's a pending milestone to show
             if (_pendingMilestone != null)
             {
                 var milestone = _pendingMilestone;
@@ -405,18 +375,16 @@ namespace FilipinoFolkloreApp.Views
 
                 string milestoneKey = $"Bugtong_Milestone_{milestone.RequiredCorrect}";
 
-                // Navigate to reward page which will handle unlocking the medal and claiming the reward
                 await Navigation.PushAsync(new ColoringRewardPage(
-                    stars: milestone.RewardStars,
-                    medalId: milestone.MedalId,
-                    rewardKey: milestoneKey,
-                    returnPageType: "BugtongList",
-                    returnPageParameter: null
-                ));
+   stars: milestone.RewardStars,
+   medalId: milestone.MedalId,
+   rewardKey: milestoneKey,
+   returnPageType: "BugtongList",
+   returnPageParameter: null
+));
             }
             else
             {
-                // No milestone, just go back to list
                 await NavigateToBugtongList();
             }
         }
@@ -425,12 +393,11 @@ namespace FilipinoFolkloreApp.Views
         {
             await SoundService.PlayButtonClickAsync();
 
-            // Check which overlay is showing
-            if (AlertOkButton.IsVisible) // Success overlay
+            if (AlertOkButton.IsVisible)
             {
                 await OnAlertOkTappedAsync();
             }
-            else // Wrong answer overlay
+            else
             {
                 await HideWrongModalAsync();
                 await NavigateToBugtongList();
@@ -441,7 +408,6 @@ namespace FilipinoFolkloreApp.Views
         {
             await Navigation.PopAsync();
 
-            // Remove this page after navigation
             Navigation.RemovePage(this);
         }
 
@@ -455,7 +421,6 @@ namespace FilipinoFolkloreApp.Views
         {
             await SoundService.PlayButtonClickAsync();
 
-            // Use NavigationHelper for safer navigation
             var pages = Navigation.NavigationStack.ToList();
             foreach (var page in pages)
             {

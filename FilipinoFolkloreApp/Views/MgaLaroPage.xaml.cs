@@ -11,18 +11,16 @@ public partial class MgaLaroPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
-    // Tutorial state
     private int _tutorialStep = 0;
     private const string TUTORIAL_COMPLETED_KEY = "MgaLaroPageTutorialCompleted7";
 
-    // Tutorial steps configuration - FOCUSED ON GAMES
     private readonly TutorialStep[] _tutorialSteps = new[]
-    {
+{
         new TutorialStep
         {
             Title = "Maligayang Pagdating sa Mga Laro!",
             Message = "Dito makikita mo ang mga laro na pwede mong laruin para kumita ng stars!",
-            
+
         },
         new TutorialStep
         {
@@ -59,7 +57,6 @@ public partial class MgaLaroPage : ContentPage
         base.OnAppearing();
         LoadHUD();
 
-        // Check if tutorial should be shown
         bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
         if (!tutorialCompleted)
         {
@@ -75,13 +72,11 @@ public partial class MgaLaroPage : ContentPage
         UpdateTutorialStep();
         TutorialOverlay.IsVisible = true;
 
-        // Animate tarsier entrance
         await Task.WhenAll(
-            TarsierImage.FadeTo(1, 400, Easing.CubicOut),
-            TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
-        );
+   TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+   TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+);
 
-        // Animate speech bubble
         await Task.Delay(200);
         await Task.WhenAll(
             SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
@@ -110,7 +105,6 @@ public partial class MgaLaroPage : ContentPage
         TutorialMessageLabel.Text = step.Message;
         TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
 
-        // Update arrow pointer to point at target element dynamically
         if (!string.IsNullOrEmpty(step.TargetElementName))
         {
             await PositionArrowToElement(step.TargetElementName, step.OffsetX);
@@ -121,7 +115,6 @@ public partial class MgaLaroPage : ContentPage
             PositionSpeechBubble(true, 0);
         }
 
-        // Highlight target element
         HighlightTargetElement(step.TargetElementName);
     }
 
@@ -229,7 +222,6 @@ public partial class MgaLaroPage : ContentPage
     {
         if (element == null) return Rect.Zero;
 
-        // Add TranslationX and TranslationY to grab the true visual position
         double x = element.X + element.TranslationX;
         double y = element.Y + element.TranslationY;
         double width = element.Width;
@@ -239,7 +231,6 @@ public partial class MgaLaroPage : ContentPage
 
         while (current != null && !(current is Page))
         {
-            // Add parent layouts AND parent translations
             x += current.X + current.TranslationX;
             y += current.Y + current.TranslationY;
 
@@ -293,7 +284,6 @@ public partial class MgaLaroPage : ContentPage
 
     private void HighlightTargetElement(string? targetName)
     {
-        // Reset all highlights
         GamesContentArea.Opacity = 1;
         BugtongButton.Opacity = 1;
         MagkulayButton.Opacity = 1;
@@ -302,11 +292,9 @@ public partial class MgaLaroPage : ContentPage
         if (string.IsNullOrEmpty(targetName))
             return;
 
-        // Dim everything except target
         switch (targetName)
         {
             case "GamesContentArea":
-                // Don't dim anything, just show the whole area
                 break;
             case "BugtongButton":
                 MagkulayButton.Opacity = 0.3;
@@ -336,7 +324,6 @@ public partial class MgaLaroPage : ContentPage
 
         TutorialOverlay.IsVisible = false;
 
-        // Reset opacities
         GamesContentArea.Opacity = 1;
         BugtongButton.Opacity = 1;
         MagkulayButton.Opacity = 1;
@@ -383,7 +370,6 @@ public partial class MgaLaroPage : ContentPage
     private async void OnMagpintaTapped(object? sender, EventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        // Navigate to Coloring Selection page
         await Navigation.PushAsync(new ColoringSelectionPage());
     }
 

@@ -90,24 +90,21 @@ public partial class NarratorManagementPage : ContentPage
     private async void OnNarratorTapped(object? sender, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
+
         if (sender is Grid grid && grid.BindingContext is NarratorCard card)
         {
             if (!card.IsLocked)
             {
-                // Already unlocked, navigate to detail page
                 await Navigation.PushAsync(new NarratorDetailPage(card.Id));
             }
             else
             {
-                // Locked narrator
                 if (CharacterHelper.CurrentStars >= card.Price)
                 {
-                    // Player has enough stars, confirm purchase
                     bool confirm = await ShowGameAlertAsync(
-                        $"I-unlock ang {card.Name} para sa {card.Price} stars?",
-                        true
-                    );
+   $"I-unlock ang {card.Name} para sa {card.Price} stars?",
+   true
+);
 
                     if (confirm)
                     {
@@ -116,11 +113,10 @@ public partial class NarratorManagementPage : ContentPage
                 }
                 else
                 {
-                    // Not enough stars
                     await ShowGameAlertAsync(
-                        $"{card.Name} ay naka-lock pa. Kailangan mo ng {card.Price} stars para i-unlock.",
-                        false
-                    );
+   $"{card.Name} ay naka-lock pa. Kailangan mo ng {card.Price} stars para i-unlock.",
+   false
+);
                 }
             }
         }
@@ -130,11 +126,9 @@ public partial class NarratorManagementPage : ContentPage
     {
         try
         {
-            // Deduct stars
             CharacterHelper.CurrentStars -= card.Price;
             await App.Database.SetStarsAsync(CharacterHelper.CurrentStars);
 
-            // Unlock narrator globally by adding to the first story (juan tamad)
             var firstStory = AlamatContent.Stories.FirstOrDefault(s => s.Id == "1_juan_tamad");
             if (firstStory != null)
             {
@@ -148,24 +142,19 @@ public partial class NarratorManagementPage : ContentPage
                         break;
                 }
 
-                // Update story in database
                 await App.Database.UpdateStoryAsync(firstStory);
             }
 
-            // Add to global unlocked narrators set
             AlamatContent.UnlockedNarrators.Add(card.Id);
 
-            // Update UI
             LoadHUD();
             LoadNarrators();
 
-            // Show success message
             await ShowGameAlertAsync(
-                $"Congratulations! Na-unlock mo ang {card.Name}!",
-                false
-            );
+   $"Congratulations! Na-unlock mo ang {card.Name}!",
+   false
+);
 
-            // Navigate to narrator detail page
             await Navigation.PushAsync(new NarratorDetailPage(card.Id));
         }
         catch (Exception ex)
@@ -177,7 +166,6 @@ public partial class NarratorManagementPage : ContentPage
         }
     }
 
-    // Custom Game Alert with Yes/No or OK buttons
     private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
     {
         if (GameAlertOverlay.IsVisible && _alertTcs != null)
@@ -185,15 +173,12 @@ public partial class NarratorManagementPage : ContentPage
 
         _alertTcs = new TaskCompletionSource<bool>();
 
-        // Set message
         AlertMessageLabel.Text = message;
 
-        // Clear existing buttons
         AlertButtonsPanel.Children.Clear();
 
         if (showYesNo)
         {
-            // Add Yes button
             var yesButton = new Button
             {
                 Text = "Oo",
@@ -207,7 +192,6 @@ public partial class NarratorManagementPage : ContentPage
             yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
             AlertButtonsPanel.Children.Add(yesButton);
 
-            // Add No button
             var noButton = new Button
             {
                 Text = "Hindi",
@@ -223,7 +207,6 @@ public partial class NarratorManagementPage : ContentPage
         }
         else
         {
-            // Add OK button
             var okButton = new Button
             {
                 Text = "OK",
@@ -303,11 +286,11 @@ public partial class NarratorManagementPage : ContentPage
         await SoundService.PlayButtonClickAsync();
         await Navigation.PopAsync();
     }
-    
+
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
+
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {

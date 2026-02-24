@@ -590,7 +590,6 @@ public partial class AlamatPage : ContentPage
 
     async void OnStoryTapped(object? sender, TappedEventArgs e)
     {
-        // Prevent double-tap: if already navigating, ignore this tap
         if (_isNavigating)
         {
             System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to NarratorPage.");
@@ -601,7 +600,6 @@ public partial class AlamatPage : ContentPage
 
         if (sender is not Grid g || g.BindingContext is not StoryCard card) return;
 
-        // Set navigation flag to prevent double-tap
         _isNavigating = true;
 
         try
@@ -610,66 +608,55 @@ public partial class AlamatPage : ContentPage
 
             if (!AlamatContent.IsStoryUnlocked(card.Id))
             {
-                // Try to spend stars (updates in-memory AlamatContent.Stars)
                 if (!AlamatContent.TrySpendStars(card.Price))
                 {
                     await ShowGameAlertAsync($"Kailangan: {card.Price}", false);
-                    _isNavigating = false; // Reset flag before returning
+                    _isNavigating = false; 
                     return;
                 }
 
-                // Optimistically mark as purchased in memory
                 story.IsPurchased = true;
 
                 bool savedToDb = false;
                 try
                 {
-                    // Persist monitored story data
                     await App.Database.UpdateStoryAsync(story);
 
-                    // Keep the fast-check set in sync (UpdateStoryAsync also tries to sync it,
-                    // but we ensure it here immediately so UI checks are consistent).
                     AlamatContent.UnlockedStories.Add(story.Id);
                     await App.Database.SetStarsAsync(CharacterHelper.CurrentStars - card.Price);
-                    CharacterHelper.CurrentStars -= card.Price; // keep in sync
+                    CharacterHelper.CurrentStars -= card.Price;
                     savedToDb = true;
                 }
                 catch (Exception ex)
                 {
-                    // Rollback in-memory changes on failure
                     story.IsPurchased = false;
-                    AlamatContent.Stars += card.Price; // refund
+                    AlamatContent.Stars += card.Price;
                     System.Diagnostics.Debug.WriteLine($"UpdateStoryAsync failed: {ex}");
 
                     await ShowGameAlertAsync("Hindi naisave ang binili — subukang muli.", false);
                 }
 
-                // If saving failed, stop here (user was refunded). If saved, refresh UI.
                 if (!savedToDb)
                 {
-                    _isNavigating = false; // Reset flag before returning
+                    _isNavigating = false; 
                     return;
                 }
 
-                // Refresh HUD and list
                 LoadHud();
                 LoadStories();
             }
 
             AlamatContent.CurrentStoryId = story.Id;
 
-            // Navigate to narrator page (story view)
             await Navigation.PushAsync(new NarratorPage(card.Id));
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in OnStoryTapped: {ex}");
-            _isNavigating = false; // Reset flag on error
+            _isNavigating = false; 
         }
-        // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
     }
 
-    // Custom Game Alert with Yes/No or OK buttons
     private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
     {
         if (GameAlertOverlay.IsVisible && _alertTcs != null)
@@ -677,15 +664,12 @@ public partial class AlamatPage : ContentPage
 
         _alertTcs = new TaskCompletionSource<bool>();
 
-        // Set message
         AlertMessageLabel.Text = message;
 
-        // Clear existing buttons
         AlertButtonsPanel.Children.Clear();
 
         if (showYesNo)
         {
-            // Add Yes button
             var yesButton = new Button
             {
                 Text = "Oo",
@@ -699,7 +683,6 @@ public partial class AlamatPage : ContentPage
             yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
             AlertButtonsPanel.Children.Add(yesButton);
 
-            // Add No button
             var noButton = new Button
             {
                 Text = "Hindi",
@@ -715,7 +698,6 @@ public partial class AlamatPage : ContentPage
         }
         else
         {
-            // Add OK button
             var okButton = new Button
             {
                 Text = "OK",

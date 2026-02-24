@@ -18,51 +18,46 @@ public partial class MedalPage : ContentPage
     private bool _medalsLoaded = false;
 
     public MedalPage()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
         BindingContext = this;
-        
-        // Set ItemsSource once during initialization
+
         MedalsView.ItemsSource = Medals;
-	}
-    
+    }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        
-        // refresh UI
+
         LoadHud();
-        
-        // Only load medals once (unless explicitly requested to refresh)
+
         if (!_medalsLoaded)
         {
             await LoadMedals();
             _medalsLoaded = true;
         }
     }
-    
+
     public async Task LoadMedals()
     {
         Medals.Clear();
 
         var medalsFromDb = await App.Database.GetMedalAsync();
 
-        // Add existing medals (if any)
         if (medalsFromDb != null)
         {
             foreach (var medal in medalsFromDb)
                 Medals.Add(medal);
         }
 
-        // Fill remaining slots up to 30
         int missingCount = 30 - Medals.Count;
 
         for (int i = 0; i < missingCount; i++)
         {
             Medals.Add(new Medals
             {
-                MedalImagePath = "medal_empty.png", // placeholder image
+                MedalImagePath = "medal_empty.png",
                 isUnlocked = false
             });
         }
@@ -75,10 +70,9 @@ public partial class MedalPage : ContentPage
 
         await SoundService.PlayButtonClickAsync();
 
-        // Navigate to medal detail page
         await Navigation.PushAsync(new MedalDetailPage(medal));
     }
-    
+
     public ICommand MedalTappedCommand => new Command<Medals>(async (medal) =>
     {
         if (medal.isUnlocked)
@@ -102,7 +96,7 @@ public partial class MedalPage : ContentPage
             });
         }
     }
-    
+
     void LoadHud()
     {
         HudAvatar.Source = CharacterHelper.CurrentAvatar;
@@ -110,7 +104,7 @@ public partial class MedalPage : ContentPage
         StarsLabel.Text = CharacterHelper.CurrentStars.ToString();
         RefreshHearts();
     }
-    
+
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();

@@ -167,8 +167,6 @@ public partial class IndexPage : ContentPage
         TutorialTitleLabel.Text = step.Title;
         TutorialMessageLabel.Text = step.Message;
         TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
-
-        // Update arrow pointer to point at target element dynamically
         if (!string.IsNullOrEmpty(step.TargetElementName))
         {
             await PositionArrowToElement(step.TargetElementName, step.OffsetX);
@@ -176,17 +174,14 @@ public partial class IndexPage : ContentPage
         else
         {
             ArrowPointer.Opacity = 0;
-            // Position speech bubble at default location (upper right of tarsier)
             PositionSpeechBubble(true, 0);
         }
 
-        // Highlight target element
         HighlightTargetElement(step.TargetElementName);
     }
 
     private async Task PositionArrowToElement(string elementName, double offsetX = 0)
     {
-        // 1. Find the target element
         VisualElement? targetElement = elementName switch
         {
             "HudAvatar" => HudAvatar,
@@ -207,33 +202,25 @@ public partial class IndexPage : ContentPage
             return;
         }
 
-        // Wait briefly for layout to settle
         await Task.Delay(150);
 
-        // 2. Get screen info and target bounds
         var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
         double screenHeight = displayInfo.Height / displayInfo.Density;
-        double safeZone = 60; // Padding from edges (Safe Zone)
+        double safeZone = 60; 
 
         Rect targetBounds = GetAbsolutePosition(targetElement);
 
         if (targetBounds == Rect.Zero) return;
 
-        // Arrow dimensions
+        
         double arrowWidth = 50;
         double arrowHeight = 50;
-        double padding = 10; // Space between arrow and element
+        double padding = 10; 
 
-        // 3. Calculate Potential Positions
-
-        // Position A: Above the element (Pointing Down)
         double yAbove = targetBounds.Top - arrowHeight - padding;
 
-        // Position B: Below the element (Pointing Up)
         double yBelow = targetBounds.Bottom + padding;
 
-        // 4. Determine Best Position
-        // Default preference based on screen half
         bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
 
         double finalArrowY;
@@ -241,7 +228,6 @@ public partial class IndexPage : ContentPage
 
         if (preferAbove)
         {
-            // We want to be Above. Check if we fit in the Top Safe Zone.
             if (yAbove >= safeZone)
             {
                 finalArrowY = yAbove;
@@ -249,14 +235,12 @@ public partial class IndexPage : ContentPage
             }
             else
             {
-                // Overflowed Top! Flip to Below.
                 finalArrowY = yBelow;
                 isArrowAbove = false;
             }
         }
         else
         {
-            // We want to be Below. Check if we fit in the Bottom Safe Zone.
             if (yBelow + arrowHeight <= screenHeight - safeZone)
             {
                 finalArrowY = yBelow;
@@ -264,27 +248,18 @@ public partial class IndexPage : ContentPage
             }
             else
             {
-                // Overflowed Bottom! Flip to Above.
                 finalArrowY = yAbove;
                 isArrowAbove = true;
             }
         }
 
-        // 5. Apply Position and Rotation
-        // Center horizontally
         double arrowX = targetBounds.Center.X - (arrowWidth / 2);
 
         AbsoluteLayout.SetLayoutBounds(ArrowPointer, new Rect(arrowX, finalArrowY, arrowWidth, arrowHeight));
         AbsoluteLayout.SetLayoutFlags(ArrowPointer, AbsoluteLayoutFlags.None);
 
-        // Rotation Logic for Right-Pointing Arrow Image:
-        // If Arrow is Above -> Needs to point DOWN -> Rotate 90 deg
-        // If Arrow is Below -> Needs to point UP   -> Rotate -90 deg
         ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
 
-        // 6. Sync Speech Bubble
-        // If Arrow is in top half (y < screenHeight/2), put Bubble at Bottom
-        // If Arrow is in bottom half, put Bubble at Top
         bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
         PositionSpeechBubble(!arrowIsAtTopHalf, offsetX);
 
@@ -296,23 +271,17 @@ public partial class IndexPage : ContentPage
         var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
         double screenHeight = displayInfo.Height / displayInfo.Density;
 
-        // Use a fixed X position instead of centering
-        // Tarsier ends at 180 (X=30 + Width=150). 
-        // We set Bubble X to 160 to slightly overlap the tail with the Tarsier.
         double bubbleX = 160;
-        bubbleX += offsetX; // Apply any additional offset from the tutorial step
+        bubbleX += offsetX;
         double bubbleWidth = 350;
-        double safePadding = 60; // Padding from top/bottom screen edges
+        double safePadding = 60; 
 
         if (positionAtTop)
         {
-            // Position at Top
             AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
         }
         else
         {
-            // Position at Bottom
-            // Using a fixed offset from bottom (e.g., 200) to ensure it doesn't cover keyboard/nav bar
             AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
         }
 
@@ -358,8 +327,6 @@ public partial class IndexPage : ContentPage
             ArrowPointer.FadeTo(1, 300, Easing.CubicOut),
             ArrowPointer.ScaleTo(1, 300, Easing.BounceOut)
         );
-
-        // Bounce animation loop
         _ = Task.Run(async () =>
         {
             try
@@ -382,14 +349,13 @@ public partial class IndexPage : ContentPage
             }
             catch
             {
-                // Animation cancelled - ignore
+               
             }
         });
     }
 
     private void HighlightTargetElement(string? targetName)
     {
-        // Reset all highlights
         HudAvatar.Opacity = 1;
         StarsLabel.Opacity = 1;
         HeartsPanel.Opacity = 1;
@@ -401,7 +367,6 @@ public partial class IndexPage : ContentPage
         if (string.IsNullOrEmpty(targetName))
             return;
 
-        // Dim everything except target
         switch (targetName)
         {
             case "HudAvatar":
@@ -465,10 +430,8 @@ public partial class IndexPage : ContentPage
 
     private async Task CompleteTutorial()
     {
-        // Save that tutorial is completed
         Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
 
-        // Animate out
         await Task.WhenAll(
             ArrowPointer.FadeTo(0, 200),
             SpeechBubbleContainer.FadeTo(0, 300),
@@ -478,7 +441,6 @@ public partial class IndexPage : ContentPage
 
         TutorialOverlay.IsVisible = false;
 
-        // Reset opacities
         HudAvatar.Opacity = 1;
         StarsLabel.Opacity = 1;
         HeartsPanel.Opacity = 1;
@@ -677,29 +639,23 @@ public partial class IndexPage : ContentPage
 
     private void OnVolumeChanged(object sender, ValueChangedEventArgs e)
     {
-        // Update the volume label
         int volumePercent = (int)e.NewValue;
         BackgroundVolumeLabel.Text = $"{volumePercent}%";
 
-        // Save to preferences (0.0 to 1.0 range)
         double volumeValue = e.NewValue / 100.0;
         Preferences.Set("NarratorVolume", volumeValue);
 
-        // Store in AlamatContent for easy access
         AlamatContent.NarratorVolume = volumeValue;
     }
 
     private void OnNarratorVolumeChanged(object sender, ValueChangedEventArgs e)
     {
-        // Update the volume label
         int volumePercent = (int)e.NewValue;
         NarratorVolumeLabel.Text = $"{volumePercent}%";
 
-        // Save to preferences (0.0 to 1.0 range)
         double volumeValue = e.NewValue / 100.0;
         Preferences.Set("NarratorVolume", volumeValue);
 
-        // Store in AlamatContent for easy access
         AlamatContent.NarratorVolume = volumeValue;
     }
 
@@ -730,7 +686,6 @@ public partial class IndexPage : ContentPage
         public string Title { get; set; } = "";
         public string Message { get; set; } = "";
         public string? TargetElementName { get; set; }
-        // Add this line:
         public double OffsetX { get; set; } = 0;
     }
 }

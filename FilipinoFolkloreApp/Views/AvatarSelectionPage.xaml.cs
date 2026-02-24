@@ -13,15 +13,12 @@ namespace FilipinoFolkloreApp.Views
 {
     public partial class AvatarSelectionPage : ContentPage
     {
-        // Tutorial state
         private int _tutorialStep = 0;
         private const string TUTORIAL_COMPLETED_KEY = "AvatarSelectionTutorialCompleted";
 
-        // Double-tap prevention flag
         private bool _isNavigating = false;
 
-        // Tutorial steps configuration
-        private readonly TutorialStep[] _tutorialSteps = new[]
+                 private readonly TutorialStep[] _tutorialSteps = new[]
         {
             new TutorialStep
             {
@@ -62,11 +59,9 @@ namespace FilipinoFolkloreApp.Views
         {
             base.OnAppearing();
 
-            // Reset navigation flag when page appears
-            _isNavigating = false;
+                         _isNavigating = false;
 
-            // Check if tutorial should be shown
-            bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
+                         bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
             if (!tutorialCompleted)
             {
                 await Task.Delay(500);
@@ -81,14 +76,12 @@ namespace FilipinoFolkloreApp.Views
             UpdateTutorialStep();
             TutorialOverlay.IsVisible = true;
 
-            // Animate tarsier entrance
-            await Task.WhenAll(
+                         await Task.WhenAll(
                 TarsierImage.FadeTo(1, 400, Easing.CubicOut),
                 TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
             );
 
-            // Animate speech bubble
-            await Task.Delay(200);
+                         await Task.Delay(200);
             await Task.WhenAll(
                 SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
                 SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
@@ -117,26 +110,22 @@ namespace FilipinoFolkloreApp.Views
             TutorialMessageLabel.Text = step.Message;
             TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
 
-            // Update arrow pointer to point at target element dynamically
-            if (!string.IsNullOrEmpty(step.TargetElementName))
+                         if (!string.IsNullOrEmpty(step.TargetElementName))
             {
                 await PositionArrowToElement(step.TargetElementName);
             }
             else
             {
                 ArrowPointer.Opacity = 0;
-                // Position speech bubble at default location (upper right of tarsier)
-                PositionSpeechBubble(true);
+                                 PositionSpeechBubble(true);
             }
 
-            // Highlight target element
-            HighlightTargetElement(step.TargetElementName);
+                         HighlightTargetElement(step.TargetElementName);
         }
 
         private async Task PositionArrowToElement(string elementName)
         {
-            // 1. Find the target element
-            VisualElement? targetElement = null;
+                         VisualElement? targetElement = null;
 
             if (elementName == "AvatarGrid")
             {
@@ -144,12 +133,10 @@ namespace FilipinoFolkloreApp.Views
             }
             else if (elementName == "Avatar3")
             {
-                // Get the 3rd avatar item (index 2)
-                targetElement = await GetAvatarItemAtIndex(2);
+                                 targetElement = await GetAvatarItemAtIndex(2);
                 if (targetElement == null)
                 {
-                    // Fallback to the whole grid if we can't get the specific item
-                    targetElement = AvatarGrid;
+                                         targetElement = AvatarGrid;
                 }
             }
 
@@ -159,85 +146,63 @@ namespace FilipinoFolkloreApp.Views
                 return;
             }
 
-            // Wait briefly for layout to settle
-            await Task.Delay(150);
+                         await Task.Delay(150);
 
-            // 2. Get screen info and target bounds
-            var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+                         var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
             double screenHeight = displayInfo.Height / displayInfo.Density;
-            double safeZone = 60; // Padding from edges (Safe Zone)
-
+            double safeZone = 60;  
             Rect targetBounds = GetAbsolutePosition(targetElement);
 
             if (targetBounds == Rect.Zero) return;
 
-            // Arrow dimensions
-            double arrowWidth = 50;
+                         double arrowWidth = 50;
             double arrowHeight = 50;
-            double padding = 10; // Space between arrow and element
+            double padding = 10;  
+             
+                         double yAbove = targetBounds.Top - arrowHeight - padding;
 
-            // 3. Calculate Potential Positions
+                         double yBelow = targetBounds.Bottom + padding;
 
-            // Position A: Above the element (Pointing Down)
-            double yAbove = targetBounds.Top - arrowHeight - padding;
-
-            // Position B: Below the element (Pointing Up)
-            double yBelow = targetBounds.Bottom + padding;
-
-            // 4. Determine Best Position
-            // Default preference based on screen half
-            bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
+                                      bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
 
             double finalArrowY;
             bool isArrowAbove;
 
             if (preferAbove)
             {
-                // We want to be Above. Check if we fit in the Top Safe Zone.
-                if (yAbove >= safeZone)
+                                 if (yAbove >= safeZone)
                 {
                     finalArrowY = yAbove;
                     isArrowAbove = true;
                 }
                 else
                 {
-                    // Overflowed Top! Flip to Below.
-                    finalArrowY = yBelow;
+                                         finalArrowY = yBelow;
                     isArrowAbove = false;
                 }
             }
             else
             {
-                // We want to be Below. Check if we fit in the Bottom Safe Zone.
-                if (yBelow + arrowHeight <= screenHeight - safeZone)
+                                 if (yBelow + arrowHeight <= screenHeight - safeZone)
                 {
                     finalArrowY = yBelow;
                     isArrowAbove = false;
                 }
                 else
                 {
-                    // Overflowed Bottom! Flip to Above.
-                    finalArrowY = yAbove;
+                                         finalArrowY = yAbove;
                     isArrowAbove = true;
                 }
             }
 
-            // 5. Apply Position and Rotation
-            // Center horizontally
-            double arrowX = targetBounds.Center.X - (arrowWidth / 2);
+                                      double arrowX = targetBounds.Center.X - (arrowWidth / 2);
 
             AbsoluteLayout.SetLayoutBounds(ArrowPointer, new Rect(arrowX, finalArrowY, arrowWidth, arrowHeight));
             AbsoluteLayout.SetLayoutFlags(ArrowPointer, AbsoluteLayoutFlags.None);
 
-            // Rotation Logic for Right-Pointing Arrow Image:
-            // If Arrow is Above -> Needs to point DOWN -> Rotate 90 deg
-            // If Arrow is Below -> Needs to point UP   -> Rotate -90 deg
-            ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
+                                                   ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
 
-            // 6. Sync Speech Bubble
-            // If Arrow is in top half (y < screenHeight/2), put Bubble at Bottom
-            // If Arrow is in bottom half, put Bubble at Top
-            bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
+                                                   bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
             PositionSpeechBubble(!arrowIsAtTopHalf);
 
             await AnimateArrowPointer();
@@ -245,14 +210,11 @@ namespace FilipinoFolkloreApp.Views
 
         private async Task<VisualElement?> GetAvatarItemAtIndex(int index)
         {
-            // Try to get the visual element for a specific item in the CollectionView
-            try
+                         try
             {
-                // Give the CollectionView time to render items
-                await Task.Delay(200);
+                                 await Task.Delay(200);
 
-                // Search through the visual tree to find the avatar image at the specified index
-                var items = FindVisualChildren<Image>(AvatarGrid);
+                                 var items = FindVisualChildren<Image>(AvatarGrid);
                 var itemList = items.ToList();
 
                 if (itemList.Count > index)
@@ -262,8 +224,7 @@ namespace FilipinoFolkloreApp.Views
             }
             catch
             {
-                // If we can't get the item, return null
-            }
+                             }
 
             return null;
         }
@@ -273,12 +234,10 @@ namespace FilipinoFolkloreApp.Views
             if (element == null)
                 yield break;
 
-            // Check if current element is of type T
-            if (element is T t)
+                         if (element is T t)
                 yield return t;
 
-            // Recursively search children
-            foreach (var child in GetLogicalChildren(element))
+                         foreach (var child in GetLogicalChildren(element))
             {
                 foreach (var descendant in FindVisualChildren<T>(child))
                 {
@@ -317,24 +276,17 @@ namespace FilipinoFolkloreApp.Views
             var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
             double screenHeight = displayInfo.Height / displayInfo.Density;
 
-            // Use a fixed X position instead of centering
-            // Tarsier ends at 180 (X=30 + Width=150). 
-            // We set Bubble X to 160 to slightly overlap the tail with the Tarsier.
-            double bubbleX = 160;
+                                                   double bubbleX = 160;
 
             double bubbleWidth = 350;
-            double safePadding = 60; // Padding from top/bottom screen edges
-
+            double safePadding = 60;  
             if (positionAtTop)
             {
-                // Position at Top
-                AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
+                                 AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
             }
             else
             {
-                // Position at Bottom
-                // Using a fixed offset from bottom (e.g., 200) to ensure it doesn't cover keyboard/nav bar
-                AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
+                                                  AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
             }
 
             AbsoluteLayout.SetLayoutFlags(SpeechBubbleContainer, AbsoluteLayoutFlags.None);
@@ -380,8 +332,7 @@ namespace FilipinoFolkloreApp.Views
                 ArrowPointer.ScaleTo(1, 300, Easing.BounceOut)
             );
 
-            // Bounce animation loop
-            _ = Task.Run(async () =>
+                         _ = Task.Run(async () =>
             {
                 try
                 {
@@ -403,29 +354,24 @@ namespace FilipinoFolkloreApp.Views
                 }
                 catch
                 {
-                    // Animation cancelled - ignore
-                }
+                                     }
             });
         }
 
         private void HighlightTargetElement(string? targetName)
         {
-            // Reset all highlights
-            AvatarGrid.Opacity = 1;
+                         AvatarGrid.Opacity = 1;
 
             if (string.IsNullOrEmpty(targetName))
                 return;
 
-            // Currently only one target element, but structure allows for expansion
-        }
+                     }
 
         private async Task CompleteTutorial()
         {
-            // Save that tutorial is completed
-            Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+                         Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
 
-            // Animate out
-            await Task.WhenAll(
+                         await Task.WhenAll(
                 ArrowPointer.FadeTo(0, 200),
                 SpeechBubbleContainer.FadeTo(0, 300),
                 TarsierImage.FadeTo(0, 300),
@@ -434,14 +380,12 @@ namespace FilipinoFolkloreApp.Views
 
             TutorialOverlay.IsVisible = false;
 
-            // Reset opacities
-            AvatarGrid.Opacity = 1;
+                         AvatarGrid.Opacity = 1;
         }
 
         async void AvatarGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Prevent double-tap: if already navigating, ignore this selection
-            if (_isNavigating)
+                         if (_isNavigating)
             {
                 System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to IndexPage.");
                 AvatarGrid.SelectedItem = null;
@@ -454,13 +398,11 @@ namespace FilipinoFolkloreApp.Views
                 return;
             }
 
-            // Set navigation flag to prevent double-tap
-            _isNavigating = true;
+                         _isNavigating = true;
 
             try
             {
-                // Animation
-                PointsOverlay.Scale = 0.9;
+                                 PointsOverlay.Scale = 0.9;
                 PointsOverlay.Opacity = 0;
                 PointsOverlay.IsVisible = true;
 
@@ -471,16 +413,14 @@ namespace FilipinoFolkloreApp.Views
 
                 await Task.Delay(2500);
 
-                // Update character points
-                var existingChar = await App.Database.GetCharAsync();
+                                 var existingChar = await App.Database.GetCharAsync();
                 if (existingChar != null)
                 {
                     existingChar.points = 50;
                     await App.Database.UpdateCharAsync(existingChar);
                 }
 
-                // Save avatar set
-                var fileName = Path.GetFileNameWithoutExtension(selected.ImageSource ?? "");
+                                 var fileName = Path.GetFileNameWithoutExtension(selected.ImageSource ?? "");
                 var avatarId = string.IsNullOrWhiteSpace(fileName) ? "avatar1" : fileName;
 
                 var set = new AvatarCostumeSet
@@ -498,8 +438,7 @@ namespace FilipinoFolkloreApp.Views
                 CharacterHelper.CurrentAvatar = AvatarCustomizationHelper.GetFirstCostumePathOrDefault(set.avatarid);
                 await App.Database.UpdateCurrentAvatarAsync(CharacterHelper.CurrentAvatar);
 
-                // Navigate to IndexPage
-                await Navigation.PushAsync(new IndexPage());
+                                 await Navigation.PushAsync(new IndexPage());
                 Navigation.RemovePage(this);
 
                 AvatarGrid.SelectedItem = null;
@@ -507,11 +446,9 @@ namespace FilipinoFolkloreApp.Views
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in AvatarGrid_SelectionChanged: {ex}");
-                _isNavigating = false; // Reset flag on error
-                AvatarGrid.SelectedItem = null;
+                _isNavigating = false;                  AvatarGrid.SelectedItem = null;
             }
-            // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
-        }
+                     }
 
         private class TutorialStep
         {

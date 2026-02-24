@@ -31,10 +31,10 @@ namespace FilipinoFolkloreApp.Services
         public class QuizQuestion
         {
             public string Prompt { get; set; } = "";
-            public List<string> ChoiceTexts { get; set; } = new(); // Changed from ChoiceImages
+            public List<string> ChoiceTexts { get; set; } = new(); 
             public int CorrectIndex { get; set; } = 0;
             public int TimeLimitSec { get; set; } = 1000;
-            public int RewardStars { get; set; } = 10; // Stars awarded for correct answer
+            public int RewardStars { get; set; } = 10; 
         }
 
         public class Story
@@ -752,14 +752,11 @@ namespace FilipinoFolkloreApp.Services
 
             var timeSinceLastUse = DateTime.Now - LastNarratorUseTime;
             
-            // Check if 10 minutes have passed since last use
             if (timeSinceLastUse.TotalMinutes >= 10)
             {
-                // Reset to full battery after 10 minutes
                 NarratorBattery = 3;
-                LastNarratorUseTime = DateTime.MinValue; // Reset timer
+                LastNarratorUseTime = DateTime.MinValue; 
                 
-                // Save to database asynchronously
                 _ = Task.Run(async () => 
                 {
                     try
@@ -772,7 +769,6 @@ namespace FilipinoFolkloreApp.Services
                     }
                 });
                 
-                // Stop the timer since battery is full
                 _narratorBatteryTimer?.Dispose();
                 _narratorBatteryTimer = null;
             }
@@ -780,16 +776,13 @@ namespace FilipinoFolkloreApp.Services
 
         private static void StartNarratorBatteryRefreshTimer()
         {
-            // Cancel existing timer if any
             _narratorBatteryTimer?.Dispose();
             
-            // Create timer that checks every 30 seconds for better responsiveness
             _narratorBatteryTimer = new System.Threading.Timer(
                 callback: _ => 
                 {
                     CheckAndRefreshNarratorBattery();
                     
-                    // If battery is full, dispose the timer
                     if (NarratorBattery >= 3)
                     {
                         _narratorBatteryTimer?.Dispose();
@@ -812,19 +805,15 @@ namespace FilipinoFolkloreApp.Services
             }
         }
 
-        // Prefer checked sets but also fall back to story fields and price.
         public static bool IsStoryUnlocked(string id)
         {
-            // fast-set check first
             if (UnlockedStories.Contains(id)) return true;
 
-            // fallback: check story flags / free price
             var s = Stories.FirstOrDefault(x => x.Id == id);
             if (s == null) return false;
 
             bool unlocked = s.PriceStars == 0 || s.IsPurchased;
 
-            // If story is unlocked by flags, ensure the HashSet mirrors that
             if (unlocked)
                 UnlockedStories.Add(id);
 
@@ -837,13 +826,10 @@ namespace FilipinoFolkloreApp.Services
         
         public static bool IsNarratorUnlocked(string id)
         {
-            // 'tarsier' is always available
             if (id == "tarsier") return true;
 
-            // Fast in-memory check first
             if (UnlockedNarrators.Contains(id)) return true;
 
-            // Fallback: check per-story monitored flags already in memory
             if (id == "eagle")
             {
                 var currentStory = Stories.FirstOrDefault(s => s.Id == CurrentStoryId);
@@ -882,7 +868,6 @@ namespace FilipinoFolkloreApp.Services
             return false;
         }
 
-        // ------- Helpers -------
         public static Narrator CurrentNarrator => Narrators.First(n => n.Id == SelectedNarratorId);
         public static Story GetStory(string id) => Stories.First(s => s.Id == id);
 

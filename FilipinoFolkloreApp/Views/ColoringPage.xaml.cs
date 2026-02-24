@@ -19,7 +19,13 @@ public partial class ColoringPage : ContentPage
     private readonly string _templatePath;
     private TaskCompletionSource<bool>? _alertTcs;
 
-    // Zoom and Pan variables
+    private class UndoState
+    {
+        public SKBitmap BitmapSnapshot { get; set; } = null!;
+    }
+
+    private readonly Stack<UndoState> _undoStack = new();
+    private const int MAX_UNDO_STATES = 10;
     private float _baseScale = 1f;
     private float _currentScale = 1f;
     private float _minScale = 0.5f;
@@ -29,24 +35,20 @@ public partial class ColoringPage : ContentPage
     private SKPoint _lastPanPoint = SKPoint.Empty;
     private bool _isPanning = false;
 
-    // Multi-touch tracking
     private readonly Dictionary<long, SKPoint> _touchPoints = new();
     private float _previousPinchDistance = 0f;
     private SKPoint _pinchCenter = SKPoint.Empty;
 
-    // Track coloring completions
     private const string COLORING_COUNT_KEY = "ColoringCompletedCount";
 
-    // Flood fill safety limits
     private const int MAX_PIXELS_TO_FILL = 500000;
     private const int COLOR_MATCH_THRESHOLD = 15;
-    
+
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
     private record ColorInfo(string Name, SKColor SkColor);
-    
-    // Filipino color palette
+
     private readonly List<ColorInfo> _colors = new()
     {
         new ColorInfo("Pula", SKColors.Red),
@@ -66,7 +68,6 @@ public partial class ColoringPage : ContentPage
         new ColorInfo("Luntiang-Dahon", new SKColor(34, 139, 34))
     };
 
-    // Coloring milestones
     private class ColoringMilestone
     {
         public int RequiredCount { get; set; }
@@ -172,7 +173,6 @@ public partial class ColoringPage : ContentPage
             ColorPalette.Children.Add(colorFrame);
         }
 
-        // Highlight first color
         if (ColorPalette.Children.Count > 0 && ColorPalette.Children[0] is Frame firstFrame)
         {
             firstFrame.BorderColor = Colors.Gold;
@@ -198,7 +198,6 @@ public partial class ColoringPage : ContentPage
                 return;
             }
 
-            // FORCE CONVERT TO RGBA8888 to ensure colors work properly
             _coloringBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Rgba8888, SKAlphaType.Premul);
 
             using (var canvas = new SKCanvas(_coloringBitmap))
@@ -230,6 +229,60 @@ public partial class ColoringPage : ContentPage
         }
     }
 
+    private void SaveUndoState()
+    {
+        if (_coloringBitmap == null) return;
+
+        var snapshot = _coloringBitmap.Copy();
+        if (snapshot == null) return;
+
+        var undoState = new UndoState
+        {
+            BitmapSnapshot = snapshot
+        };
+
+        _undoStack.Push(undoState);
+
+        if (_undoStack.Count > MAX_UNDO_STATES)
+        {
+            var stackList = _undoStack.ToList();
+            var oldestState = stackList[stackList.Count - 1];
+            oldestState.BitmapSnapshot?.Dispose();
+
+            _undoStack.Clear();
+            for (int i = stackList.Count - 2; i >= 0; i--)
+            {
+                _undoStack.Push(stackList[i]);
+            }
+        }
+
+        UpdateUndoButtonState();
+    }
+
+    private void UpdateUndoButtonState()
+    {
+        UndoButton.IsEnabled = _undoStack.Count > 0;
+        UndoButton.Opacity = _undoStack.Count > 0 ? 1.0 : 0.5;
+    }
+
+    private async void OnUndoClicked(object? sender, EventArgs e)
+    {
+        await SoundService.PlayButtonClickAsync();
+
+        if (_undoStack.Count == 0 || _coloringBitmap == null)
+            return;
+
+        var undoState = _undoStack.Pop();
+
+        _coloringBitmap.Dispose();
+        _coloringBitmap = undoState.BitmapSnapshot;
+
+        ColoringCanvas.InvalidateSurface();
+        UpdateUndoButtonState();
+
+        System.Diagnostics.Debug.WriteLine($"Undo performed. Remaining undo states: {_undoStack.Count}");
+    }
+
     private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
@@ -239,7 +292,6 @@ public partial class ColoringPage : ContentPage
         {
             var info = e.Info;
 
-            // Calculate base scale to fit canvas (only once)
             if (_baseScale == 1f)
             {
                 float scaleX = (float)info.Width / _coloringBitmap.Width;
@@ -248,22 +300,19 @@ public partial class ColoringPage : ContentPage
                 _currentScale = _baseScale;
             }
 
-            // Calculate centered base offset
             float baseX = (info.Width - _coloringBitmap.Width * _currentScale) / 2;
             float baseY = (info.Height - _coloringBitmap.Height * _currentScale) / 2;
 
-            // Apply pan offset
             float x = baseX + _panOffset.X;
             float y = baseY + _panOffset.Y;
             _offset = new SKPoint(x, y);
 
-            // Create destination rectangle
             var destRect = new SKRect(
-                x,
-                y,
-                x + _coloringBitmap.Width * _currentScale,
-                y + _coloringBitmap.Height * _currentScale
-            );
+    x,
+    y,
+    x + _coloringBitmap.Width * _currentScale,
+    y + _coloringBitmap.Height * _currentScale
+);
 
             canvas.DrawBitmap(_coloringBitmap, destRect);
         }
@@ -349,7 +398,6 @@ public partial class ColoringPage : ContentPage
         float deltaX = currentPoint.X - _lastPanPoint.X;
         float deltaY = currentPoint.Y - _lastPanPoint.Y;
 
-        // If moved more than threshold, it's a pan not a tap
         if (Math.Abs(deltaX) > 5 || Math.Abs(deltaY) > 5)
         {
             _isPanning = true;
@@ -371,42 +419,33 @@ public partial class ColoringPage : ContentPage
         var point1 = points[0];
         var point2 = points[1];
 
-        // Calculate current distance between touch points
         float currentDistance = SKPoint.Distance(point1, point2);
 
-        // Only process if we have a previous distance to compare
         if (_previousPinchDistance <= 0)
         {
             _previousPinchDistance = currentDistance;
             return;
         }
 
-        // Calculate center point of the pinch
         var centerX = (point1.X + point2.X) / 2;
         var centerY = (point1.Y + point2.Y) / 2;
         var center = new SKPoint(centerX, centerY);
 
-        // Calculate scale factor based on distance change
         float scaleFactor = currentDistance / _previousPinchDistance;
 
-        // Apply scale limits
         float newScale = _currentScale * scaleFactor;
         newScale = Math.Max(_minScale * _baseScale, Math.Min(_maxScale * _baseScale, newScale));
 
-        // Adjust pan offset to zoom towards pinch center point
         if (newScale != _currentScale)
         {
             float actualScaleFactor = newScale / _currentScale;
 
-            // Calculate the point in bitmap coordinates that should stay under the center
             float bitmapX = (center.X - _offset.X) / _currentScale;
             float bitmapY = (center.Y - _offset.Y) / _currentScale;
 
-            // Calculate new offset to keep that point under the center
             float newOffsetX = center.X - bitmapX * newScale;
             float newOffsetY = center.Y - bitmapY * newScale;
 
-            // Update pan offset (considering base offset)
             var info = ColoringCanvas.CanvasSize;
             float baseX = (info.Width - _coloringBitmap!.Width * newScale) / 2;
             float baseY = (info.Height - _coloringBitmap.Height * newScale) / 2;
@@ -415,7 +454,6 @@ public partial class ColoringPage : ContentPage
             _currentScale = newScale;
         }
 
-        // Update previous distance for next frame
         _previousPinchDistance = currentDistance;
     }
 
@@ -429,25 +467,8 @@ public partial class ColoringPage : ContentPage
             return;
         }
 
-        // Run flood fill on background thread to prevent UI freezing
-        await Task.Run(() => FloodFill(x, y, fillColor));
-
-        // Update UI on main thread
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            ColoringCanvas.InvalidateSurface();
-        });
-    }
-
-    private void FloodFill(int x, int y, SKColor fillColor)
-    {
-        if (_coloringBitmap == null) return;
-
         SKColor targetColor = _coloringBitmap.GetPixel(x, y);
 
-        System.Diagnostics.Debug.WriteLine($"Target color at ({x},{y}): {targetColor}");
-
-        // Don't fill if clicking on outline or already same color
         if (IsBlackOutline(targetColor))
         {
             System.Diagnostics.Debug.WriteLine("Clicked on black outline, skipping fill");
@@ -460,29 +481,42 @@ public partial class ColoringPage : ContentPage
             return;
         }
 
+        SaveUndoState();
+
+        await Task.Run(() => FloodFill(x, y, fillColor));
+
+        MainThread.BeginInvokeOnMainThread(() =>
+{
+    ColoringCanvas.InvalidateSurface();
+});
+    }
+
+    private void FloodFill(int x, int y, SKColor fillColor)
+    {
+        if (_coloringBitmap == null) return;
+
+        SKColor targetColor = _coloringBitmap.GetPixel(x, y);
+
+        System.Diagnostics.Debug.WriteLine($"Target color at ({x},{y}): {targetColor}");
+
         int pixelsFilled = 0;
         int width = _coloringBitmap.Width;
         int height = _coloringBitmap.Height;
 
-        // Use HashSet to track visited pixels and prevent reprocessing
         HashSet<int> visited = new HashSet<int>();
 
-        // Use Queue instead of Stack for better memory management (BFS instead of DFS)
         Queue<SKPointI> pixels = new Queue<SKPointI>();
         pixels.Enqueue(new SKPointI(x, y));
 
-        // Helper function to convert point to unique int
         int PointToKey(int px, int py) => py * width + px;
 
         while (pixels.Count > 0 && pixelsFilled < MAX_PIXELS_TO_FILL)
         {
             var point = pixels.Dequeue();
 
-            // Check bounds
             if (point.X < 0 || point.X >= width || point.Y < 0 || point.Y >= height)
                 continue;
 
-            // Check if already visited
             int key = PointToKey(point.X, point.Y);
             if (visited.Contains(key))
                 continue;
@@ -491,13 +525,11 @@ public partial class ColoringPage : ContentPage
 
             SKColor currentColor = _coloringBitmap.GetPixel(point.X, point.Y);
 
-            // Check if pixel should be filled
             if (ColorsMatch(currentColor, targetColor) && !IsBlackOutline(currentColor))
             {
                 _coloringBitmap.SetPixel(point.X, point.Y, fillColor);
                 pixelsFilled++;
 
-                // Add neighboring pixels
                 pixels.Enqueue(new SKPointI(point.X + 1, point.Y));
                 pixels.Enqueue(new SKPointI(point.X - 1, point.Y));
                 pixels.Enqueue(new SKPointI(point.X, point.Y + 1));
@@ -517,25 +549,22 @@ public partial class ColoringPage : ContentPage
 
     private bool IsBlackOutline(SKColor color)
     {
-        // Detect black or very dark colors (outlines)
         return color.Red < 50 && color.Green < 50 && color.Blue < 50;
     }
 
     private bool ColorsMatch(SKColor color1, SKColor color2)
     {
-        // Reduced threshold for tighter edge detection (prevent bleeding)
         return Math.Abs(color1.Red - color2.Red) < COLOR_MATCH_THRESHOLD &&
-               Math.Abs(color1.Green - color2.Green) < COLOR_MATCH_THRESHOLD &&
-               Math.Abs(color1.Blue - color2.Blue) < COLOR_MATCH_THRESHOLD;
+       Math.Abs(color1.Green - color2.Green) < COLOR_MATCH_THRESHOLD &&
+       Math.Abs(color1.Blue - color2.Blue) < COLOR_MATCH_THRESHOLD;
     }
 
     private bool ColorsAreIdentical(SKColor color1, SKColor color2)
     {
-        // Check if colors are exactly the same
         return color1.Red == color2.Red &&
-               color1.Green == color2.Green &&
-               color1.Blue == color2.Blue &&
-               color1.Alpha == color2.Alpha;
+       color1.Green == color2.Green &&
+       color1.Blue == color2.Blue &&
+       color1.Alpha == color2.Alpha;
     }
 
     private void OnColorSelected(SKColor color, Frame selectedFrame)
@@ -544,7 +573,6 @@ public partial class ColoringPage : ContentPage
 
         System.Diagnostics.Debug.WriteLine($"Color selected: {color}");
 
-        // Reset all frames
         foreach (var child in ColorPalette.Children)
         {
             if (child is Frame frame)
@@ -554,7 +582,6 @@ public partial class ColoringPage : ContentPage
             }
         }
 
-        // Highlight selected
         selectedFrame.BorderColor = Colors.Gold;
         selectedFrame.Scale = 1.1;
     }
@@ -574,55 +601,45 @@ public partial class ColoringPage : ContentPage
             SaveButton.IsEnabled = false;
             SaveButton.Text = "Nag-se-save...";
 
-            // Create folder in app data directory
             var folderPath = Path.Combine(FileSystem.AppDataDirectory, "ColoredImages");
             Directory.CreateDirectory(folderPath);
 
-            // Generate filename
             var fileName = $"colored_{DateTime.Now:yyyyMMdd_HHmmss}.png";
             var filePath = Path.Combine(folderPath, fileName);
 
-            // Save bitmap
             using (var stream = File.OpenWrite(filePath))
             {
                 _coloringBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
 
-            // Increment coloring count
             int currentCount = Preferences.Get(COLORING_COUNT_KEY, 0);
             currentCount++;
             Preferences.Set(COLORING_COUNT_KEY, currentCount);
 
-            // Check for milestone achievements
             var milestone = _milestones.FirstOrDefault(m => m.RequiredCount == currentCount);
 
             if (milestone != null)
             {
-                // Check if milestone reward was already claimed
                 string milestoneKey = $"Coloring_Milestone_{milestone.RequiredCount}";
                 bool alreadyClaimed = Preferences.Get(milestoneKey, false);
 
                 if (!alreadyClaimed)
                 {
-                    // Unlock milestone medal
                     await App.Database.UnlockMedalAsync(milestone.MedalId);
 
-                    // Show success message first
                     await ShowGameAlertAsync($"Tagumpay na na-save ang larawan", false);
 
-                    // Navigate to ColoringRewardPage for milestone
                     await Navigation.PushAsync(new ColoringRewardPage(
-                        stars: milestone.RewardStars,
-                        medalId: milestone.MedalId,
-                        rewardKey: milestoneKey,
-                        returnPageType: "ColoringSelection",
-                        returnPageParameter: null
-                    ));
+    stars: milestone.RewardStars,
+    medalId: milestone.MedalId,
+    rewardKey: milestoneKey,
+    returnPageType: "ColoringSelection",
+    returnPageParameter: null
+));
                     return;
                 }
             }
 
-            // No milestone - show normal success message
             await ShowGameAlertAsync($"Tagumpay na na-save ang larawan", false);
             await Navigation.PopAsync();
         }
@@ -761,7 +778,7 @@ public partial class ColoringPage : ContentPage
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
+
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {

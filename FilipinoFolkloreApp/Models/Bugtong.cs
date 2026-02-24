@@ -14,9 +14,6 @@ namespace FilipinoFolkloreApp.Models
         public bool IsAvailable { get; set; } = true;
     }
 
-    /// <summary>
-    /// Database-tracked entity for bugtong progress
-    /// </summary>
     public class BugtongMonitored
     {
         [PrimaryKey, AutoIncrement]
@@ -28,9 +25,7 @@ namespace FilipinoFolkloreApp.Models
         public DateTime? CompletedDate { get; set; }
     }
 
-    /// <summary>
-    /// Milestone rewards for bugtong achievements
-    /// </summary>
+    
     public class BugtongMilestone
     {
         public int RequiredCorrect { get; set; }

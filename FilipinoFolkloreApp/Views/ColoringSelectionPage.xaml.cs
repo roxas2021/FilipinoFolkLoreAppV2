@@ -11,10 +11,8 @@ public partial class ColoringSelectionPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
-    // Double-tap prevention flag
     private bool _isNavigating = false;
 
-    // Hardcoded list of coloring templates
     private readonly List<ColoringTemplate> _coloringTemplates = new()
     {
         new ColoringTemplate
@@ -123,7 +121,6 @@ public partial class ColoringSelectionPage : ContentPage
     {
         base.OnAppearing();
 
-        // Reset navigation flag when page appears
         _isNavigating = false;
 
         LoadHUD();
@@ -154,7 +151,6 @@ public partial class ColoringSelectionPage : ContentPage
 
     private void LoadColoringTemplates()
     {
-        // Create grid layout with 5 columns
         int columns = 5;
         int currentColumn = 0;
         Grid? currentRow = null;
@@ -163,7 +159,6 @@ public partial class ColoringSelectionPage : ContentPage
         {
             if (currentColumn == 0)
             {
-                // Create new row with 5 equal columns
                 currentRow = new Grid
                 {
                     ColumnDefinitions =
@@ -212,7 +207,6 @@ public partial class ColoringSelectionPage : ContentPage
             }
         };
 
-        // Thumbnail Image
         var thumbnailFrame = new Frame
         {
             BackgroundColor = Colors.White,
@@ -233,7 +227,6 @@ public partial class ColoringSelectionPage : ContentPage
         Grid.SetRow(thumbnailFrame, 0);
         grid.Children.Add(thumbnailFrame);
 
-        // Title
         var titleLabel = new Label
         {
             Text = template.Title,
@@ -251,7 +244,6 @@ public partial class ColoringSelectionPage : ContentPage
 
         frame.Content = grid;
 
-        // Add tap gesture
         var tapGesture = new TapGestureRecognizer();
         tapGesture.Tapped += (s, e) => OnColoringTemplateTapped(template);
         frame.GestureRecognizers.Add(tapGesture);
@@ -261,7 +253,6 @@ public partial class ColoringSelectionPage : ContentPage
 
     private async void OnColoringTemplateTapped(ColoringTemplate template)
     {
-        // Prevent double-tap: if already navigating, ignore this tap
         if (_isNavigating)
         {
             System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to ColoringPage.");
@@ -270,7 +261,6 @@ public partial class ColoringSelectionPage : ContentPage
 
         await SoundService.PlayButtonClickAsync();
 
-        // Set navigation flag to prevent double-tap
         _isNavigating = true;
 
         try
@@ -280,14 +270,12 @@ public partial class ColoringSelectionPage : ContentPage
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in OnColoringTemplateTapped: {ex}");
-            _isNavigating = false; // Reset flag on error
+            _isNavigating = false;
         }
-        // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
     }
 
     private async void OnCollectionTapped(object? sender, EventArgs e)
     {
-        // Prevent double-tap: if already navigating, ignore this tap
         if (_isNavigating)
         {
             System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to ColoringCollectionPage.");
@@ -296,7 +284,6 @@ public partial class ColoringSelectionPage : ContentPage
 
         await SoundService.PlayButtonClickAsync();
 
-        // Set navigation flag to prevent double-tap
         _isNavigating = true;
 
         try
@@ -306,9 +293,8 @@ public partial class ColoringSelectionPage : ContentPage
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in OnCollectionTapped: {ex}");
-            _isNavigating = false; // Reset flag on error
+            _isNavigating = false;
         }
-        // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
     }
 
     private async void OnBackTapped(object? sender, TappedEventArgs e)
@@ -320,7 +306,7 @@ public partial class ColoringSelectionPage : ContentPage
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
+
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {

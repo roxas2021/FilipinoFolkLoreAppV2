@@ -20,8 +20,8 @@ public partial class ColoringRewardPage : ContentPage
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
     public ColoringRewardPage(
-        int stars = 20, 
-        int medalId = 16, 
+        int stars = 20,
+        int medalId = 16,
         string? rewardKey = null,
         string returnPageType = "ColoringSelection",
         object? returnPageParameter = null)
@@ -33,52 +33,46 @@ public partial class ColoringRewardPage : ContentPage
         _rewardKey = rewardKey ?? "FirstColoredImageRewardClaimed";
         _returnPageType = returnPageType;
         _returnPageParameter = returnPageParameter;
-        
-        // Don't set text yet - wait for OnAppearing
+
         RewardLabel.Text = "";
         RewardStarIcon.IsVisible = false;
-        OkButton.IsEnabled = false; // Disable until loading completes
+        OkButton.IsEnabled = false;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        
+
         if (!_isLoading)
             return;
         string medalImagePath = DatabaseService.GetMedalImagePath(_medalId);
         try
         {
-            
-            // Now get the medal image path
-            
-            // Fallback to default if path is empty
+
+
             if (string.IsNullOrEmpty(medalImagePath))
             {
                 System.Diagnostics.Debug.WriteLine($"Warning: Medal image path is empty for medal ID {_medalId}");
                 medalImagePath = "medal_empty.png";
             }
-            
+
             System.Diagnostics.Debug.WriteLine($"Setting medal image: {medalImagePath}");
-            
-            // Set the image source - use MainThread to ensure UI update
+
             await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                MedalImage.Source = ImageSource.FromFile(medalImagePath);
-            });
+{
+   MedalImage.Source = ImageSource.FromFile(medalImagePath);
+});
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"LoadMedalsAsync failed in ColoringRewardPage.OnAppearing: {ex}");
-            
-            // Set fallback image on error
+
             await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                MedalImage.Source = ImageSource.FromFile("medal_empty.png");
-            });
+{
+   MedalImage.Source = ImageSource.FromFile("medal_empty.png");
+});
         }
 
-        // Check if reward was already claimed
         bool alreadyClaimed = Preferences.Get(_rewardKey, false);
 
         if (alreadyClaimed)
@@ -89,12 +83,11 @@ public partial class ColoringRewardPage : ContentPage
         }
         else
         {
-            // Show normal reward text
             RewardLabel.Text = $"{_stars}";
             RewardStarIcon.IsVisible = true;
             OkButton.Text = "OK";
         }
-        
+
         OkButton.IsEnabled = true;
         _isLoading = false;
     }
@@ -102,27 +95,22 @@ public partial class ColoringRewardPage : ContentPage
     private async void OnRewardOk(object? sender, EventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
-        // Check if already claimed (double-check to prevent race conditions)
+
         bool alreadyClaimed = Preferences.Get(_rewardKey, false);
 
         if (alreadyClaimed)
         {
-            // Just close and navigate back
             await NavigateBack();
             return;
         }
 
         try
         {
-            // Award the stars
             var character = await App.Database.AddStarsAsync(_stars);
             CharacterHelper.CurrentStars = character.stars;
 
-            // Unlock the medal
             await App.Database.UnlockMedalAsync(_medalId);
 
-            // Mark the reward as claimed
             Preferences.Set(_rewardKey, true);
 
             System.Diagnostics.Debug.WriteLine($"Reward claimed: {_stars} stars, Medal ID: {_medalId}, Key: {_rewardKey}");
@@ -134,13 +122,11 @@ public partial class ColoringRewardPage : ContentPage
             return;
         }
 
-        // Navigate back
         await NavigateBack();
     }
 
     private async Task NavigateBack()
     {
-        // Remove this reward page from navigation stack
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {
@@ -153,32 +139,30 @@ public partial class ColoringRewardPage : ContentPage
                 Navigation.RemovePage(page);
             }
             if (page is BugtongQuizPage)
-            { 
+            {
                 Navigation.RemovePage(page);
             }
         }
 
-        // Navigate based on return page type
         switch (_returnPageType)
         {
             case "ColoringSelection":
                 await Navigation.PushAsync(new ColoringSelectionPage());
                 break;
-            
+
             case "NarratorDetail":
                 if (_returnPageParameter is string narratorId)
                 {
                     await Navigation.PushAsync(new NarratorDetailPage(narratorId));
                 }
                 break;
-            
+
             case "BugtongList":
                 Navigation.RemovePage(this);
                 await Navigation.PushAsync(new BugtongListPage());
                 break;
-            
+
             default:
-                // Just pop if no specific navigation needed
                 await Navigation.PopAsync();
                 break;
         }

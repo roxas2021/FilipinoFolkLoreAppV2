@@ -17,8 +17,7 @@ public partial class BugtongListPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
-    // Double-tap prevention flag
-    private bool _isNavigating = false;
+         private bool _isNavigating = false;
 
     public BugtongListPage()
     {
@@ -32,8 +31,7 @@ public partial class BugtongListPage : ContentPage
     {
         base.OnAppearing();
 
-        // Reset navigation flag when page appears
-        _isNavigating = false;
+                 _isNavigating = false;
 
         AlamatContent.Hearts = HeartService.GetHearts();
         RefreshHearts();
@@ -96,8 +94,7 @@ public partial class BugtongListPage : ContentPage
 
     private async void OnBugtongTapped(object? sender, TappedEventArgs e)
     {
-        // Prevent double-tap: if already navigating, ignore this tap
-        if (_isNavigating)
+                 if (_isNavigating)
         {
             System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to BugtongQuizPage.");
             return;
@@ -107,8 +104,7 @@ public partial class BugtongListPage : ContentPage
         
         if (e.Parameter is string bugtongId)
         {
-            // Set navigation flag to prevent double-tap
-            _isNavigating = true;
+                         _isNavigating = true;
 
             try
             {
@@ -117,10 +113,8 @@ public partial class BugtongListPage : ContentPage
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in OnBugtongTapped: {ex}");
-                _isNavigating = false; // Reset flag on error
-            }
-            // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
-        }
+                _isNavigating = false;              }
+                     }
     }
     
     private async void OnBackTapped(object? sender, TappedEventArgs e)
@@ -154,8 +148,7 @@ public partial class BugtongListPage : ContentPage
     }
 }
 
-// ViewModel for binding
-public class BugtongViewModel
+ public class BugtongViewModel
 {
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;

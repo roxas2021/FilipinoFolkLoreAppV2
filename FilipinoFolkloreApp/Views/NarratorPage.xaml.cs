@@ -19,16 +19,13 @@ public partial class NarratorPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
-    // Double-tap prevention flag
     private bool _isNavigating = false;
 
-    // Tutorial state
     private int _tutorialStep = 0;
     private const string TUTORIAL_COMPLETED_KEY = "NarratorPageTutorialCompleted4";
 
-    // Tutorial steps configuration - FOCUSED ON NARRATOR MECHANICS
     private readonly TutorialStep[] _tutorialSteps = new[]
-    {
+{
         new TutorialStep
         {
             Title = "Pumili ng Narrator!",
@@ -73,17 +70,14 @@ public partial class NarratorPage : ContentPage
     {
         base.OnAppearing();
 
-        // Reset navigation flag when page appears
         _isNavigating = false;
 
         AlamatContent.Hearts = HeartService.GetHearts();
 
-        // Check and refresh narrator battery
         AlamatContent.CheckAndRefreshNarratorBattery();
 
         try
         {
-            // Sync in-memory story monitored fields from DB.
             await App.Database.LoadStoriesAsync();
             await App.Database.LoadNarratorDataAsync();
         }
@@ -92,16 +86,13 @@ public partial class NarratorPage : ContentPage
             System.Diagnostics.Debug.WriteLine($"Error syncing stories on appear: {ex}");
         }
 
-        // Refresh UI now that data is consistent
         LoadHud();
         RefreshNarratorList();
 
-        // Check if tutorial should be shown
         bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
         if (!tutorialCompleted)
         {
-            await Task.Delay(800); // Wait for narrators to load
-            await ShowTutorial();
+            await Task.Delay(800); await ShowTutorial();
         }
     }
 
@@ -112,13 +103,11 @@ public partial class NarratorPage : ContentPage
         UpdateTutorialStep();
         TutorialOverlay.IsVisible = true;
 
-        // Animate tarsier entrance
         await Task.WhenAll(
-            TarsierImage.FadeTo(1, 400, Easing.CubicOut),
-            TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
-        );
+   TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+   TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+);
 
-        // Animate speech bubble
         await Task.Delay(200);
         await Task.WhenAll(
             SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
@@ -147,7 +136,6 @@ public partial class NarratorPage : ContentPage
         TutorialMessageLabel.Text = step.Message;
         TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
 
-        // Update arrow pointer to point at target element dynamically
         if (!string.IsNullOrEmpty(step.TargetElementName))
         {
             await PositionArrowToElement(step.TargetElementName, step.OffsetX);
@@ -158,7 +146,6 @@ public partial class NarratorPage : ContentPage
             PositionSpeechBubble(true, 0);
         }
 
-        // Highlight target element
         HighlightTargetElement(step.TargetElementName);
     }
 
@@ -166,40 +153,31 @@ public partial class NarratorPage : ContentPage
     {
         Rect targetBounds = Rect.Zero;
 
-        // 1. Find the target bounds using the Virtual Anchor approach
         if (elementName == "FirstUnlockedNarrator" || elementName == "FirstLockedNarrator")
         {
-            await Task.Delay(200); // Give layout time to render
-
+            await Task.Delay(200);
             Rect cvBounds = GetAbsolutePosition(NarratorsView);
 
             if (cvBounds != Rect.Zero)
             {
-                // Check device type to match your XAML's OnIdiom Span
-                double columns = 3; // Default for Phone
-                if (DeviceInfo.Idiom == DeviceIdiom.Tablet) columns = 5;
+                double columns = 3; if (DeviceInfo.Idiom == DeviceIdiom.Tablet) columns = 5;
                 if (DeviceInfo.Idiom == DeviceIdiom.Desktop) columns = 6;
 
-                double spacing = 16; // Match your HorizontalItemSpacing
-
-                // Calculate the exact width of a single narrator card
+                double spacing = 16;
                 double cardWidth = (cvBounds.Width - (spacing * (columns - 1))) / columns;
 
                 double targetX = cvBounds.X;
 
-                // If we want the SECOND item (FirstLockedNarrator), shift right by one card + spacing
                 if (elementName == "FirstLockedNarrator")
                 {
                     targetX += cardWidth + spacing;
                 }
 
-                // Create the virtual target box (Using 180 for height to roughly cover Avatar + Price)
                 targetBounds = new Rect(targetX, cvBounds.Y, cardWidth, 180);
             }
         }
         else if (elementName == "NarratorsGridContainer")
         {
-            // Target the whole grid for the first step
             targetBounds = GetAbsolutePosition(NarratorsGridContainer);
         }
 
@@ -211,7 +189,6 @@ public partial class NarratorPage : ContentPage
 
         await Task.Delay(150);
 
-        // 2. Get screen info and target bounds
         var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
         double screenHeight = displayInfo.Height / displayInfo.Density;
         double safeZone = 60;
@@ -220,7 +197,6 @@ public partial class NarratorPage : ContentPage
         double arrowHeight = 50;
         double padding = 10;
 
-        // 3. Calculate Potential Positions
         double yAbove = targetBounds.Top - arrowHeight - padding;
         double yBelow = targetBounds.Bottom + padding;
 
@@ -256,7 +232,6 @@ public partial class NarratorPage : ContentPage
             }
         }
 
-        // 4. Apply Position and Rotation
         double arrowX = targetBounds.Center.X - (arrowWidth / 2);
 
         AbsoluteLayout.SetLayoutBounds(ArrowPointer, new Rect(arrowX, finalArrowY, arrowWidth, arrowHeight));
@@ -279,7 +254,6 @@ public partial class NarratorPage : ContentPage
                 var items = GetVisualTreeDescendants(NarratorsView);
                 var narratorCards = new List<Grid>();
 
-                // Collect all narrator cards in order
                 foreach (var item in items)
                 {
                     if (item is Grid grid &&
@@ -290,7 +264,6 @@ public partial class NarratorPage : ContentPage
                     }
                 }
 
-                // Return the card at the specified index
                 if (targetIndex >= 0 && targetIndex < narratorCards.Count)
                 {
                     System.Diagnostics.Debug.WriteLine($"Found narrator card at index {targetIndex}: {(narratorCards[targetIndex].BindingContext as Card)?.Name}");
@@ -425,13 +398,11 @@ public partial class NarratorPage : ContentPage
 
     private void HighlightTargetElement(string? targetName)
     {
-        // Reset all highlights
         NarratorsGridContainer.Opacity = 1;
 
         if (string.IsNullOrEmpty(targetName))
             return;
 
-        // For specific narrator cards, we slightly dim the container
         switch (targetName)
         {
             case "FirstUnlockedNarrator":
@@ -454,23 +425,18 @@ public partial class NarratorPage : ContentPage
 
         TutorialOverlay.IsVisible = false;
 
-        // Reset opacities
         NarratorsGridContainer.Opacity = 1;
     }
 
     void RefreshNarratorList()
     {
-        // Get the current story (safe lookup)
         var story = AlamatContent.Stories.FirstOrDefault(s => s.Id == _storyId);
 
         NarratorsView.ItemsSource = AlamatContent.Narrators.Select(n =>
         {
-            // per-story unlock check: tarsier always unlocked, or global unlocked set,
-            // or the current story has the narrator unlocked flag set.
             bool unlocked = n.Id == "tarsier"
-                            || AlamatContent.UnlockedNarrators.Contains(n.Id) // global unlocks if used
-                            || (story != null && n.Id == "eagle" && story.NarratorEagleUnlocked)
-                            || (story != null && n.Id == "monkey" && story.NarratorMonkeyUnlocked);
+  || AlamatContent.UnlockedNarrators.Contains(n.Id) || (story != null && n.Id == "eagle" && story.NarratorEagleUnlocked)
+  || (story != null && n.Id == "monkey" && story.NarratorMonkeyUnlocked);
 
             return new Card
             {
@@ -485,7 +451,6 @@ public partial class NarratorPage : ContentPage
 
     async void OnNarratorTapped(object? sender, TappedEventArgs e)
     {
-        // Prevent double-tap: if already navigating, ignore this tap
         if (_isNavigating)
         {
             System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to story.");
@@ -496,10 +461,8 @@ public partial class NarratorPage : ContentPage
 
         if (sender is not Grid g || g.BindingContext is not Card c) return;
 
-        // Check narrator battery before proceeding
         if (!AlamatContent.CanUseNarrator())
         {
-            // Calculate time until next battery refresh
             var timeSinceLastUse = DateTime.Now - AlamatContent.LastNarratorUseTime;
             var minutesUntilRefresh = 10 - ((int)timeSinceLastUse.TotalMinutes % 10);
 
@@ -510,18 +473,15 @@ public partial class NarratorPage : ContentPage
             return;
         }
 
-        // Set navigation flag to prevent double-tap
         _isNavigating = true;
 
         try
         {
-            // If already unlocked for this story or globally, just select and continue
             var story = AlamatContent.GetStory(_storyId);
 
             bool alreadyUnlockedForThisStory =
                 c.Id == "tarsier" ||
-                AlamatContent.UnlockedNarrators.Contains(c.Id) || // global
-                (c.Id == "eagle" && story.NarratorEagleUnlocked) ||
+                AlamatContent.UnlockedNarrators.Contains(c.Id) || (c.Id == "eagle" && story.NarratorEagleUnlocked) ||
                 (c.Id == "monkey" && story.NarratorMonkeyUnlocked);
 
             if (!alreadyUnlockedForThisStory)
@@ -529,15 +489,12 @@ public partial class NarratorPage : ContentPage
                 if (!AlamatContent.TrySpendStars(c.Price))
                 {
                     await ShowGameAlertAsync($"Kailangan: {c.Price}", false);
-                    _isNavigating = false; // Reset flag before returning
-                    return;
+                    _isNavigating = false; return;
                 }
 
-                // Save previous flags to rollback on DB failure
                 bool previousEagle = story.NarratorEagleUnlocked;
                 bool previousMonkey = story.NarratorMonkeyUnlocked;
 
-                // set the per-story flag
                 switch (c.Id)
                 {
                     case "eagle":
@@ -553,16 +510,13 @@ public partial class NarratorPage : ContentPage
                 {
                     await App.Database.UpdateStoryAsync(story);
                     await App.Database.SetStarsAsync(CharacterHelper.CurrentStars - c.Price);
-                    CharacterHelper.CurrentStars -= c.Price; // keep in sync
-                    saved = true;
+                    CharacterHelper.CurrentStars -= c.Price; saved = true;
                 }
                 catch (Exception ex)
                 {
-                    // rollback if DB save fails: restore story flags and refund stars
                     story.NarratorEagleUnlocked = previousEagle;
                     story.NarratorMonkeyUnlocked = previousMonkey;
-                    AlamatContent.Stars += c.Price; // refund
-                    System.Diagnostics.Debug.WriteLine($"UpdateStoryAsync failed while unlocking narrator: {ex}");
+                    AlamatContent.Stars += c.Price; System.Diagnostics.Debug.WriteLine($"UpdateStoryAsync failed while unlocking narrator: {ex}");
                     await ShowGameAlertAsync("Hindi naisave ang narrator — subukang muli.", false);
                 }
 
@@ -570,19 +524,15 @@ public partial class NarratorPage : ContentPage
                 {
                     LoadHud();
                     RefreshNarratorList();
-                    _isNavigating = false; // Reset flag before returning
-                    return;
+                    _isNavigating = false; return;
                 }
 
-                // saved ok -> refresh HUD and list
                 LoadHud();
                 RefreshNarratorList();
             }
 
-            // Use narrator battery (deduct 1)
             await AlamatContent.UseNarratorAsync();
 
-            // Save selected narrator to database
             AlamatContent.SelectedNarratorId = c.Id;
             AlamatContent.CurrentNarratorImage = c.Avatar;
             await App.Database.UpdateSelectedNarratorAsync(c.Id);
@@ -592,9 +542,8 @@ public partial class NarratorPage : ContentPage
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in OnNarratorTapped: {ex}");
-            _isNavigating = false; // Reset flag on error
+            _isNavigating = false;
         }
-        // Note: Don't reset _isNavigating here - it will be reset in OnAppearing when user returns
     }
 
     void LoadHud()
@@ -620,7 +569,6 @@ public partial class NarratorPage : ContentPage
         }
     }
 
-    // Custom Game Alert with Yes/No or OK buttons
     private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
     {
         if (GameAlertOverlay.IsVisible && _alertTcs != null)
@@ -628,15 +576,12 @@ public partial class NarratorPage : ContentPage
 
         _alertTcs = new TaskCompletionSource<bool>();
 
-        // Set message
         AlertMessageLabel.Text = message;
 
-        // Clear existing buttons
         AlertButtonsPanel.Children.Clear();
 
         if (showYesNo)
         {
-            // Add Yes button
             var yesButton = new Button
             {
                 Text = "Oo",
@@ -650,7 +595,6 @@ public partial class NarratorPage : ContentPage
             yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
             AlertButtonsPanel.Children.Add(yesButton);
 
-            // Add No button
             var noButton = new Button
             {
                 Text = "Hindi",
@@ -666,7 +610,6 @@ public partial class NarratorPage : ContentPage
         }
         else
         {
-            // Add OK button
             var okButton = new Button
             {
                 Text = "OK",

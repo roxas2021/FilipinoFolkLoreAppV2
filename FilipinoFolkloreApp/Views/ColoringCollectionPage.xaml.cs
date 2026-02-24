@@ -157,7 +157,6 @@ public partial class ColoringCollectionPage : ContentPage
             }
         };
 
-        // Thumbnail Image
         var thumbnailFrame = new Frame
         {
             BackgroundColor = Colors.White,
@@ -174,7 +173,6 @@ public partial class ColoringCollectionPage : ContentPage
             HeightRequest = 100
         };
 
-        // Add tap gesture to view image
         var imageTapGesture = new TapGestureRecognizer();
         imageTapGesture.Tapped += (s, e) => OnImageTapped(imageInfo);
         thumbnailFrame.GestureRecognizers.Add(imageTapGesture);
@@ -183,7 +181,6 @@ public partial class ColoringCollectionPage : ContentPage
         Grid.SetRow(thumbnailFrame, 0);
         grid.Children.Add(thumbnailFrame);
 
-        // Sell Button
         var sellButton = new Button
         {
             Text = $"+ {StarsPerImage}",
@@ -208,7 +205,6 @@ public partial class ColoringCollectionPage : ContentPage
 
     private void OnImageTapped(ColoredImageInfo imageInfo)
     {
-        // Show image preview modal
         PreviewImage.Source = ImageSource.FromFile(imageInfo.FilePath);
         ImagePreviewOverlay.IsVisible = true;
     }
@@ -230,26 +226,20 @@ public partial class ColoringCollectionPage : ContentPage
 
         try
         {
-            // Delete the image file
             if (File.Exists(imageInfo.FilePath))
             {
                 File.Delete(imageInfo.FilePath);
             }
 
-            // Add stars to database
             var character = await App.Database.AddStarsAsync(StarsPerImage);
             CharacterHelper.CurrentStars = character.stars;
 
-            // Update UI
             StarsLabel.Text = character.stars.ToString();
 
-            // Remove from list and UI
             _coloredImages.Remove(imageInfo);
 
-            // Reload the grid
             LoadColoredImageGrid();
 
-            // Show empty state if no more images
             if (_coloredImages.Count == 0)
             {
                 ShowEmptyState();
@@ -270,7 +260,6 @@ public partial class ColoringCollectionPage : ContentPage
         EmptyStateContainer.IsVisible = true;
     }
 
-    // Custom Game Alert with Yes/No or OK buttons
     private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
     {
         if (GameAlertOverlay.IsVisible && _alertTcs != null)
@@ -278,15 +267,12 @@ public partial class ColoringCollectionPage : ContentPage
 
         _alertTcs = new TaskCompletionSource<bool>();
 
-        // Set message
         AlertMessageLabel.Text = message;
 
-        // Clear existing buttons
         AlertButtonsPanel.Children.Clear();
 
         if (showYesNo)
         {
-            // Add Yes button
             var yesButton = new Button
             {
                 Text = "Oo",
@@ -300,7 +286,6 @@ public partial class ColoringCollectionPage : ContentPage
             yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
             AlertButtonsPanel.Children.Add(yesButton);
 
-            // Add No button
             var noButton = new Button
             {
                 Text = "Hindi",
@@ -316,7 +301,6 @@ public partial class ColoringCollectionPage : ContentPage
         }
         else
         {
-            // Add OK button
             var okButton = new Button
             {
                 Text = "OK",
@@ -400,28 +384,24 @@ public partial class ColoringCollectionPage : ContentPage
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
+
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {
             if (page is ColoringSelectionPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is ColoringCollectionPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is ColoringPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
             if (page is MgaLaroPage)
             {
-                // Remove RewardPage from the stack
                 Navigation.RemovePage(page);
             }
         }

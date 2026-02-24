@@ -16,8 +16,8 @@ namespace FilipinoFolkloreApp.Models
         public int points { get; set; }
         public int stars { get; set; } = 0;
 
-        public string selectedNarrator { get; set; } = "tarsier"; // Default narrator
-        public int narratorBattery { get; set; } = 3; // 3 = full, 0 = empty
+        public string selectedNarrator { get; set; } = "tarsier"; 
+        public int narratorBattery { get; set; } = 3; 
         public DateTime lastNarratorUseTime { get; set; } = DateTime.MinValue;
     }
 }

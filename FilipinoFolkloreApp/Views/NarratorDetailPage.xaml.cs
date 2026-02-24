@@ -118,18 +118,15 @@ public partial class NarratorDetailPage : ContentPage
 
     private void OnOverlayBackgroundTapped(object? sender, TappedEventArgs e)
     {
-        // Optional: Close overlay when tapping outside the content
-        // NarratorOverlay.IsVisible = false;
     }
 
     private async void OnFoodTapped(object? sender, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
+
         if (sender is not Grid grid || grid.BindingContext is not FoodItem food)
             return;
 
-        // Check if battery is already full
         if (AlamatContent.NarratorBattery >= 3)
         {
             await ShowGameAlertAsync(
@@ -139,7 +136,6 @@ public partial class NarratorDetailPage : ContentPage
             return;
         }
 
-        // Check if player has enough stars
         if (CharacterHelper.CurrentStars < food.Price)
         {
             await ShowGameAlertAsync(
@@ -149,30 +145,25 @@ public partial class NarratorDetailPage : ContentPage
             return;
         }
 
-        // Confirm purchase
         bool confirm = await ShowGameAlertAsync(
-            $"Bumili ng {food.Name} para sa {food.Price} stars?\nMagdadagdag ng {food.BatteryRestore} battery.",
-            true
-        );
+   $"Bumili ng {food.Name} para sa {food.Price} stars?\nMagdadagdag ng {food.BatteryRestore} battery.",
+   true
+);
 
         if (!confirm)
             return;
 
         try
         {
-            // Track previous battery level
             int previousBattery = AlamatContent.NarratorBattery;
 
-            // Deduct stars
             CharacterHelper.CurrentStars -= food.Price;
             await App.Database.SetStarsAsync(CharacterHelper.CurrentStars);
 
-            // Restore battery
             AlamatContent.NarratorBattery = Math.Min(3, AlamatContent.NarratorBattery + food.BatteryRestore);
             AlamatContent.LastNarratorUseTime = DateTime.Now;
             await App.Database.UpdateNarratorBatteryAsync(AlamatContent.NarratorBattery, AlamatContent.LastNarratorUseTime);
 
-            // Update UI
             LoadHUD();
             UpdateBatteryDisplay();
 
@@ -181,7 +172,6 @@ public partial class NarratorDetailPage : ContentPage
                 false
             );
 
-            // Check for achievements
             await CheckAndAwardAchievements(previousBattery);
         }
         catch (Exception ex)
@@ -195,30 +185,25 @@ public partial class NarratorDetailPage : ContentPage
 
     private async Task CheckAndAwardAchievements(int previousBattery)
     {
-        // Check if battery just became full
         if (AlamatContent.NarratorBattery == 3 && previousBattery < 3)
         {
-            // Check if this is the first time reaching full battery
             string firstFullBatteryKey = $"Narrator_{_narratorId}_FirstFullBattery";
             bool firstFullBattery = Preferences.Get(firstFullBatteryKey, false);
 
             if (!firstFullBattery)
             {
-                // Show reward page using ColoringRewardPage
-                // Medal ID for narrator first full battery achievement
                 await Navigation.PushAsync(new ColoringRewardPage(
-                    stars: 50,
-                    medalId: 23,
-                    rewardKey: firstFullBatteryKey,
-                    returnPageType: "NarratorDetail",
-                    returnPageParameter: _narratorId
-                ));
+stars: 50,
+medalId: 23,
+rewardKey: firstFullBatteryKey,
+returnPageType: "NarratorDetail",
+returnPageParameter: _narratorId
+));
                 return;
             }
         }
     }
 
-    // Custom Game Alert with Yes/No or OK buttons
     private Task<bool> ShowGameAlertAsync(string message, bool showYesNo = false)
     {
         if (GameAlertOverlay.IsVisible && _alertTcs != null)
@@ -226,15 +211,12 @@ public partial class NarratorDetailPage : ContentPage
 
         _alertTcs = new TaskCompletionSource<bool>();
 
-        // Set message
         AlertMessageLabel.Text = message;
 
-        // Clear existing buttons
         AlertButtonsPanel.Children.Clear();
 
         if (showYesNo)
         {
-            // Add Yes button
             var yesButton = new Button
             {
                 Text = "Oo",
@@ -248,7 +230,6 @@ public partial class NarratorDetailPage : ContentPage
             yesButton.Clicked += (s, e) => OnAlertYesClicked(s, e);
             AlertButtonsPanel.Children.Add(yesButton);
 
-            // Add No button
             var noButton = new Button
             {
                 Text = "Hindi",
@@ -264,7 +245,6 @@ public partial class NarratorDetailPage : ContentPage
         }
         else
         {
-            // Add OK button
             var okButton = new Button
             {
                 Text = "OK",
@@ -348,7 +328,7 @@ public partial class NarratorDetailPage : ContentPage
     private async void OnHomeTapped(object? sender, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();
-        
+
         var pages = Navigation.NavigationStack.ToList();
         foreach (var page in pages)
         {

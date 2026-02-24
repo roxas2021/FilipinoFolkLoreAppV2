@@ -146,7 +146,6 @@
 	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon6.png" />
 	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon7.png" />
 	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon8.png" />
-	  <None Remove="Resources\Images\coloring\thumbnail\drawingicon9.png" />
 	  <None Remove="Resources\Images\elements\close.png" />
 	  <None Remove="Resources\Images\elements\eagle.png" />
 	  <None Remove="Resources\Images\elements\lock.png" />
@@ -448,22 +447,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon1.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon10.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon11.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon12.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon13.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon2.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon3.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon4.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon5.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon6.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon7.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon8.png" />
-	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon9.png" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\avatar1.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\avatar1_blue.png" />
 	  <MauiImage Include="Resources\Images\avatarcustomization\avatar1\avatar1_bluered.png" />
@@ -504,6 +487,19 @@
 	  <MauiImage Include="Resources\Images\bg\login_bg.jpg" />
 	  <MauiImage Include="Resources\Images\bg\narator_bg.jpg" />
 	  <MauiImage Include="Resources\Images\bg\reward_bg.jpg" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon9.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon1.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon10.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon11.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon12.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon13.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon2.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon3.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon4.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon5.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon6.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon7.png" />
+	  <MauiImage Include="Resources\Images\coloring\thumbnail\drawingicon8.png" />
 	  <MauiImage Include="Resources\Images\elements\close.png" />
 	  <MauiImage Include="Resources\Images\elements\eagle.png" />
 	  <MauiImage Include="Resources\Images\elements\lock.png" />

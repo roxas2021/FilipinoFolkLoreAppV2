@@ -24,13 +24,11 @@ public partial class QuizPage : ContentPage
     private SoundService SoundService =>
         Application.Current!.Handler!.MauiContext!.Services.GetService<SoundService>()!;
 
-    // Tutorial state
     private int _tutorialStep = 0;
     private const string TUTORIAL_COMPLETED_KEY = "QuizPageTutorialCompleted4";
 
-    // Tutorial steps configuration - FOCUSED ON QUIZ MECHANICS ONLY
     private readonly TutorialStep[] _tutorialSteps = new[]
-    {
+{
         new TutorialStep
         {
             Title = "Ito ang Quiz!",
@@ -53,14 +51,11 @@ public partial class QuizPage : ContentPage
 
         _storyId = storyId;
 
-        // Header HUD
         LoadHud();
 
-        // Load first question (supports more later)
         var story = AlamatContent.GetStory(_storyId);
         if (story.Quiz == null || story.Quiz.Count == 0)
         {
-            // No quiz? Just reward and exit gracefully
             _ = HandleCorrectAsync();
             return;
         }
@@ -75,15 +70,12 @@ public partial class QuizPage : ContentPage
         base.OnAppearing();
 
         AlamatContent.Hearts = HeartService.GetHearts();
-        // ?? Restore hearts if 5 minutes already passed
         RefreshHearts();
 
-        // Check if tutorial should be shown
         bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
         if (!tutorialCompleted)
         {
-            await Task.Delay(800); // Wait for quiz to load
-            await ShowTutorial();
+            await Task.Delay(800); await ShowTutorial();
         }
     }
 
@@ -97,19 +89,16 @@ public partial class QuizPage : ContentPage
     {
         _tutorialStep = 0;
 
-        // Pause the quiz timer during tutorial
         _cts?.Cancel();
 
         UpdateTutorialStep();
         TutorialOverlay.IsVisible = true;
 
-        // Animate tarsier entrance
         await Task.WhenAll(
-            TarsierImage.FadeTo(1, 400, Easing.CubicOut),
-            TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
-        );
+   TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+   TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+);
 
-        // Animate speech bubble
         await Task.Delay(200);
         await Task.WhenAll(
             SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
@@ -138,7 +127,6 @@ public partial class QuizPage : ContentPage
         TutorialMessageLabel.Text = step.Message;
         TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
 
-        // Update arrow pointer to point at target element dynamically
         if (!string.IsNullOrEmpty(step.TargetElementName))
         {
             await PositionArrowToElement(step.TargetElementName, step.OffsetX);
@@ -149,7 +137,6 @@ public partial class QuizPage : ContentPage
             PositionSpeechBubble(true, 0);
         }
 
-        // Highlight target element
         HighlightTargetElement(step.TargetElementName);
     }
 
@@ -317,14 +304,12 @@ public partial class QuizPage : ContentPage
 
     private void HighlightTargetElement(string? targetName)
     {
-        // Reset all highlights
         QuestionArea.Opacity = 1;
         ChoicesArea.Opacity = 1;
 
         if (string.IsNullOrEmpty(targetName))
             return;
 
-        // Dim everything except target
         switch (targetName)
         {
             case "QuestionArea":
@@ -349,11 +334,9 @@ public partial class QuizPage : ContentPage
 
         TutorialOverlay.IsVisible = false;
 
-        // Reset opacities
         QuestionArea.Opacity = 1;
         ChoicesArea.Opacity = 1;
 
-        // Resume quiz timer
         var story = AlamatContent.GetStory(_storyId);
         var q = story.Quiz[_quizIndex];
         _cts = new CancellationTokenSource();
@@ -371,7 +354,6 @@ public partial class QuizPage : ContentPage
             QuizPrompt.Text = q.Prompt;
             _correctIndex = q.CorrectIndex;
 
-            // Set text answers instead of images
             Choice0Text.Text = q.ChoiceTexts.ElementAtOrDefault(0) ?? "";
             Choice1Text.Text = q.ChoiceTexts.ElementAtOrDefault(1) ?? "";
             Choice2Text.Text = q.ChoiceTexts.ElementAtOrDefault(2) ?? "";
@@ -393,30 +375,25 @@ public partial class QuizPage : ContentPage
     }
     async Task AnimateQuizSwapAsync(Action swapContent)
     {
-        // Animate out
         await Task.WhenAll(
-            QuizContentWrapper.FadeTo(0, 150, Easing.CubicIn),
-            QuizContentWrapper.TranslateTo(0, -12, 150, Easing.CubicIn)
-        );
+   QuizContentWrapper.FadeTo(0, 150, Easing.CubicIn),
+   QuizContentWrapper.TranslateTo(0, -12, 150, Easing.CubicIn)
+);
 
-        // Swap quiz content
         swapContent.Invoke();
 
-        // Reset position for animate-in
         QuizContentWrapper.TranslationY = 12;
 
-        // Animate in
         await Task.WhenAll(
-            QuizContentWrapper.FadeTo(1, 180, Easing.CubicOut),
-            QuizContentWrapper.TranslateTo(0, 0, 180, Easing.CubicOut)
-        );
+   QuizContentWrapper.FadeTo(1, 180, Easing.CubicOut),
+   QuizContentWrapper.TranslateTo(0, 0, 180, Easing.CubicOut)
+);
     }
 
     async Task HandlePickAsync(int idx)
     {
         await SoundService.PlayButtonClickAsync();
 
-        // ?? Guard: no hearts left
         if (HeartService.GetHearts() <= 0)
         {
             await DisplayAlert(
@@ -427,7 +404,6 @@ public partial class QuizPage : ContentPage
             return;
         }
 
-        // Normal flow
         if (idx == _correctIndex)
             await HandleCorrectAsync();
         else
@@ -440,12 +416,10 @@ public partial class QuizPage : ContentPage
         var story = AlamatContent.GetStory(_storyId);
         var currentQuestion = story.Quiz[_quizIndex];
 
-        // Check if this is the first time answering this question correctly
         bool isFirstTime = await App.Database.SetQuizQuestionAnsweredAsync(_storyId, _quizIndex);
 
         if (isFirstTime)
         {
-            // Award stars for first correct answer
             int starsToAward = currentQuestion.RewardStars;
             _totalQuizStarsEarned += starsToAward;
 
@@ -456,14 +430,12 @@ public partial class QuizPage : ContentPage
 
         _quizIndex++;
 
-        // More quizzes left → load next quiz
         if (_quizIndex < story.Quiz.Count)
         {
             await LoadQuiz();
             return;
         }
 
-        // No more quizzes → reward player with story completion stars
         var reward = story.RewardStars;
         var isClaimed = story.IsRewardClaimed;
 
@@ -565,7 +537,6 @@ public partial class QuizPage : ContentPage
 
     void OnAlertBackgroundTapped(object? s, TappedEventArgs e)
     {
-        // Intentionally no-op to prevent skipping
     }
 
 
@@ -573,7 +544,6 @@ public partial class QuizPage : ContentPage
     async void OnPick1(object? s, TappedEventArgs e) => await HandlePickAsync(1);
     async void OnPick2(object? s, TappedEventArgs e) => await HandlePickAsync(2);
 
-    // ---------- HUD helpers ----------
     void LoadHud()
     {
         HudAvatar.Source = CharacterHelper.CurrentAvatar;
@@ -603,7 +573,6 @@ public partial class QuizPage : ContentPage
         }
     }
 
-    // ---------- Header actions ----------
     async void OnHomeTapped(object? s, TappedEventArgs e)
     {
         await SoundService.PlayButtonClickAsync();

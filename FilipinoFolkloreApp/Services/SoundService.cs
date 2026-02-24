@@ -17,7 +17,7 @@ public class SoundService
 
     public async Task PlayButtonClickAsync()
     {
-        // Prevent overlapping button click sounds
+       
         if (_isPlaying)
             return;
 
@@ -25,16 +25,13 @@ public class SoundService
         {
             _isPlaying = true;
 
-            // Create a new stream and player for each click (don't reuse)
             using var stream = await FileSystem.OpenAppPackageFileAsync("sounds/button_click.mp3");
             using var player = _audioManager.CreatePlayer(stream);
 
-            // Set volume and play
-            player.Volume = 1; // Adjust as needed
+            player.Volume = 1; 
             player.Play();
 
-            // Wait for the sound to finish (assuming short duration ~200-500ms)
-            await Task.Delay(300); // Adjust based on your sound file duration
+            await Task.Delay(300); 
         }
         catch (Exception ex)
         {
@@ -46,7 +43,6 @@ public class SoundService
         }
     }
 
-    // Alternative method if you want fire-and-forget (no waiting)
     public void PlayButtonClickFireAndForget()
     {
         _ = Task.Run(async () =>
