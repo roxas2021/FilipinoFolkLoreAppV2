@@ -6,6 +6,8 @@ using FilipinoFolkloreApp.Models;
 using System.Threading.Tasks;
 using FilipinoFolkloreApp.Services;
 using Microsoft.Maui.Layouts;
+using Plugin.Maui.Audio;
+using System.IO;
 
 namespace FilipinoFolkloreApp
 {
@@ -19,8 +21,11 @@ namespace FilipinoFolkloreApp
         private int _tutorialStep = 0;
         private const string TUTORIAL_COMPLETED_KEY = "MainPageTutorialCompleted";
 
+        private IAudioPlayer? _tutorialAudioPlayer;
+        private Stream? _tutorialAudioStream;
+
         private readonly TutorialStep[] _tutorialSteps = new[]
-{
+        {
             new TutorialStep
             {
                 Title = "Maligayang pagdating!",
@@ -30,19 +35,19 @@ namespace FilipinoFolkloreApp
             new TutorialStep
             {
                 Title = "Ilagay ang Iyong Pangalan",
-                Message = "I-click ang mga titik sa ibaba para magsimula ng paglagay ng iyong pangalan. Kailangan ng 2-20 titik.",
+                Message = "Pindutin ang mga titik sa ibaba para magsimula ng paglagay ng iyong pangalan. Kailangan ng 2-20 titik.",
                 TargetElementName = "OutputEntry",
             },
             new TutorialStep
             {
                 Title = "Tanggalin ang Mali",
-                Message = "Kung may mali, i-click ang erase button para burahin ang lahat ng titik.",
+                Message = "Kung may mali, pindutin ang ekis na button para burahin ang lahat ng titik.",
                 TargetElementName = "EraseButton",
             },
             new TutorialStep
             {
                 Title = "Ipagpatuloy",
-                Message = "Kapag tapos ka na, i-click ang OK button para magpatuloy sa adventure!",
+                Message = "Kapag tapos ka na, pindutin ang OK button para magpatuloy sa paglalakbay!",
                 TargetElementName = "EnterButton",
             }
         };
@@ -50,6 +55,13 @@ namespace FilipinoFolkloreApp
         public MainPage()
         {
             InitializeComponent();
+            
+            // Dynamically assign audio paths based on their sequential order
+            for (int i = 0; i < _tutorialSteps.Length; i++)
+            {
+                _tutorialSteps[i].AudioPath = $"tutorialaudio/mainpagetutorial/mainpagetutorial{i + 1}.mp3"; // Adjust path dynamically based on your assets
+            }
+            
             UpdateCharacterCounter();
         }
 
@@ -64,6 +76,12 @@ namespace FilipinoFolkloreApp
                 await ShowTutorial();
             }
         }
+        
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            StopTutorialAudio();
+        }
 
         private async Task ShowTutorial()
         {
@@ -73,9 +91,9 @@ namespace FilipinoFolkloreApp
             TutorialOverlay.IsVisible = true;
 
             await Task.WhenAll(
-   TarsierImage.FadeTo(1, 400, Easing.CubicOut),
-   TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
-);
+                TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+                TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+            );
 
             await Task.Delay(200);
             await Task.WhenAll(
@@ -83,6 +101,15 @@ namespace FilipinoFolkloreApp
                 SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
             );
 
+        }
+
+        private void OnTutorialPrevStep(object? sender, EventArgs e)
+        {
+            if (_tutorialStep > 0)
+            {
+                _tutorialStep--;
+                UpdateTutorialStep();
+            }
         }
 
         private async void OnTutorialNextStep(object? sender, EventArgs e)
@@ -106,6 +133,11 @@ namespace FilipinoFolkloreApp
             TutorialMessageLabel.Text = step.Message;
             TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
 
+            PrevTutorialButton.IsVisible = _tutorialStep > 0;
+            NextTutorialButton.Text = _tutorialStep == _tutorialSteps.Length - 1 ? "Tapusin" : "Susunod";
+
+            await PlayTutorialAudio(step.AudioPath);
+
             if (!string.IsNullOrEmpty(step.TargetElementName))
             {
                 await PositionArrowToElement(step.TargetElementName);
@@ -117,6 +149,58 @@ namespace FilipinoFolkloreApp
             }
 
             HighlightTargetElement(step.TargetElementName);
+        }
+
+        private async Task PlayTutorialAudio(string? audioPath)
+        {
+            StopTutorialAudio();
+
+            if (string.IsNullOrWhiteSpace(audioPath))
+                return;
+
+            try
+            {
+                // Pause background music before speaking
+                if (Application.Current is App app)
+                {
+                    app.PauseBackgroundMusic();
+                }
+
+                _tutorialAudioStream = await FileSystem.OpenAppPackageFileAsync(audioPath);
+                _tutorialAudioPlayer = AudioManager.Current.CreatePlayer(_tutorialAudioStream);
+                _tutorialAudioPlayer.Volume = AlamatContent.NarratorVolume;
+                
+                // Resume background music when the audio file finishes
+                _tutorialAudioPlayer.PlaybackEnded += (sender, args) =>
+                {
+                    if (Application.Current is App a)
+                    {
+                        a.ResumeBackgroundMusic();
+                    }
+                };
+                
+                _tutorialAudioPlayer.Play();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error playing tutorial audio: {ex}");
+                
+                // Re-enable if it failed to play
+                if (Application.Current is App a)
+                {
+                    a.ResumeBackgroundMusic();
+                }
+            }
+        }
+
+        private void StopTutorialAudio()
+        {
+            _tutorialAudioPlayer?.Stop();
+            _tutorialAudioPlayer?.Dispose();
+            _tutorialAudioPlayer = null;
+
+            _tutorialAudioStream?.Dispose();
+            _tutorialAudioStream = null;
         }
 
         private async Task PositionArrowToElement(string elementName)
@@ -259,29 +343,29 @@ namespace FilipinoFolkloreApp
             );
 
             _ = Task.Run(async () =>
-{
-   try
-   {
-       while (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
-       {
-           await MainThread.InvokeOnMainThreadAsync(async () =>
-           {
-               if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
-               {
-                   await ArrowPointer.ScaleTo(1.2, 500, Easing.CubicInOut);
-                   if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
-                   {
-                       await ArrowPointer.ScaleTo(1.0, 500, Easing.CubicInOut);
-                   }
-               }
-           });
-           await Task.Delay(100);
-       }
-   }
-   catch
-   {
-   }
-});
+            {
+                try
+                {
+                    while (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                    {
+                        await MainThread.InvokeOnMainThreadAsync(async () =>
+                        {
+                            if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                            {
+                                await ArrowPointer.ScaleTo(1.2, 500, Easing.CubicInOut);
+                                if (ArrowPointer.Opacity > 0 && TutorialOverlay.IsVisible)
+                                {
+                                    await ArrowPointer.ScaleTo(1.0, 500, Easing.CubicInOut);
+                                }
+                            }
+                        });
+                        await Task.Delay(100);
+                    }
+                }
+                catch
+                {
+                }
+            });
         }
 
         private void HighlightTargetElement(string? targetName)
@@ -307,21 +391,26 @@ namespace FilipinoFolkloreApp
         private async Task CompleteTutorial()
         {
             Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+            StopTutorialAudio();
+
+            // Ensure music plays if tutorial ends or is skipped early
+            if (Application.Current is App app)
+            {
+                app.ResumeBackgroundMusic();
+            }
 
             await Task.WhenAll(
-   ArrowPointer.FadeTo(0, 200),
-   SpeechBubbleContainer.FadeTo(0, 300),
-   TarsierImage.FadeTo(0, 300),
-   TutorialOverlay.FadeTo(0, 400)
-);
+                ArrowPointer.FadeTo(0, 200),
+                SpeechBubbleContainer.FadeTo(0, 300),
+                TarsierImage.FadeTo(0, 300),
+                TutorialOverlay.FadeTo(0, 400)
+            );
 
             TutorialOverlay.IsVisible = false;
 
             OutputEntry.Opacity = 1;
             KeyboardGrid.Opacity = 1;
         }
-
-
 
         private async void Letter_Clicked(object sender, EventArgs e)
         {
@@ -430,6 +519,7 @@ namespace FilipinoFolkloreApp
             public string Title { get; set; } = "";
             public string Message { get; set; } = "";
             public string? TargetElementName { get; set; }
+            public string? AudioPath { get; set; }
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Maui.Layouts;
 using System;
+using Plugin.Maui.Audio;
 
 namespace FilipinoFolkloreApp.Views
 {
@@ -17,13 +18,16 @@ namespace FilipinoFolkloreApp.Views
         private const string TUTORIAL_COMPLETED_KEY = "AvatarSelectionTutorialCompleted";
 
         private bool _isNavigating = false;
+        
+        private IAudioPlayer? _tutorialAudioPlayer;
+        private Stream? _tutorialAudioStream;
 
-                 private readonly TutorialStep[] _tutorialSteps = new[]
+        private readonly TutorialStep[] _tutorialSteps = new[]
         {
             new TutorialStep
             {
                 Title = "Pumili ng Iyong Avatar!",
-                Message = "Maligayang pagdating! Pumili ng avatar na magiging iyong kaibigan sa adventure.",
+                Message = "Maligayang pagdating! Pumili ng avatar na magiging iyong kaibigan sa paglalakbay.",
                 TargetElementName = null,
             },
             new TutorialStep
@@ -34,9 +38,9 @@ namespace FilipinoFolkloreApp.Views
             },
             new TutorialStep
             {
-                Title = "I-tap para Piliin",
-                Message = "I-click ang avatar na gusto mo. Makakakuha ka ng 50 Pilon Stars para magsimula!",
-                TargetElementName = "Avatar3",
+                Title = "Pumili",
+                Message = "Pindutin ang avatar na gusto mo. Makakakuha ka ng 50 Coins para magsimula!",
+                TargetElementName = "Avatar3",  
             }
         };
 
@@ -52,6 +56,13 @@ namespace FilipinoFolkloreApp.Views
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
+            
+            // Dynamically assign audio paths based on their sequential order
+            for (int i = 0; i < _tutorialSteps.Length; i++)
+            {
+                _tutorialSteps[i].AudioPath = $"tutorialaudio/avatarselectionpagetutorial/avatarselectionpagetutorial{i + 1}.mp3"; // Adjust path dynamically if needed
+            }
+            
             AvatarGrid.ItemsSource = Avatars;
         }
 
@@ -59,14 +70,20 @@ namespace FilipinoFolkloreApp.Views
         {
             base.OnAppearing();
 
-                         _isNavigating = false;
+            _isNavigating = false;
 
-                         bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
+            bool tutorialCompleted = Preferences.Get(TUTORIAL_COMPLETED_KEY, false);
             if (!tutorialCompleted)
             {
                 await Task.Delay(500);
                 await ShowTutorial();
             }
+        }
+        
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            StopTutorialAudio();
         }
 
         private async Task ShowTutorial()
@@ -76,17 +93,26 @@ namespace FilipinoFolkloreApp.Views
             UpdateTutorialStep();
             TutorialOverlay.IsVisible = true;
 
-                         await Task.WhenAll(
+            await Task.WhenAll(
                 TarsierImage.FadeTo(1, 400, Easing.CubicOut),
                 TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
             );
 
-                         await Task.Delay(200);
+            await Task.Delay(200);
             await Task.WhenAll(
                 SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
                 SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
             );
 
+        }
+
+        private void OnTutorialPrevStep(object? sender, EventArgs e)
+        {
+            if (_tutorialStep > 0)
+            {
+                _tutorialStep--;
+                UpdateTutorialStep();
+            }
         }
 
         private async void OnTutorialNextStep(object? sender, EventArgs e)
@@ -110,22 +136,79 @@ namespace FilipinoFolkloreApp.Views
             TutorialMessageLabel.Text = step.Message;
             TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
 
-                         if (!string.IsNullOrEmpty(step.TargetElementName))
+            PrevTutorialButton.IsVisible = _tutorialStep > 0;
+            NextTutorialButton.Text = _tutorialStep == _tutorialSteps.Length - 1 ? "Tapusin" : "Susunod";
+
+            await PlayTutorialAudio(step.AudioPath);
+
+            if (!string.IsNullOrEmpty(step.TargetElementName))
             {
                 await PositionArrowToElement(step.TargetElementName);
             }
             else
             {
                 ArrowPointer.Opacity = 0;
-                                 PositionSpeechBubble(true);
+                PositionSpeechBubble(true);
             }
 
-                         HighlightTargetElement(step.TargetElementName);
+            HighlightTargetElement(step.TargetElementName);
+        }
+
+        private async Task PlayTutorialAudio(string? audioPath)
+        {
+            StopTutorialAudio();
+
+            if (string.IsNullOrWhiteSpace(audioPath))
+                return;
+
+            try
+            {
+                // Pause background music before speaking
+                if (Application.Current is App app)
+                {
+                    app.PauseBackgroundMusic();
+                }
+
+                _tutorialAudioStream = await FileSystem.OpenAppPackageFileAsync(audioPath);
+                _tutorialAudioPlayer = AudioManager.Current.CreatePlayer(_tutorialAudioStream);
+                _tutorialAudioPlayer.Volume = AlamatContent.NarratorVolume;
+                
+                // Resume background music when the audio file finishes
+                _tutorialAudioPlayer.PlaybackEnded += (sender, args) =>
+                {
+                    if (Application.Current is App a)
+                    {
+                        a.ResumeBackgroundMusic();
+                    }
+                };
+                
+                _tutorialAudioPlayer.Play();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error playing tutorial audio: {ex}");
+                
+                // Re-enable if it failed to play
+                if (Application.Current is App a)
+                {
+                    a.ResumeBackgroundMusic();
+                }
+            }
+        }
+
+        private void StopTutorialAudio()
+        {
+            _tutorialAudioPlayer?.Stop();
+            _tutorialAudioPlayer?.Dispose();
+            _tutorialAudioPlayer = null;
+
+            _tutorialAudioStream?.Dispose();
+            _tutorialAudioStream = null;
         }
 
         private async Task PositionArrowToElement(string elementName)
         {
-                         VisualElement? targetElement = null;
+            VisualElement? targetElement = null;
 
             if (elementName == "AvatarGrid")
             {
@@ -133,10 +216,10 @@ namespace FilipinoFolkloreApp.Views
             }
             else if (elementName == "Avatar3")
             {
-                                 targetElement = await GetAvatarItemAtIndex(2);
+                targetElement = await GetAvatarItemAtIndex(2);
                 if (targetElement == null)
                 {
-                                         targetElement = AvatarGrid;
+                    targetElement = AvatarGrid;
                 }
             }
 
@@ -146,63 +229,63 @@ namespace FilipinoFolkloreApp.Views
                 return;
             }
 
-                         await Task.Delay(150);
+            await Task.Delay(150);
 
-                         var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+            var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
             double screenHeight = displayInfo.Height / displayInfo.Density;
             double safeZone = 60;  
             Rect targetBounds = GetAbsolutePosition(targetElement);
 
             if (targetBounds == Rect.Zero) return;
 
-                         double arrowWidth = 50;
+            double arrowWidth = 50;
             double arrowHeight = 50;
             double padding = 10;  
              
-                         double yAbove = targetBounds.Top - arrowHeight - padding;
+            double yAbove = targetBounds.Top - arrowHeight - padding;
 
-                         double yBelow = targetBounds.Bottom + padding;
+            double yBelow = targetBounds.Bottom + padding;
 
-                                      bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
+            bool preferAbove = targetBounds.Center.Y > (screenHeight / 2);
 
             double finalArrowY;
             bool isArrowAbove;
 
             if (preferAbove)
             {
-                                 if (yAbove >= safeZone)
+                if (yAbove >= safeZone)
                 {
                     finalArrowY = yAbove;
                     isArrowAbove = true;
                 }
                 else
                 {
-                                         finalArrowY = yBelow;
+                    finalArrowY = yBelow;
                     isArrowAbove = false;
                 }
             }
             else
             {
-                                 if (yBelow + arrowHeight <= screenHeight - safeZone)
+                if (yBelow + arrowHeight <= screenHeight - safeZone)
                 {
                     finalArrowY = yBelow;
                     isArrowAbove = false;
                 }
                 else
                 {
-                                         finalArrowY = yAbove;
+                    finalArrowY = yAbove;
                     isArrowAbove = true;
                 }
             }
 
-                                      double arrowX = targetBounds.Center.X - (arrowWidth / 2);
+            double arrowX = targetBounds.Center.X - (arrowWidth / 2);
 
             AbsoluteLayout.SetLayoutBounds(ArrowPointer, new Rect(arrowX, finalArrowY, arrowWidth, arrowHeight));
             AbsoluteLayout.SetLayoutFlags(ArrowPointer, AbsoluteLayoutFlags.None);
 
-                                                   ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
+            ArrowPointer.Rotation = isArrowAbove ? 90 : -90;
 
-                                                   bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
+            bool arrowIsAtTopHalf = finalArrowY < (screenHeight / 2);
             PositionSpeechBubble(!arrowIsAtTopHalf);
 
             await AnimateArrowPointer();
@@ -210,11 +293,11 @@ namespace FilipinoFolkloreApp.Views
 
         private async Task<VisualElement?> GetAvatarItemAtIndex(int index)
         {
-                         try
+            try
             {
-                                 await Task.Delay(200);
+                await Task.Delay(200);
 
-                                 var items = FindVisualChildren<Image>(AvatarGrid);
+                var items = FindVisualChildren<Image>(AvatarGrid);
                 var itemList = items.ToList();
 
                 if (itemList.Count > index)
@@ -224,7 +307,7 @@ namespace FilipinoFolkloreApp.Views
             }
             catch
             {
-                             }
+            }
 
             return null;
         }
@@ -234,10 +317,10 @@ namespace FilipinoFolkloreApp.Views
             if (element == null)
                 yield break;
 
-                         if (element is T t)
+            if (element is T t)
                 yield return t;
 
-                         foreach (var child in GetLogicalChildren(element))
+            foreach (var child in GetLogicalChildren(element))
             {
                 foreach (var descendant in FindVisualChildren<T>(child))
                 {
@@ -276,17 +359,17 @@ namespace FilipinoFolkloreApp.Views
             var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
             double screenHeight = displayInfo.Height / displayInfo.Density;
 
-                                                   double bubbleX = 160;
+            double bubbleX = 160;
 
             double bubbleWidth = 350;
             double safePadding = 60;  
             if (positionAtTop)
             {
-                                 AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
+                AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, safePadding, bubbleWidth, AbsoluteLayout.AutoSize));
             }
             else
             {
-                                                  AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
+                AbsoluteLayout.SetLayoutBounds(SpeechBubbleContainer, new Rect(bubbleX, screenHeight - 200, bubbleWidth, AbsoluteLayout.AutoSize));
             }
 
             AbsoluteLayout.SetLayoutFlags(SpeechBubbleContainer, AbsoluteLayoutFlags.None);
@@ -332,7 +415,7 @@ namespace FilipinoFolkloreApp.Views
                 ArrowPointer.ScaleTo(1, 300, Easing.BounceOut)
             );
 
-                         _ = Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 try
                 {
@@ -354,24 +437,30 @@ namespace FilipinoFolkloreApp.Views
                 }
                 catch
                 {
-                                     }
+                }
             });
         }
 
         private void HighlightTargetElement(string? targetName)
         {
-                         AvatarGrid.Opacity = 1;
+            AvatarGrid.Opacity = 1;
 
             if (string.IsNullOrEmpty(targetName))
                 return;
-
-                     }
+        }
 
         private async Task CompleteTutorial()
         {
-                         Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+            Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+            StopTutorialAudio();
 
-                         await Task.WhenAll(
+            // Ensure music plays if tutorial ends or is skipped early
+            if (Application.Current is App app)
+            {
+                app.ResumeBackgroundMusic();
+            }
+
+            await Task.WhenAll(
                 ArrowPointer.FadeTo(0, 200),
                 SpeechBubbleContainer.FadeTo(0, 300),
                 TarsierImage.FadeTo(0, 300),
@@ -380,12 +469,12 @@ namespace FilipinoFolkloreApp.Views
 
             TutorialOverlay.IsVisible = false;
 
-                         AvatarGrid.Opacity = 1;
+            AvatarGrid.Opacity = 1;
         }
 
         async void AvatarGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-                         if (_isNavigating)
+            if (_isNavigating)
             {
                 System.Diagnostics.Debug.WriteLine("Double-tap prevented: Already navigating to IndexPage.");
                 AvatarGrid.SelectedItem = null;
@@ -398,11 +487,11 @@ namespace FilipinoFolkloreApp.Views
                 return;
             }
 
-                         _isNavigating = true;
+            _isNavigating = true;
 
             try
             {
-                                 PointsOverlay.Scale = 0.9;
+                PointsOverlay.Scale = 0.9;
                 PointsOverlay.Opacity = 0;
                 PointsOverlay.IsVisible = true;
 
@@ -413,14 +502,14 @@ namespace FilipinoFolkloreApp.Views
 
                 await Task.Delay(2500);
 
-                                 var existingChar = await App.Database.GetCharAsync();
+                var existingChar = await App.Database.GetCharAsync();
                 if (existingChar != null)
                 {
                     existingChar.points = 50;
                     await App.Database.UpdateCharAsync(existingChar);
                 }
 
-                                 var fileName = Path.GetFileNameWithoutExtension(selected.ImageSource ?? "");
+                var fileName = Path.GetFileNameWithoutExtension(selected.ImageSource ?? "");
                 var avatarId = string.IsNullOrWhiteSpace(fileName) ? "avatar1" : fileName;
 
                 var set = new AvatarCostumeSet
@@ -438,7 +527,7 @@ namespace FilipinoFolkloreApp.Views
                 CharacterHelper.CurrentAvatar = AvatarCustomizationHelper.GetFirstCostumePathOrDefault(set.avatarid);
                 await App.Database.UpdateCurrentAvatarAsync(CharacterHelper.CurrentAvatar);
 
-                                 await Navigation.PushAsync(new IndexPage());
+                await Navigation.PushAsync(new IndexPage());
                 Navigation.RemovePage(this);
 
                 AvatarGrid.SelectedItem = null;
@@ -448,13 +537,14 @@ namespace FilipinoFolkloreApp.Views
                 System.Diagnostics.Debug.WriteLine($"Error in AvatarGrid_SelectionChanged: {ex}");
                 _isNavigating = false;                  AvatarGrid.SelectedItem = null;
             }
-                     }
+        }
 
         private class TutorialStep
         {
             public string Title { get; set; } = "";
             public string Message { get; set; } = "";
             public string? TargetElementName { get; set; }
+            public string? AudioPath { get; set; }
         }
     }
 

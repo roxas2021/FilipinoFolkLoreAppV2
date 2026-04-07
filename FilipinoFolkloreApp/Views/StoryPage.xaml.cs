@@ -15,7 +15,8 @@ public partial class StoryPage : ContentPage
     int _idx = 0;
     bool _playing = true;
     CancellationTokenSource? _hudCts;
-    CancellationTokenSource? _cts; readonly IAudioManager _audioManager = AudioManager.Current;
+    CancellationTokenSource? _cts; 
+    readonly IAudioManager _audioManager = AudioManager.Current;
     private Stream? _audioStream;
     private IAudioPlayer? _player;
 
@@ -56,6 +57,7 @@ public partial class StoryPage : ContentPage
 
         var slide = story.Slides[_idx];
 
+        SubtitleBar.CancelAnimations();
         await SubtitleBar.FadeTo(0, 120);
 
         var front = BgA.Opacity >= BgB.Opacity ? BgA : BgB;
@@ -81,7 +83,6 @@ public partial class StoryPage : ContentPage
         if (!string.IsNullOrWhiteSpace(slide.Subtitle))
         {
             SubtitleText.Text = slide.Subtitle!;
-            await SubtitleBar.FadeTo(1, 150);
         }
         else
         {
@@ -113,13 +114,15 @@ public partial class StoryPage : ContentPage
             {
                 _cts = new CancellationTokenSource();
 
-                _audioStream = await FileSystem.OpenAppPackageFileAsync(relPath); _player = AudioManager.Current.CreatePlayer(_audioStream);
+                _audioStream = await FileSystem.OpenAppPackageFileAsync(relPath); 
+                _player = AudioManager.Current.CreatePlayer(_audioStream);
                 _player.Volume = AlamatContent.NarratorVolume;
                 _player.PlaybackEnded += async (s, e) =>
                 {
                     try
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(3), _cts!.Token);
+                        // 1. Short delay after the AUDIO finishes playing
+                        await Task.Delay(TimeSpan.FromSeconds(0.5), _cts!.Token);
 
                         if (_cts!.IsCancellationRequested) return;
 
@@ -135,7 +138,10 @@ public partial class StoryPage : ContentPage
                 };
 
                 if (_playing)
+                {
                     _player.Play();
+                    ShowSubtitleIfAvailable();
+                }
             }
             catch
             {
@@ -147,6 +153,16 @@ public partial class StoryPage : ContentPage
             StartAutoTimerIfPlaying();
         }
     }
+    
+    void ShowSubtitleIfAvailable()
+    {
+        if (!string.IsNullOrWhiteSpace(SubtitleText.Text))
+        {
+            SubtitleBar.CancelAnimations();
+            _ = SubtitleBar.FadeTo(1, 150);
+        }
+    }
+
     void OnScreenTapped(object? s, TappedEventArgs e)
     {
         _ = ShowControlsTemporarilyAsync();
@@ -171,6 +187,7 @@ public partial class StoryPage : ContentPage
         }
         catch (TaskCanceledException) { /* ignore */ }
     }
+
     protected override void OnDisappearing()
     {
         _isNavigatingToQuiz = true;
@@ -194,6 +211,8 @@ public partial class StoryPage : ContentPage
     {
         if (!_playing) return;
 
+        ShowSubtitleIfAvailable();
+
         _cts?.Cancel();
         _cts = new CancellationTokenSource();
         _ = AutoAdvanceAsync(_cts.Token);
@@ -213,6 +232,7 @@ public partial class StoryPage : ContentPage
     {
         try
         {
+            // 2. Long delay for reading when NO AUDIO is playing
             await Task.Delay(TimeSpan.FromSeconds(5), ct);
             if (ct.IsCancellationRequested) return;
 
@@ -249,8 +269,15 @@ public partial class StoryPage : ContentPage
 
         if (_playing)
         {
-            if (_player != null) _player.Play();
-            else StartAutoTimerIfPlaying();
+            if (_player != null)
+            {
+                _player.Play();
+                ShowSubtitleIfAvailable();
+            }
+            else 
+            {
+                StartAutoTimerIfPlaying();
+            }
         }
         else
         {

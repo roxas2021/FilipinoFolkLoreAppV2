@@ -3,6 +3,8 @@ using System;
 using System.Threading.Tasks;
 using FilipinoFolkloreApp.Services;
 using Microsoft.Maui.Layouts;
+using Plugin.Maui.Audio;
+using System.IO;
 
 namespace FilipinoFolkloreApp.Views;
 
@@ -14,32 +16,35 @@ public partial class MgaLaroPage : ContentPage
     private int _tutorialStep = 0;
     private const string TUTORIAL_COMPLETED_KEY = "MgaLaroPageTutorialCompleted7";
 
+    private IAudioPlayer? _tutorialAudioPlayer;
+    private Stream? _tutorialAudioStream;
+
     private readonly TutorialStep[] _tutorialSteps = new[]
-{
+    {
         new TutorialStep
         {
             Title = "Maligayang Pagdating sa Mga Laro!",
-            Message = "Dito makikita mo ang mga laro na pwede mong laruin para kumita ng stars!",
+            Message = "Dito makikita mo ang mga laro na pwede mong laruin para kumita ng coins!",
 
         },
         new TutorialStep
         {
             Title = "Bugtong",
-            Message = "I-click ito para maglaro ng Bugtong! Sagutan ang mga riddles at manalo ng stars!",
+            Message = "Pindutin ito para maglaro ng Bugtong! Sagutan ang mga bugtong at manalo ng coins!",
             TargetElementName = "BugtongButton",
             OffsetX = +330
         },
         new TutorialStep
         {
             Title = "Magkulay",
-            Message = "I-click ito para mag-coloring! Kulayan ang mga larawan at mag-enjoy!",
+            Message = "Pindutin ito para magkulay! Kulayan ang mga larawan at mag-enjoy!",
             TargetElementName = "MagkulayButton",
             OffsetX = +330
         },
         new TutorialStep
         {
-            Title = "Narrator Management",
-            Message = "I-click ang puno para tingnan ang iyong narrator collection at battery status!",
+            Title = "Estado ng Narrator",
+            Message = "Pindutin ang puno para tingnan ang iyong koleksyon ng narrator at natitira nilang baterya!",
             TargetElementName = "NarratorTreeImage",
             OffsetX = +150
         }
@@ -49,6 +54,12 @@ public partial class MgaLaroPage : ContentPage
     {
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
+
+        for (int i = 0; i < _tutorialSteps.Length; i++)
+        {
+            _tutorialSteps[i].AudioPath = $"tutorialaudio/mgalaropagetutorial/mgalaropagetutorial{i + 1}.mp3";
+        }
+
         LoadHUD();
     }
 
@@ -64,6 +75,12 @@ public partial class MgaLaroPage : ContentPage
             await ShowTutorial();
         }
     }
+    
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        StopTutorialAudio();
+    }
 
     private async Task ShowTutorial()
     {
@@ -73,15 +90,24 @@ public partial class MgaLaroPage : ContentPage
         TutorialOverlay.IsVisible = true;
 
         await Task.WhenAll(
-   TarsierImage.FadeTo(1, 400, Easing.CubicOut),
-   TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
-);
+            TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+            TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+        );
 
         await Task.Delay(200);
         await Task.WhenAll(
             SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
             SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
         );
+    }
+    
+    private void OnTutorialPrevStep(object? sender, EventArgs e)
+    {
+        if (_tutorialStep > 0)
+        {
+            _tutorialStep--;
+            UpdateTutorialStep();
+        }
     }
 
     private async void OnTutorialNextStep(object? sender, EventArgs e)
@@ -104,6 +130,11 @@ public partial class MgaLaroPage : ContentPage
         TutorialTitleLabel.Text = step.Title;
         TutorialMessageLabel.Text = step.Message;
         TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
+        
+        PrevTutorialButton.IsVisible = _tutorialStep > 0;
+        NextTutorialButton.Text = _tutorialStep == _tutorialSteps.Length - 1 ? "Tapusin" : "Susunod";
+
+        await PlayTutorialAudio(step.AudioPath);
 
         if (!string.IsNullOrEmpty(step.TargetElementName))
         {
@@ -116,6 +147,55 @@ public partial class MgaLaroPage : ContentPage
         }
 
         HighlightTargetElement(step.TargetElementName);
+    }
+
+    private async Task PlayTutorialAudio(string? audioPath)
+    {
+        StopTutorialAudio();
+
+        if (string.IsNullOrWhiteSpace(audioPath))
+            return;
+
+        try
+        {
+            if (Application.Current is App app)
+            {
+                app.PauseBackgroundMusic();
+            }
+
+            _tutorialAudioStream = await FileSystem.OpenAppPackageFileAsync(audioPath);
+            _tutorialAudioPlayer = AudioManager.Current.CreatePlayer(_tutorialAudioStream);
+            _tutorialAudioPlayer.Volume = AlamatContent.NarratorVolume;
+            
+            _tutorialAudioPlayer.PlaybackEnded += (sender, args) =>
+            {
+                if (Application.Current is App a)
+                {
+                    a.ResumeBackgroundMusic();
+                }
+            };
+            
+            _tutorialAudioPlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error playing tutorial audio: {ex}");
+            
+            if (Application.Current is App a)
+            {
+                a.ResumeBackgroundMusic();
+            }
+        }
+    }
+
+    private void StopTutorialAudio()
+    {
+        _tutorialAudioPlayer?.Stop();
+        _tutorialAudioPlayer?.Dispose();
+        _tutorialAudioPlayer = null;
+
+        _tutorialAudioStream?.Dispose();
+        _tutorialAudioStream = null;
     }
 
     private async Task PositionArrowToElement(string elementName, double offsetX = 0)
@@ -314,6 +394,12 @@ public partial class MgaLaroPage : ContentPage
     private async Task CompleteTutorial()
     {
         Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+        StopTutorialAudio();
+        
+        if (Application.Current is App app)
+        {
+            app.ResumeBackgroundMusic();
+        }
 
         await Task.WhenAll(
             ArrowPointer.FadeTo(0, 200),
@@ -391,5 +477,6 @@ public partial class MgaLaroPage : ContentPage
         public string Message { get; set; } = "";
         public string? TargetElementName { get; set; }
         public double OffsetX { get; set; } = 0;
+        public string? AudioPath { get; set; }
     }
 }

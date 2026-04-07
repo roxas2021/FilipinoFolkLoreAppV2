@@ -6,6 +6,8 @@ using System.Linq;
 using FilipinoFolkloreApp.Views.Home;
 using FilipinoFolkloreApp.Services;
 using Microsoft.Maui.Layouts;
+using Plugin.Maui.Audio;
+using System.IO;
 
 namespace FilipinoFolkloreApp.Views;
 
@@ -26,12 +28,15 @@ public partial class AlamatPage : ContentPage
     private int _tutorialStep = 0;
     private const string TUTORIAL_COMPLETED_KEY = "AlamatPageTutorialCompleted";
 
+    private IAudioPlayer? _tutorialAudioPlayer;
+    private Stream? _tutorialAudioStream;
+
     // Tutorial steps configuration
     private readonly TutorialStep[] _tutorialSteps = new[]
     {
         new TutorialStep
         {
-            Title = "Maligayang Pagdating sa Stories!",
+            Title = "Maligayang Pagdating sa mga Kwento!",
             Message = "Dito makikita mo ang lahat ng kwentong maaari mong basahin!",
             TargetElementName = null,
         },
@@ -43,32 +48,32 @@ public partial class AlamatPage : ContentPage
         },
         new TutorialStep
         {
-            Title = "Pilon Stars",
-            Message = "Dito mo makikita ang iyong stars na pwede mong gamitin para bumili ng mga kwento!",
+            Title = "Coins",
+            Message = "Dito mo makikita ang iyong coins na pwede mong gamitin para bumili ng mga kwento!",
             TargetElementName = "StarsLabel",
         },
         new TutorialStep
         {
-            Title = "Mga Puso (Lives)",
-            Message = "Ito ang iyong mga puso o lives para sa mga quiz!",
+            Title = "Mga Puso",
+            Message = "Ito ang iyong mga puso o buhay para sa mga quiz!",
             TargetElementName = "HeartsPanel",
         },
         new TutorialStep
         {
             Title = "Balik Button",
-            Message = "I-click ito para bumalik sa nakaraang page!",
+            Message = "Pindutin ito para bumalik sa nakaraang page!",
             TargetElementName = "BackButton",
         },
         new TutorialStep
         {
             Title = "Home Button",
-            Message = "I-click ito para bumalik sa Home Page!",
+            Message = "Pindutin ito para bumalik sa Home Page!",
             TargetElementName = "HomeButton",
         },
         new TutorialStep
         {
             Title = "Mga Kwento",
-            Message = "Ito ang mga kwentong maaari mong basahin! Ang may lock ay kailangan mong bilhin gamit ang stars.",
+            Message = "Ito ang mga kwentong maaari mong basahin! Ang may lock ay kailangan mong bilhin gamit ang coins.",
             TargetElementName = "SecondStoryCard",
             OffsetX = +200
         }
@@ -84,7 +89,7 @@ public partial class AlamatPage : ContentPage
         public bool IsPurchased { get; set; }
         public bool IsRewardClaimed { get; set; }
         public int Price { get; set; }
-        public string PriceText => $"{Price}⭐";
+        public string PriceText => $"{Price}";
     }
 
     public AlamatPage(string category)
@@ -92,6 +97,12 @@ public partial class AlamatPage : ContentPage
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
         AlamatContent.category = category;
+        
+        // Dynamically assign audio paths based on their sequential order
+        for (int i = 0; i < _tutorialSteps.Length; i++)
+        {
+            _tutorialSteps[i].AudioPath = $"tutorialaudio/alamatpagetutorial/alamatpagetutorial{i + 1}.mp3"; // Adjust path dynamically based on your assets
+        }  
 
         LoadHud();
     }
@@ -123,6 +134,12 @@ public partial class AlamatPage : ContentPage
             await ShowTutorial();
         }
     }
+    
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        StopTutorialAudio();
+    }
 
     private async Task ShowTutorial()
     {
@@ -145,6 +162,15 @@ public partial class AlamatPage : ContentPage
             SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
         );
     }
+    
+    private void OnTutorialPrevStep(object? sender, EventArgs e)
+    {
+        if (_tutorialStep > 0)
+        {
+            _tutorialStep--;
+            UpdateTutorialStep();
+        }
+    }
 
     private async void OnTutorialNextStep(object? sender, EventArgs e)
     {
@@ -166,6 +192,11 @@ public partial class AlamatPage : ContentPage
         TutorialTitleLabel.Text = step.Title;
         TutorialMessageLabel.Text = step.Message;
         TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
+        
+        PrevTutorialButton.IsVisible = _tutorialStep > 0;
+        NextTutorialButton.Text = _tutorialStep == _tutorialSteps.Length - 1 ? "Tapusin" : "Susunod";
+
+        await PlayTutorialAudio(step.AudioPath);
 
         // Update arrow pointer to point at target element dynamically
         if (!string.IsNullOrEmpty(step.TargetElementName))
@@ -182,6 +213,59 @@ public partial class AlamatPage : ContentPage
         // Highlight target element
         HighlightTargetElement(step.TargetElementName);
     }
+    
+    private async Task PlayTutorialAudio(string? audioPath)
+    {
+        StopTutorialAudio();
+
+        if (string.IsNullOrWhiteSpace(audioPath))
+            return;
+
+        try
+        {
+            // Pause background music before speaking
+            if (Application.Current is App app)
+            {
+                app.PauseBackgroundMusic();
+            }
+
+            _tutorialAudioStream = await FileSystem.OpenAppPackageFileAsync(audioPath);
+            _tutorialAudioPlayer = AudioManager.Current.CreatePlayer(_tutorialAudioStream);
+            _tutorialAudioPlayer.Volume = AlamatContent.NarratorVolume;
+            
+            // Resume background music when the audio file finishes
+            _tutorialAudioPlayer.PlaybackEnded += (sender, args) =>
+            {
+                if (Application.Current is App a)
+                {
+                    a.ResumeBackgroundMusic();
+                }
+            };
+            
+            _tutorialAudioPlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error playing tutorial audio: {ex}");
+            
+            // Re-enable if it failed to play
+            if (Application.Current is App a)
+            {
+                a.ResumeBackgroundMusic();
+            }
+        }
+    }
+
+    private void StopTutorialAudio()
+    {
+        _tutorialAudioPlayer?.Stop();
+        _tutorialAudioPlayer?.Dispose();
+        _tutorialAudioPlayer = null;
+
+        _tutorialAudioStream?.Dispose();
+        _tutorialAudioStream = null;
+    }
+
 
     // Update the PositionArrowToElement method to use the named elements directly
     private async Task PositionArrowToElement(string elementName, double offsetX = 0)
@@ -515,6 +599,13 @@ public partial class AlamatPage : ContentPage
     private async Task CompleteTutorial()
     {
         Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+        StopTutorialAudio();
+        
+        // Ensure music plays if tutorial ends or is skipped early
+        if (Application.Current is App app)
+        {
+            app.ResumeBackgroundMusic();
+        }
 
         await Task.WhenAll(
             ArrowPointer.FadeTo(0, 200),
@@ -778,5 +869,6 @@ public partial class AlamatPage : ContentPage
         public string Message { get; set; } = "";
         public string? TargetElementName { get; set; }
         public double OffsetX { get; set; } = 0;
+        public string? AudioPath { get; set; }
     }
 }

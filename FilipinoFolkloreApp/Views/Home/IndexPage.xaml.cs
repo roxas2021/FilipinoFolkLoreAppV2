@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Plugin.Maui.Audio;
+using System.IO;
 
 namespace FilipinoFolkloreApp.Views.Home;
 
@@ -20,7 +22,10 @@ public partial class IndexPage : ContentPage
 
     // Tutorial state
     private int _tutorialStep = 0;
-    private const string TUTORIAL_COMPLETED_KEY = "IndexPageTutorialCompleted";
+    private const string TUTORIAL_COMPLETED_KEY = "IndexPageTutorialCompleted123";
+
+    private IAudioPlayer? _tutorialAudioPlayer;
+    private Stream? _tutorialAudioStream;
 
     // Tutorial steps configuration
     private readonly TutorialStep[] _tutorialSteps = new[]
@@ -28,65 +33,65 @@ public partial class IndexPage : ContentPage
         new TutorialStep
         {
             Title = "Maligayang Pagdating sa Home!",
-            Message = "Ito ang iyong Home Page! Dito mo makikita ang lahat ng mahalagang features.",
-            TargetElementName = null,
+            Message = "Ito ang iyong Home Page! Dito mo makikita ang lahat ng mahalagang bagay.",
+            TargetElementName = null
         },
         new TutorialStep
         {
             Title = "Iyong Avatar",
-            Message = "I-click ang iyong avatar para mag-customize ng costume at hitsura!",
-            TargetElementName = "HudAvatar",
+            Message = "Pindutin ang iyong avatar para magpalit ng kasuotan at hitsura!",
+            TargetElementName = "HudAvatar"
         },
         new TutorialStep
         {
-            Title = "Pilon Stars",
-            Message = "Dito mo makikita ang iyong stars na kikitain sa bawat adventure!",
-            TargetElementName = "StarsLabel",
+            Title = "Coins",
+            Message = "Dito mo makikita ang iyong coins na kikitain sa bawat adventure!",
+            TargetElementName = "StarsLabel"
         },
         new TutorialStep
         {
-            Title = "Mga Puso (Lives)",
-            Message = "Ito ang iyong mga lives. Kailangan mo nito para maglaro ng mga quiz!",
-            TargetElementName = "HeartsPanel",
+            Title = "Mga Puso",
+            Message = "Ito ang iyong mga buhay. Kailangan mo nito para maglaro ng mga quiz!",
+            TargetElementName = "HeartsPanel"
         },
         new TutorialStep
         {
             Title = "Medalya",
-            Message = "I-click ito para tingnan ang mga medalyang nakuha mo!",
-            TargetElementName = "MedalButton",
+            Message = "Pindutin ito para tingnan ang mga medalyang nakuha mo!",
+            TargetElementName = "MedalButton"
         },
         new TutorialStep
         {
             Title = "Settings",
-            Message = "I-click ito para i-adjust ang volume ng music at narrator!",
-            TargetElementName = "SettingsButton",
+            Message = "Pindutin ito para i-adjust ang tunog ng musika at narrator!",
+            TargetElementName = "SettingsButton"
         },
         new TutorialStep
         {
             Title = "Alamat",
-            Message = "I-click ito para magbasa ng mga Alamat - mga kwentong nagpapaliwanag kung paano nabuo ang mga bagay!",
+            Message = "Pindutin ito para magbasa ng mga Alamat - mga kwentong nagpapaliwanag kung paano nabuo ang mga bagay!",
             TargetElementName = "AlamatButton",
-            OffsetX = 150 // Shift speech bubble to the right for better visibility
+            OffsetX = 150
         },
         new TutorialStep
         {
             Title = "Epiko",
-            Message = "I-click ito para magbasa ng mga Epiko - mga kwento ng mga bayani at kanilang mga adventure!",
+            Message = "Pindutin ito para magbasa ng mga Epiko - mga kwento ng mga bayani at kanilang mga paglalakbay!",
             TargetElementName = "EpikoButton",
             OffsetX = 300
         },
         new TutorialStep
         {
             Title = "Pabula",
-            Message = "I-click ito para magbasa ng mga Pabula - mga kwentong may aral na may mga hayop bilang tauhan!",
+            Message = "Pindutin ito para magbasa ng mga Pabula - mga kwentong may aral na may mga hayop bilang tauhan!",
             TargetElementName = "PabulaButton",
             OffsetX = -100
         },
         new TutorialStep
         {
             Title = "Mga Laro",
-            Message = "I-click ito para maglaro ng Bugtong at Coloring activities!",
-            TargetElementName = "MgaLaroButton",
+            Message = "Pindutin ito para maglaro ng Bugtong at Magkulay!",
+            TargetElementName = "MgaLaroButton"
         }
     };
 
@@ -94,6 +99,13 @@ public partial class IndexPage : ContentPage
     {
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
+        
+        // Dynamically assign audio paths based on their sequential order
+        for (int i = 0; i < _tutorialSteps.Length; i++)
+        {
+            _tutorialSteps[i].AudioPath = $"tutorialaudio/indexpagetutorial/indexpagetutorial{i + 1}.mp3";
+        }
+        
         loadhud();
         var data = App.Database.GetCharAsync();
         LoadSettings();
@@ -125,6 +137,12 @@ public partial class IndexPage : ContentPage
         }
     }
 
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        StopTutorialAudio();
+    }
+
     private async Task ShowTutorial()
     {
         _tutorialStep = 0;
@@ -147,6 +165,15 @@ public partial class IndexPage : ContentPage
 
     }
 
+    private async void OnTutorialPrevStep(object? sender, EventArgs e)
+    {
+        if (_tutorialStep > 0)
+        {
+            _tutorialStep--;
+            UpdateTutorialStep();
+        }
+    }
+
     private async void OnTutorialNextStep(object? sender, EventArgs e)
     {
         _tutorialStep++;
@@ -167,6 +194,12 @@ public partial class IndexPage : ContentPage
         TutorialTitleLabel.Text = step.Title;
         TutorialMessageLabel.Text = step.Message;
         TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
+
+        PrevTutorialButton.IsVisible = _tutorialStep > 0;
+        NextTutorialButton.Text = _tutorialStep == _tutorialSteps.Length - 1 ? "Tapusin" : "Susunod";
+
+        await PlayTutorialAudio(step.AudioPath);
+
         if (!string.IsNullOrEmpty(step.TargetElementName))
         {
             await PositionArrowToElement(step.TargetElementName, step.OffsetX);
@@ -178,6 +211,58 @@ public partial class IndexPage : ContentPage
         }
 
         HighlightTargetElement(step.TargetElementName);
+    }
+
+    private async Task PlayTutorialAudio(string? audioPath)
+    {
+        StopTutorialAudio();
+
+        if (string.IsNullOrWhiteSpace(audioPath))
+            return;
+
+        try
+        {
+            // Pause background music before speaking
+            if (Application.Current is App app)
+            {
+                app.PauseBackgroundMusic();
+            }
+
+            _tutorialAudioStream = await FileSystem.OpenAppPackageFileAsync(audioPath);
+            _tutorialAudioPlayer = AudioManager.Current.CreatePlayer(_tutorialAudioStream);
+            _tutorialAudioPlayer.Volume = AlamatContent.NarratorVolume;
+            
+            // Resume background music when the audio file finishes
+            _tutorialAudioPlayer.PlaybackEnded += (sender, args) =>
+            {
+                if (Application.Current is App a)
+                {
+                    a.ResumeBackgroundMusic();
+                }
+            };
+            
+            _tutorialAudioPlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error playing tutorial audio: {ex}");
+            
+            // Re-enable if it failed to play
+            if (Application.Current is App a)
+            {
+                a.ResumeBackgroundMusic();
+            }
+        }
+    }
+
+    private void StopTutorialAudio()
+    {
+        _tutorialAudioPlayer?.Stop();
+        _tutorialAudioPlayer?.Dispose();
+        _tutorialAudioPlayer = null;
+
+        _tutorialAudioStream?.Dispose();
+        _tutorialAudioStream = null;
     }
 
     private async Task PositionArrowToElement(string elementName, double offsetX = 0)
@@ -431,6 +516,13 @@ public partial class IndexPage : ContentPage
     private async Task CompleteTutorial()
     {
         Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+        StopTutorialAudio();
+
+        // Ensure music plays if tutorial ends or is skipped early
+        if (Application.Current is App app)
+        {
+            app.ResumeBackgroundMusic();
+        }
 
         await Task.WhenAll(
             ArrowPointer.FadeTo(0, 200),
@@ -687,5 +779,6 @@ public partial class IndexPage : ContentPage
         public string Message { get; set; } = "";
         public string? TargetElementName { get; set; }
         public double OffsetX { get; set; } = 0;
+        public string? AudioPath { get; set; }
     }
 }

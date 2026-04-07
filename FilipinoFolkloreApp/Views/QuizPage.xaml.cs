@@ -7,6 +7,8 @@ using System.Threading;
 using FilipinoFolkloreApp.Views.Home;
 using FilipinoFolkloreApp.Services;
 using Microsoft.Maui.Layouts;
+using Plugin.Maui.Audio;
+using System.IO;
 
 namespace FilipinoFolkloreApp.Views;
 
@@ -27,6 +29,9 @@ public partial class QuizPage : ContentPage
     private int _tutorialStep = 0;
     private const string TUTORIAL_COMPLETED_KEY = "QuizPageTutorialCompleted4";
 
+    private IAudioPlayer? _tutorialAudioPlayer;
+    private Stream? _tutorialAudioStream;
+
     private readonly TutorialStep[] _tutorialSteps = new[]
 {
         new TutorialStep
@@ -38,7 +43,7 @@ public partial class QuizPage : ContentPage
         new TutorialStep
         {
             Title = "Pumili ng Sagot",
-            Message = "I-click ang isa sa tatlong choices para sagutin ang tanong. Mabilis, may time limit!",
+            Message = "Pindutin ang isa sa tatlong pagpipilian para sagutin ang tanong. Bilisan dahil limitado laman ang oras!",
             TargetElementName = "ChoicesArea",
             OffsetX = -150
         }
@@ -50,6 +55,12 @@ public partial class QuizPage : ContentPage
         NavigationPage.SetHasNavigationBar(this, false);
 
         _storyId = storyId;
+        
+        // Dynamically assign audio paths based on their sequential order
+        for (int i = 0; i < _tutorialSteps.Length; i++)
+        {
+            _tutorialSteps[i].AudioPath = $"tutorialaudio/quizpagetutorial/quizpagetutorial{i + 1}.mp3"; // Adjust path dynamically based on your assets
+        }  
 
         LoadHud();
 
@@ -82,6 +93,7 @@ public partial class QuizPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        StopTutorialAudio();
         _cts?.Cancel();
     }
 
@@ -95,15 +107,24 @@ public partial class QuizPage : ContentPage
         TutorialOverlay.IsVisible = true;
 
         await Task.WhenAll(
-   TarsierImage.FadeTo(1, 400, Easing.CubicOut),
-   TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
-);
+            TarsierImage.FadeTo(1, 400, Easing.CubicOut),
+            TarsierImage.ScaleTo(1, 400, Easing.BounceOut)
+        );
 
         await Task.Delay(200);
         await Task.WhenAll(
             SpeechBubbleContainer.FadeTo(1, 300, Easing.CubicOut),
             SpeechBubbleContainer.ScaleTo(1, 300, Easing.BounceOut)
         );
+    }
+    
+    private void OnTutorialPrevStep(object? sender, EventArgs e)
+    {
+        if (_tutorialStep > 0)
+        {
+            _tutorialStep--;
+            UpdateTutorialStep();
+        }
     }
 
     private async void OnTutorialNextStep(object? sender, EventArgs e)
@@ -126,6 +147,11 @@ public partial class QuizPage : ContentPage
         TutorialTitleLabel.Text = step.Title;
         TutorialMessageLabel.Text = step.Message;
         TutorialProgressLabel.Text = $"{_tutorialStep + 1}/{_tutorialSteps.Length}";
+        
+        PrevTutorialButton.IsVisible = _tutorialStep > 0;
+        NextTutorialButton.Text = _tutorialStep == _tutorialSteps.Length - 1 ? "Tapusin" : "Susunod";
+
+        await PlayTutorialAudio(step.AudioPath);
 
         if (!string.IsNullOrEmpty(step.TargetElementName))
         {
@@ -138,6 +164,58 @@ public partial class QuizPage : ContentPage
         }
 
         HighlightTargetElement(step.TargetElementName);
+    }
+    
+    private async Task PlayTutorialAudio(string? audioPath)
+    {
+        StopTutorialAudio();
+
+        if (string.IsNullOrWhiteSpace(audioPath))
+            return;
+
+        try
+        {
+            // Pause background music before speaking
+            if (Application.Current is App app)
+            {
+                app.PauseBackgroundMusic();
+            }
+
+            _tutorialAudioStream = await FileSystem.OpenAppPackageFileAsync(audioPath);
+            _tutorialAudioPlayer = AudioManager.Current.CreatePlayer(_tutorialAudioStream);
+            _tutorialAudioPlayer.Volume = AlamatContent.NarratorVolume;
+            
+            // Resume background music when the audio file finishes
+            _tutorialAudioPlayer.PlaybackEnded += (sender, args) =>
+            {
+                if (Application.Current is App a)
+                {
+                    a.ResumeBackgroundMusic();
+                }
+            };
+            
+            _tutorialAudioPlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error playing tutorial audio: {ex}");
+            
+            // Re-enable if it failed to play
+            if (Application.Current is App a)
+            {
+                a.ResumeBackgroundMusic();
+            }
+        }
+    }
+
+    private void StopTutorialAudio()
+    {
+        _tutorialAudioPlayer?.Stop();
+        _tutorialAudioPlayer?.Dispose();
+        _tutorialAudioPlayer = null;
+
+        _tutorialAudioStream?.Dispose();
+        _tutorialAudioStream = null;
     }
 
     private async Task PositionArrowToElement(string elementName, double offsetX = 0)
@@ -324,6 +402,13 @@ public partial class QuizPage : ContentPage
     private async Task CompleteTutorial()
     {
         Preferences.Set(TUTORIAL_COMPLETED_KEY, true);
+        StopTutorialAudio();
+        
+        // Ensure music plays if tutorial ends or is skipped early
+        if (Application.Current is App app)
+        {
+            app.ResumeBackgroundMusic();
+        }
 
         await Task.WhenAll(
             ArrowPointer.FadeTo(0, 200),
@@ -376,18 +461,18 @@ public partial class QuizPage : ContentPage
     async Task AnimateQuizSwapAsync(Action swapContent)
     {
         await Task.WhenAll(
-   QuizContentWrapper.FadeTo(0, 150, Easing.CubicIn),
-   QuizContentWrapper.TranslateTo(0, -12, 150, Easing.CubicIn)
-);
+            QuizContentWrapper.FadeTo(0, 150, Easing.CubicIn),
+            QuizContentWrapper.TranslateTo(0, -12, 150, Easing.CubicIn)
+         );
 
         swapContent.Invoke();
 
         QuizContentWrapper.TranslationY = 12;
 
         await Task.WhenAll(
-   QuizContentWrapper.FadeTo(1, 180, Easing.CubicOut),
-   QuizContentWrapper.TranslateTo(0, 0, 180, Easing.CubicOut)
-);
+            QuizContentWrapper.FadeTo(1, 180, Easing.CubicOut),
+            QuizContentWrapper.TranslateTo(0, 0, 180, Easing.CubicOut)
+         );
     }
 
     async Task HandlePickAsync(int idx)
@@ -491,9 +576,9 @@ public partial class QuizPage : ContentPage
     async Task HideWrongModalAsync()
     {
         await Task.WhenAll(
-    GameAlertOverlay.FadeTo(0, 80, Easing.CubicIn),
-    GameAlertCard.ScaleTo(0.96, 80, Easing.CubicIn)
-);
+            GameAlertOverlay.FadeTo(0, 80, Easing.CubicIn),
+            GameAlertCard.ScaleTo(0.96, 80, Easing.CubicIn)
+        );
         GameAlertOverlay.IsVisible = false;
     }
 
@@ -611,5 +696,6 @@ public partial class QuizPage : ContentPage
         public string Message { get; set; } = "";
         public string? TargetElementName { get; set; }
         public double OffsetX { get; set; } = 0;
+        public string? AudioPath { get; set; }
     }
 }
