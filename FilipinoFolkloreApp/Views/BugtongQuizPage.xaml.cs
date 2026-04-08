@@ -256,7 +256,7 @@ namespace FilipinoFolkloreApp.Views
 
             var successLabel = new Label
             {
-                Text = wasAlreadyCompleted ? "Tama ang sagot" : $"Tama ang sagot +{stars}⭐",
+                Text = wasAlreadyCompleted ? "Tama ang sagot" : $"Tama ang sagot +{stars}",
                 FontSize = 24,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.FromArgb("#0000FF"),

@@ -139,14 +139,14 @@ public partial class NarratorDetailPage : ContentPage
         if (CharacterHelper.CurrentStars < food.Price)
         {
             await ShowGameAlertAsync(
-                $"Kailangan mo ng {food.Price} stars para bumili ng {food.Name}.",
+                $"Kailangan mo ng {food.Price} coins para bumili ng {food.Name}.",
                 false
             );
             return;
         }
 
         bool confirm = await ShowGameAlertAsync(
-   $"Bumili ng {food.Name} para sa {food.Price} stars?\nMagdadagdag ng {food.BatteryRestore} battery.",
+   $"Bumili ng {food.Name} para sa {food.Price} coins?\nMagdadagdag ng {food.BatteryRestore} battery.",
    true
 );
 

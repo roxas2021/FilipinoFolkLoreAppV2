@@ -102,7 +102,7 @@ public partial class NarratorManagementPage : ContentPage
                 if (CharacterHelper.CurrentStars >= card.Price)
                 {
                     bool confirm = await ShowGameAlertAsync(
-   $"I-unlock ang {card.Name} para sa {card.Price} stars?",
+   $"I-unlock ang {card.Name} para sa {card.Price} coins?",
    true
 );
 
@@ -114,7 +114,7 @@ public partial class NarratorManagementPage : ContentPage
                 else
                 {
                     await ShowGameAlertAsync(
-   $"{card.Name} ay naka-lock pa. Kailangan mo ng {card.Price} stars para i-unlock.",
+   $"{card.Name} ay naka-lock pa. Kailangan mo ng {card.Price} coins para i-unlock.",
    false
 );
                 }

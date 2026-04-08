@@ -218,7 +218,7 @@ public partial class ColoringCollectionPage : ContentPage
     private async Task OnSellImageClicked(ColoredImageInfo imageInfo, Frame cardFrame)
     {
         bool confirm = await ShowGameAlertAsync(
-            $"Ibenta ang larawan para sa {StarsPerImage} stars?",
+            $"Ibenta ang larawan para sa {StarsPerImage} coins?",
             true
         );
 
@@ -245,7 +245,7 @@ public partial class ColoringCollectionPage : ContentPage
                 ShowEmptyState();
             }
 
-            await ShowGameAlertAsync($"Nakakuha ka ng {StarsPerImage} stars!", false);
+            await ShowGameAlertAsync($"Nakakuha ka ng {StarsPerImage} coins!", false);
         }
         catch (Exception ex)
         {
